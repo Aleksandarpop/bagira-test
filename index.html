@@ -18,7 +18,8 @@
   --success: #27ae60;
   --warning: #f39c12;
   --danger: #e74c3c;
-  --sidebar-w: 260px;
+  --yellow: #f1c40f;
+  --sidebar-w: 270px;
   --header-h: 64px;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -32,29 +33,31 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
   display: flex; flex-direction: column; transition: transform .3s ease;
   overflow-y: auto;
 }
-.sidebar-brand { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,.1); }
-.sidebar-brand h2 { font-size: 1.3rem; font-weight: 700; letter-spacing: 2px; color: var(--accent); }
-.sidebar-brand small { color: rgba(255,255,255,.5); font-size: .75rem; }
-.sidebar-nav { flex: 1; padding: 10px 0; }
+.sidebar-brand { padding: 24px 20px 18px; text-align: center; border-bottom: 1px solid rgba(255,255,255,.08); }
+.sidebar-brand h2 { font-size: 1.4rem; font-weight: 800; letter-spacing: 3px; color: var(--accent); }
+.sidebar-brand small { color: rgba(255,255,255,.45); font-size: .72rem; display: block; margin-top: 4px; letter-spacing: 1px; text-transform: uppercase; }
+.sidebar-nav { flex: 1; padding: 8px 0; }
 .sidebar-nav a {
-  display: block; padding: 10px 20px; color: rgba(255,255,255,.7);
-  text-decoration: none; font-size: .85rem; transition: all .2s;
+  display: flex; align-items: center; gap: 10px; padding: 11px 20px; color: rgba(255,255,255,.6);
+  text-decoration: none; font-size: .82rem; transition: all .2s;
   border-left: 3px solid transparent;
 }
 .sidebar-nav a:hover, .sidebar-nav a.active {
   background: var(--sidebar-hover); color: #fff; border-left-color: var(--accent);
 }
-.sidebar-nav a .nav-num { color: var(--accent); font-weight: 700; margin-right: 8px; font-size: .75rem; }
+.sidebar-nav .nav-icon { font-size: .9rem; width: 20px; text-align: center; flex-shrink: 0; }
+.sidebar-nav .nav-score {
+  margin-left: auto; font-size: .7rem; font-weight: 700; padding: 2px 7px;
+  border-radius: 10px; background: rgba(255,255,255,.1);
+}
 
 /* Hamburger */
 .hamburger {
   display: none; position: fixed; top: 14px; left: 14px; z-index: 1100;
-  background: var(--sidebar-bg); border: none; color: #fff; width: 38px; height: 38px;
-  border-radius: 6px; cursor: pointer; font-size: 1.3rem; align-items: center; justify-content: center;
+  background: var(--sidebar-bg); border: none; color: #fff; width: 40px; height: 40px;
+  border-radius: 8px; cursor: pointer; font-size: 1.4rem; align-items: center; justify-content: center;
 }
-.overlay {
-  display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 999;
-}
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 999; }
 
 /* Header */
 .main-header {
@@ -62,647 +65,729 @@ body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background
   background: #fff; border-bottom: 1px solid var(--border); z-index: 900;
   display: flex; align-items: center; justify-content: space-between; padding: 0 30px;
 }
-.main-header h1 { font-size: 1.15rem; color: var(--text-primary); }
+.main-header h1 { font-size: 1.1rem; color: var(--text-primary); }
+.main-header h1 span { color: var(--text-secondary); font-weight: 400; font-size: .9rem; margin-left: 8px; }
 .lang-toggle {
   display: flex; align-items: center; gap: 0;
   background: var(--content-bg); border-radius: 20px; overflow: hidden; border: 1px solid var(--border);
 }
 .lang-btn {
-  padding: 6px 16px; border: none; background: transparent; cursor: pointer;
-  font-weight: 600; font-size: .85rem; color: var(--text-secondary); transition: all .2s;
+  padding: 6px 18px; border: none; background: transparent; cursor: pointer;
+  font-weight: 700; font-size: .82rem; color: var(--text-secondary); transition: all .2s;
 }
 .lang-btn.active { background: var(--accent); color: #fff; }
 
 /* Content */
-.content { margin-left: var(--sidebar-w); margin-top: var(--header-h); padding: 30px; max-width: 1200px; }
+.content { margin-left: var(--sidebar-w); margin-top: var(--header-h); padding: 30px; max-width: 1100px; }
 
-/* Sections */
-.section { background: var(--card-bg); border-radius: 12px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,.06); overflow: hidden; }
+/* Section cards */
+.section { background: var(--card-bg); border-radius: 12px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,.05); overflow: hidden; }
 .section-header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 18px 24px; cursor: pointer; user-select: none; border-bottom: 1px solid var(--border);
+  padding: 18px 24px; cursor: pointer; user-select: none;
   transition: background .2s;
 }
-.section-header:hover { background: var(--content-bg); }
-.section-header h2 { font-size: 1.1rem; display: flex; align-items: center; gap: 10px; }
-.section-header h2 .sec-num {
-  background: var(--accent); color: #fff; width: 28px; height: 28px; border-radius: 50%;
-  display: inline-flex; align-items: center; justify-content: center; font-size: .8rem; flex-shrink: 0;
+.section-header:hover { background: #fafbfc; }
+.section-header h2 { font-size: 1.05rem; display: flex; align-items: center; gap: 12px; }
+.section-header h2 .sec-icon { font-size: 1.1rem; }
+.section-header .sec-score {
+  font-size: .78rem; font-weight: 700; padding: 3px 10px; border-radius: 12px; margin-left: 10px;
 }
+.sec-score.red { background: #fde8e8; color: var(--danger); }
+.sec-score.orange { background: #fef3e2; color: #e67e22; }
+.sec-score.yellow { background: #fef9e7; color: #b7950b; }
+.sec-score.green { background: #e8f8ef; color: var(--success); }
 .section-toggle {
-  width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border);
+  width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--border);
   display: flex; align-items: center; justify-content: center; transition: transform .3s;
-  font-size: .8rem; color: var(--text-secondary); flex-shrink: 0;
+  font-size: .7rem; color: var(--text-secondary); flex-shrink: 0;
 }
 .section.collapsed .section-toggle { transform: rotate(-90deg); }
-.section-body { padding: 24px; transition: max-height .4s ease, opacity .3s ease; overflow: hidden; }
-.section.collapsed .section-body { max-height: 0 !important; padding: 0 24px; opacity: 0; }
+.section-body { padding: 24px; border-top: 1px solid var(--content-bg); }
+.section.collapsed .section-body { display: none; }
 
-/* Overall Score */
-.overall-score-wrap { display: flex; align-items: center; gap: 40px; flex-wrap: wrap; padding: 20px 0; }
-.score-circle {
-  width: 160px; height: 160px; border-radius: 50%; position: relative;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+/* Overall Score Hero */
+.hero-score {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  border-radius: 12px; padding: 40px; color: #fff; margin-bottom: 24px;
+  display: flex; align-items: center; gap: 40px; flex-wrap: wrap;
 }
-.score-circle .score-val { font-size: 2.5rem; font-weight: 800; color: var(--text-primary); }
-.score-circle .score-label { font-size: .85rem; color: var(--text-secondary); }
-.score-circle-inner { text-align: center; }
-.score-meta { flex: 1; min-width: 200px; }
-.score-meta .grade { font-size: 3rem; font-weight: 800; color: var(--danger); }
-.score-meta p { color: var(--text-secondary); margin-top: 4px; }
+.score-ring { position: relative; width: 180px; height: 180px; flex-shrink: 0; }
+.score-ring svg { width: 180px; height: 180px; transform: rotate(-90deg); }
+.score-ring circle { fill: none; stroke-width: 10; }
+.score-ring .ring-bg { stroke: rgba(255,255,255,.1); }
+.score-ring .ring-fg { stroke: var(--danger); stroke-dasharray: 502; stroke-linecap: round; transition: stroke-dashoffset .8s ease; }
+.score-ring .ring-text {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.score-ring .ring-val { font-size: 3rem; font-weight: 800; line-height: 1; }
+.score-ring .ring-sub { font-size: .85rem; opacity: .7; margin-top: 4px; }
+.hero-info { flex: 1; min-width: 250px; }
+.hero-info .grade-badge {
+  display: inline-block; background: var(--danger); color: #fff;
+  font-size: 2rem; font-weight: 800; width: 52px; height: 52px;
+  border-radius: 12px; text-align: center; line-height: 52px; margin-bottom: 12px;
+}
+.hero-info h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; opacity: .95; }
+.hero-info p { font-size: .9rem; opacity: .7; line-height: 1.7; }
+.hero-stats { display: flex; gap: 24px; margin-top: 20px; flex-wrap: wrap; }
+.hero-stat { text-align: center; }
+.hero-stat .hs-val { font-size: 1.5rem; font-weight: 800; }
+.hero-stat .hs-label { font-size: .72rem; opacity: .6; text-transform: uppercase; letter-spacing: .5px; }
 
-/* Score gauge rows */
-.score-row { display: flex; align-items: center; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--content-bg); }
+/* Score bars */
+.score-row { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--content-bg); }
 .score-row:last-child { border-bottom: none; }
-.score-row .sr-label { width: 220px; font-weight: 600; font-size: .9rem; flex-shrink: 0; }
-.score-row .sr-bar-wrap { flex: 1; height: 10px; background: var(--content-bg); border-radius: 5px; overflow: hidden; min-width: 100px; }
-.score-row .sr-bar { height: 100%; border-radius: 5px; transition: width .6s ease; }
-.score-row .sr-val { width: 60px; text-align: right; font-weight: 700; font-size: .9rem; flex-shrink: 0; }
-.score-row .sr-finding { color: var(--text-secondary); font-size: .83rem; margin-top: 2px; }
-
-/* Color helpers */
+.score-row .sr-label { width: 200px; font-weight: 600; font-size: .88rem; flex-shrink: 0; }
+.score-row .sr-bar-wrap { flex: 1; height: 8px; background: var(--content-bg); border-radius: 4px; overflow: hidden; min-width: 80px; }
+.score-row .sr-bar { height: 100%; border-radius: 4px; transition: width .8s ease; }
+.score-row .sr-val { width: 55px; text-align: right; font-weight: 700; font-size: .88rem; flex-shrink: 0; }
 .bar-red { background: var(--danger); }
 .bar-orange { background: var(--warning); }
+.bar-yellow { background: var(--yellow); }
 .bar-green { background: var(--success); }
 .text-red { color: var(--danger); }
 .text-orange { color: var(--warning); }
+.text-yellow { color: #b7950b; }
 .text-green { color: var(--success); }
 
-/* Recommendation cards */
-.rec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+/* Subsection */
+.subsection { margin-top: 20px; }
+.subsection h3 { font-size: .95rem; font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--content-bg); }
+.subsection h4 { font-size: .88rem; font-weight: 700; margin: 16px 0 8px; color: var(--text-primary); }
+
+/* Cards grid */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
 .rec-card {
   border: 1px solid var(--border); border-radius: 10px; padding: 18px;
   transition: box-shadow .2s; position: relative; overflow: hidden;
 }
 .rec-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
-.rec-card .rec-num {
+.rec-card .rc-num {
   position: absolute; top: 0; right: 0; background: var(--accent); color: #fff;
-  width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
-  border-radius: 0 10px 0 10px; font-weight: 700; font-size: .85rem;
+  width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+  border-radius: 0 10px 0 10px; font-weight: 700; font-size: .8rem;
 }
-.rec-card h4 { font-size: .95rem; margin-bottom: 6px; padding-right: 36px; }
-.rec-card .rec-impact {
-  display: inline-block; background: #e8f5e9; color: var(--success); padding: 2px 10px;
-  border-radius: 12px; font-size: .8rem; font-weight: 600; margin-top: 6px;
+.rec-card h4 { font-size: .9rem; margin-bottom: 6px; padding-right: 34px; }
+.rec-card p { font-size: .82rem; color: var(--text-secondary); margin-bottom: 8px; }
+.rec-card .rc-impact {
+  display: inline-block; padding: 2px 10px; border-radius: 12px;
+  font-size: .76rem; font-weight: 700;
 }
+.rc-impact.green { background: #e8f8ef; color: var(--success); }
+.rc-impact.orange { background: #fef3e2; color: #e67e22; }
+.rc-impact.blue { background: #ebf5fb; color: #2980b9; }
 
 /* Tables */
 .resp-table { width: 100%; overflow-x: auto; }
-.resp-table table { width: 100%; border-collapse: collapse; font-size: .88rem; min-width: 500px; }
+.resp-table table { width: 100%; border-collapse: collapse; font-size: .85rem; min-width: 500px; }
 .resp-table th {
-  background: var(--sidebar-bg); color: #fff; padding: 12px 14px; text-align: left;
-  font-weight: 600; font-size: .82rem; text-transform: uppercase; letter-spacing: .5px;
+  background: var(--sidebar-bg); color: #fff; padding: 11px 14px; text-align: left;
+  font-weight: 600; font-size: .78rem; text-transform: uppercase; letter-spacing: .5px;
 }
-.resp-table td { padding: 11px 14px; border-bottom: 1px solid var(--content-bg); }
+.resp-table td { padding: 10px 14px; border-bottom: 1px solid var(--content-bg); }
 .resp-table tr:hover td { background: #fafbfc; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: .72rem; font-weight: 700; }
+.badge-red { background: #fde8e8; color: var(--danger); }
+.badge-orange { background: #fef3e2; color: #e67e22; }
+.badge-green { background: #e8f8ef; color: var(--success); }
+.badge-blue { background: #ebf5fb; color: #2980b9; }
 
-/* Mini gauge (inline) */
-.mini-gauge {
-  display: inline-flex; align-items: center; gap: 8px;
-}
-.mini-gauge .mg-bar { width: 60px; height: 6px; background: var(--content-bg); border-radius: 3px; overflow: hidden; }
-.mini-gauge .mg-fill { height: 100%; border-radius: 3px; }
-
-/* SEO / Funnel grid */
-.stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
+/* Stat cards */
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
 .stat-card {
   background: var(--content-bg); border-radius: 10px; padding: 16px; text-align: center;
 }
-.stat-card .stat-val { font-size: 1.5rem; font-weight: 800; }
-.stat-card .stat-label { font-size: .8rem; color: var(--text-secondary); margin-top: 4px; }
-.stat-card.good .stat-val { color: var(--success); }
-.stat-card.warn .stat-val { color: var(--warning); }
-.stat-card.bad .stat-val { color: var(--danger); }
+.stat-card .sv { font-size: 1.4rem; font-weight: 800; }
+.stat-card .sl { font-size: .76rem; color: var(--text-secondary); margin-top: 4px; }
 
-/* Funnel visual */
-.funnel-visual { display: flex; flex-direction: column; align-items: center; gap: 0; padding: 20px 0; }
+/* Funnel */
+.funnel-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 16px 0; }
 .funnel-step {
-  padding: 12px 20px; text-align: center; color: #fff; font-weight: 600; font-size: .85rem;
-  position: relative; border-radius: 4px; margin-bottom: 4px;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  padding: 14px 24px; color: #fff; font-weight: 600; font-size: .84rem;
+  border-radius: 6px; text-align: center;
 }
-.funnel-step small { display: block; font-weight: 400; opacity: .85; font-size: .75rem; }
+.funnel-step .fs-pct { font-size: 1.1rem; font-weight: 800; }
+.funnel-arrow { color: var(--text-secondary); font-size: 1.2rem; }
 
-/* Reports list */
-.reports-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
-.report-item {
-  display: flex; align-items: center; gap: 12px; padding: 14px 16px;
-  background: var(--content-bg); border-radius: 10px; font-weight: 500; font-size: .9rem;
-}
-.report-item .ri-icon {
-  width: 36px; height: 36px; border-radius: 8px; background: var(--accent);
-  color: #fff; display: flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0;
-}
-
-/* Revenue summary */
-.rev-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 10px; }
+/* Revenue cards */
+.rev-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
 .rev-card {
-  background: linear-gradient(135deg, var(--sidebar-bg), #16213e); color: #fff;
-  border-radius: 12px; padding: 24px; text-align: center;
+  background: linear-gradient(135deg, #1a1a2e, #16213e); color: #fff;
+  border-radius: 12px; padding: 22px; text-align: center;
 }
-.rev-card .rev-val { font-size: 1.6rem; font-weight: 800; margin: 8px 0; }
-.rev-card .rev-label { font-size: .82rem; opacity: .8; }
+.rev-card .rv { font-size: 1.4rem; font-weight: 800; margin: 6px 0; }
+.rev-card .rl { font-size: .76rem; opacity: .7; }
+
+/* Key finding callout */
+.callout {
+  background: #fef9e7; border-left: 4px solid var(--warning); padding: 14px 18px;
+  border-radius: 0 8px 8px 0; margin: 14px 0; font-size: .88rem;
+}
+.callout.danger { background: #fde8e8; border-left-color: var(--danger); }
+.callout.success { background: #e8f8ef; border-left-color: var(--success); }
+.callout strong { color: var(--text-primary); }
+
+/* Check list */
+.check-list { list-style: none; }
+.check-list li { padding: 6px 0; font-size: .88rem; display: flex; align-items: flex-start; gap: 8px; }
+.check-list .icon-pass { color: var(--success); font-weight: 700; }
+.check-list .icon-fail { color: var(--danger); font-weight: 700; }
+.check-list .icon-warn { color: var(--warning); font-weight: 700; }
+
+/* Exec text */
+.exec-text { font-size: .92rem; line-height: 1.8; color: var(--text-secondary); }
+.exec-text strong { color: var(--text-primary); }
 
 /* Footer */
 .footer {
-  text-align: center; padding: 20px; color: var(--text-secondary); font-size: .82rem;
+  text-align: center; padding: 24px; color: var(--text-secondary); font-size: .8rem;
   border-top: 1px solid var(--border); margin-top: 10px;
 }
-
-/* Executive summary */
-.exec-text { font-size: .95rem; line-height: 1.8; color: var(--text-secondary); }
-.exec-text strong { color: var(--text-primary); }
 
 /* Print */
 @media print {
   .sidebar, .hamburger, .overlay, .main-header, .lang-toggle, .section-toggle { display: none !important; }
-  .content { margin: 0 !important; padding: 10px !important; }
+  .content { margin: 0 !important; padding: 10px !important; max-width: none; }
   .section { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
-  .section.collapsed .section-body { max-height: none !important; padding: 24px !important; opacity: 1 !important; }
+  .section.collapsed .section-body { display: block !important; }
+  .hero-score { color: #000 !important; background: #f5f5f5 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
 
 /* Responsive */
-@media (max-width: 1024px) {
-  :root { --sidebar-w: 220px; }
-}
+@media (max-width: 1024px) { :root { --sidebar-w: 240px; } }
 @media (max-width: 768px) {
   .sidebar { transform: translateX(-100%); width: 280px; }
   .sidebar.open { transform: translateX(0); }
   .overlay.open { display: block; }
   .hamburger { display: flex; }
-  .main-header { left: 0; padding: 0 14px 0 60px; }
-  .main-header h1 { font-size: .95rem; }
+  .main-header { left: 0; padding: 0 14px 0 62px; }
+  .main-header h1 { font-size: .9rem; }
+  .main-header h1 span { display: none; }
   .content { margin-left: 0; padding: 20px 14px; }
-  .overall-score-wrap { flex-direction: column; align-items: flex-start; gap: 20px; }
+  .hero-score { flex-direction: column; align-items: center; text-align: center; padding: 30px 20px; }
   .score-row { flex-wrap: wrap; }
-  .score-row .sr-label { width: 100%; }
-  .rec-grid { grid-template-columns: 1fr; }
+  .score-row .sr-label { width: 100%; font-size: .82rem; }
+  .card-grid { grid-template-columns: 1fr; }
   .stat-grid { grid-template-columns: repeat(2, 1fr); }
-  .rev-cards { grid-template-columns: 1fr; }
+  .rev-grid { grid-template-columns: 1fr; }
 }
 
 /* Scrollbar */
 .sidebar::-webkit-scrollbar { width: 4px; }
-.sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 2px; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 2px; }
 </style>
 </head>
 <body>
 
-<!-- Hamburger -->
 <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">&#9776;</button>
 <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
-<!-- Sidebar -->
 <nav class="sidebar" id="sidebar">
   <div class="sidebar-brand">
     <h2>&#1041;&#1040;&#1043;&#1048;&#1056;&#1040;</h2>
-    <small>Technical Hypermarket</small>
+    <small id="sbSub">Marketing Audit</small>
   </div>
   <div class="sidebar-nav" id="sidebarNav"></div>
 </nav>
 
-<!-- Header -->
 <header class="main-header">
-  <h1 id="headerTitle">Marketing Audit Report</h1>
+  <h1 id="headerTitle">Marketing Audit Report <span>bagira.bg</span></h1>
   <div class="lang-toggle">
     <button class="lang-btn active" id="btnEN" onclick="setLang('en')">EN</button>
     <button class="lang-btn" id="btnBG" onclick="setLang('bg')">BG</button>
   </div>
 </header>
 
-<!-- Content -->
-<main class="content" id="mainContent"></main>
+<main class="content" id="mc"></main>
 
 <script>
-const T = {
-  headerTitle: { en: 'Marketing Audit Report', bg: 'Маркетинг Одит Доклад' },
-  sections: [
-    {
-      id: 'overview',
-      title: { en: 'Overview & Overall Score', bg: 'Преглед и Обща Оценка' },
-    },
-    {
-      id: 'executive',
-      title: { en: 'Executive Summary', bg: 'Резюме' },
-    },
-    {
-      id: 'scores',
-      title: { en: 'Score Breakdown', bg: 'Разбивка на Оценките' },
-    },
-    {
-      id: 'quickwins',
-      title: { en: 'Quick Wins', bg: 'Бързи Победи' },
-    },
-    {
-      id: 'strategic',
-      title: { en: 'Strategic Recommendations', bg: 'Стратегически Препоръки' },
-    },
-    {
-      id: 'longterm',
-      title: { en: 'Long-Term Initiatives', bg: 'Дългосрочни Инициативи' },
-    },
-    {
-      id: 'competitors',
-      title: { en: 'Competitor Overview', bg: 'Преглед на Конкуренцията' },
-    },
-    {
-      id: 'social',
-      title: { en: 'Social Media Overview', bg: 'Преглед на Социалните Медии' },
-    },
-    {
-      id: 'revenue',
-      title: { en: 'Revenue Impact Summary', bg: 'Обобщение на Приходите' },
-    },
-    {
-      id: 'seo',
-      title: { en: 'SEO Health Highlights', bg: 'SEO Здраве' },
-    },
-    {
-      id: 'funnel',
-      title: { en: 'Funnel Health', bg: 'Здраве на Фунъла' },
-    },
-    {
-      id: 'reports',
-      title: { en: 'Reports Generated', bg: 'Генерирани Доклади' },
-    },
-  ],
-  executive: {
-    en: `Bagira is an established technical hypermarket in Stara Zagora with real competitive advantages — physical store in a region without national chain competition, <strong>32,000 Facebook followers</strong>, broad product catalog, and DSK financing. Despite these strengths, digital marketing execution is critically weak with an overall score of <strong>35/100</strong>. The most critical issue is opaque delivery pricing — customers outside Stara Zagora cannot see shipping costs until staff calls them. This alone likely causes loss of approximately <strong>5,000-7,000\u20ac/month</strong>. The second critical gap is complete lack of content marketing. Implementing all recommendations could add <strong>20,000-50,000\u20ac/month</strong> within 6 months.`,
-    bg: `\u0411\u0410\u0413\u0418\u0420\u0410 \u0435 \u0443\u0442\u0432\u044a\u0440\u0434\u0435\u043d \u0442\u0435\u0445\u043d\u0438\u0447\u0435\u0441\u043a\u0438 \u0445\u0438\u043f\u0435\u0440\u043c\u0430\u0440\u043a\u0435\u0442 \u0432 \u0421\u0442\u0430\u0440\u0430 \u0417\u0430\u0433\u043e\u0440\u0430 \u0441 \u0440\u0435\u0430\u043b\u043d\u0438 \u043a\u043e\u043d\u043a\u0443\u0440\u0435\u043d\u0442\u043d\u0438 \u043f\u0440\u0435\u0434\u0438\u043c\u0441\u0442\u0432\u0430 \u2014 \u0444\u0438\u0437\u0438\u0447\u0435\u0441\u043a\u0438 \u043c\u0430\u0433\u0430\u0437\u0438\u043d \u0432 \u0440\u0435\u0433\u0438\u043e\u043d \u0431\u0435\u0437 \u043a\u043e\u043d\u043a\u0443\u0440\u0435\u043d\u0446\u0438\u044f \u043e\u0442 \u043d\u0430\u0446\u0438\u043e\u043d\u0430\u043b\u043d\u0438 \u0432\u0435\u0440\u0438\u0433\u0438, <strong>32,000 Facebook \u043f\u043e\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u0435\u043b\u0438</strong>, \u0448\u0438\u0440\u043e\u043a \u043f\u0440\u043e\u0434\u0443\u043a\u0442\u043e\u0432 \u043a\u0430\u0442\u0430\u043b\u043e\u0433 \u0438 \u0444\u0438\u043d\u0430\u043d\u0441\u0438\u0440\u0430\u043d\u0435 \u043e\u0442 DSK. \u0412\u044a\u043f\u0440\u0435\u043a\u0438 \u0442\u0435\u0437\u0438 \u0441\u0438\u043b\u043d\u0438 \u0441\u0442\u0440\u0430\u043d\u0438, \u0434\u0438\u0433\u0438\u0442\u0430\u043b\u043d\u043e\u0442\u043e \u043c\u0430\u0440\u043a\u0435\u0442\u0438\u043d\u0433 \u0438\u0437\u043f\u044a\u043b\u043d\u0435\u043d\u0438\u0435 \u0435 \u043a\u0440\u0438\u0442\u0438\u0447\u043d\u043e \u0441\u043b\u0430\u0431\u043e \u0441 \u043e\u0431\u0449\u0430 \u043e\u0446\u0435\u043d\u043a\u0430 <strong>35/100</strong>. \u041d\u0430\u0439-\u043a\u0440\u0438\u0442\u0438\u0447\u043d\u0438\u044f\u0442 \u043f\u0440\u043e\u0431\u043b\u0435\u043c \u0435 \u043d\u0435\u043f\u0440\u043e\u0437\u0440\u0430\u0447\u043d\u043e\u0442\u043e \u0446\u0435\u043d\u043e\u043e\u0431\u0440\u0430\u0437\u0443\u0432\u0430\u043d\u0435 \u0437\u0430 \u0434\u043e\u0441\u0442\u0430\u0432\u043a\u0430 \u2014 \u043a\u043b\u0438\u0435\u043d\u0442\u0438\u0442\u0435 \u0438\u0437\u0432\u044a\u043d \u0421\u0442\u0430\u0440\u0430 \u0417\u0430\u0433\u043e\u0440\u0430 \u043d\u0435 \u043c\u043e\u0433\u0430\u0442 \u0434\u0430 \u0432\u0438\u0434\u044f\u0442 \u0446\u0435\u043d\u0430\u0442\u0430 \u0437\u0430 \u0434\u043e\u0441\u0442\u0430\u0432\u043a\u0430, \u0434\u043e\u043a\u0430\u0442\u043e \u0441\u043b\u0443\u0436\u0438\u0442\u0435\u043b \u043d\u0435 \u0441\u0435 \u043e\u0431\u0430\u0434\u0438. \u0422\u043e\u0432\u0430 \u0435\u0434\u0438\u043d\u0441\u0442\u0432\u0435\u043d\u043e \u0432\u043e\u0434\u0438 \u0434\u043e \u0437\u0430\u0433\u0443\u0431\u0430 \u043d\u0430 \u043f\u0440\u0438\u0431\u043b\u0438\u0437\u0438\u0442\u0435\u043b\u043d\u043e <strong>5,000-7,000\u20ac/\u043c\u0435\u0441\u0435\u0447\u043d\u043e</strong>. \u0412\u0442\u043e\u0440\u0438\u044f\u0442 \u043a\u0440\u0438\u0442\u0438\u0447\u0435\u043d \u043f\u0440\u043e\u043f\u0443\u0441\u043a \u0435 \u043f\u044a\u043b\u043d\u0430\u0442\u0430 \u043b\u0438\u043f\u0441\u0430 \u043d\u0430 \u0441\u044a\u0434\u044a\u0440\u0436\u0430\u0442\u0435\u043b\u0435\u043d \u043c\u0430\u0440\u043a\u0435\u0442\u0438\u043d\u0433. \u041f\u0440\u0438 \u043f\u044a\u043b\u043d\u043e \u0438\u0437\u043f\u044a\u043b\u043d\u0435\u043d\u0438\u0435 \u043d\u0430 \u043f\u0440\u0435\u043f\u043e\u0440\u044a\u043a\u0438\u0442\u0435, \u043e\u0447\u0430\u043a\u0432\u0430\u043d\u0438\u044f\u0442 \u0434\u043e\u043f\u044a\u043b\u043d\u0438\u0442\u0435\u043b\u0435\u043d \u043f\u0440\u0438\u0445\u043e\u0434 \u0435 <strong>20,000-50,000\u20ac/\u043c\u0435\u0441\u0435\u0447\u043d\u043e</strong> \u0432 \u0440\u0430\u043c\u043a\u0438\u0442\u0435 \u043d\u0430 6 \u043c\u0435\u0441\u0435\u0446\u0430.`
-  },
-  scoreBreakdown: [
-    { label: { en: 'Content & Messaging', bg: '\u0421\u044a\u0434\u044a\u0440\u0436\u0430\u043d\u0438\u0435 \u0438 \u041a\u043e\u043c\u0443\u043d\u0438\u043a\u0430\u0446\u0438\u044f' }, score: 24, finding: { en: 'No headline, no value prop, no blog', bg: '\u0411\u0435\u0437 \u0437\u0430\u0433\u043b\u0430\u0432\u0438\u0435, \u0431\u0435\u0437 \u0441\u0442\u043e\u0439\u043d\u043e\u0441\u0442\u043d\u043e \u043f\u0440\u0435\u0434\u043b\u043e\u0436\u0435\u043d\u0438\u0435, \u0431\u0435\u0437 \u0431\u043b\u043e\u0433' } },
-    { label: { en: 'Conversion Optimization', bg: '\u041e\u043f\u0442\u0438\u043c\u0438\u0437\u0430\u0446\u0438\u044f \u043d\u0430 \u041a\u043e\u043d\u0432\u0435\u0440\u0441\u0438\u044f\u0442\u0430' }, score: 34, finding: { en: 'Hidden shipping costs, broken funnel', bg: '\u0421\u043a\u0440\u0438\u0442\u0438 \u0440\u0430\u0437\u0445\u043e\u0434\u0438 \u0437\u0430 \u0434\u043e\u0441\u0442\u0430\u0432\u043a\u0430, \u0441\u0447\u0443\u043f\u0435\u043d \u0444\u0443\u043d\u044a\u043b' } },
-    { label: { en: 'SEO & Discoverability', bg: 'SEO \u0438 \u041e\u0442\u043a\u0440\u0438\u0432\u0430\u0435\u043c\u043e\u0441\u0442' }, score: 52, finding: { en: 'Good tech base, empty H1, no content', bg: '\u0414\u043e\u0431\u0440\u0430 \u0442\u0435\u0445\u043d\u0438\u0447\u0435\u0441\u043a\u0430 \u0431\u0430\u0437\u0430, \u043f\u0440\u0430\u0437\u0435\u043d H1, \u0431\u0435\u0437 \u0441\u044a\u0434\u044a\u0440\u0436\u0430\u043d\u0438\u0435' } },
-    { label: { en: 'Competitive Positioning', bg: '\u041a\u043e\u043d\u043a\u0443\u0440\u0435\u043d\u0442\u043d\u043e \u041f\u043e\u0437\u0438\u0446\u0438\u043e\u043d\u0438\u0440\u0430\u043d\u0435' }, score: 40, finding: { en: 'Local advantage but no messaging', bg: '\u041c\u0435\u0441\u0442\u043d\u043e \u043f\u0440\u0435\u0434\u0438\u043c\u0441\u0442\u0432\u043e, \u043d\u043e \u0431\u0435\u0437 \u043a\u043e\u043c\u0443\u043d\u0438\u043a\u0430\u0446\u0438\u044f' } },
-    { label: { en: 'Brand & Trust', bg: '\u041c\u0430\u0440\u043a\u0430 \u0438 \u0414\u043e\u0432\u0435\u0440\u0438\u0435' }, score: 30, finding: { en: '60% FB recommendation, no site reviews', bg: '60% FB \u043f\u0440\u0435\u043f\u043e\u0440\u044a\u043a\u0430, \u0431\u0435\u0437 \u043e\u0442\u0437\u0438\u0432\u0438 \u043d\u0430 \u0441\u0430\u0439\u0442\u0430' } },
-    { label: { en: 'Growth & Strategy', bg: '\u0420\u0430\u0441\u0442\u0435\u0436 \u0438 \u0421\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u044f' }, score: 35, finding: { en: 'Infrastructure exists, no strategy', bg: '\u0418\u043d\u0444\u0440\u0430\u0441\u0442\u0440\u0443\u043a\u0442\u0443\u0440\u0430\u0442\u0430 \u0441\u044a\u0449\u0435\u0441\u0442\u0432\u0443\u0432\u0430, \u0431\u0435\u0437 \u0441\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u044f' } },
-  ],
-  quickWins: [
-    { title: { en: 'Make Shipping Transparent', bg: '\u041f\u0440\u043e\u0437\u0440\u0430\u0447\u043d\u0438 \u0440\u0430\u0437\u0445\u043e\u0434\u0438 \u0437\u0430 \u0434\u043e\u0441\u0442\u0430\u0432\u043a\u0430' }, impact: '+5,000-7,000\u20ac/mo' },
-    { title: { en: 'Add Trust Bar', bg: '\u0414\u043e\u0431\u0430\u0432\u0435\u0442\u0435 \u043b\u0435\u043d\u0442\u0430 \u0437\u0430 \u0434\u043e\u0432\u0435\u0440\u0438\u0435' }, impact: '+10-15% engagement' },
-    { title: { en: 'Add Homepage H1', bg: '\u0414\u043e\u0431\u0430\u0432\u0435\u0442\u0435 H1 \u0437\u0430\u0433\u043b\u0430\u0432\u0438\u0435' }, impact: '+5% SEO' },
-    { title: { en: 'Add Buy Button Microcopy', bg: '\u041c\u0438\u043a\u0440\u043e\u0442\u0435\u043a\u0441\u0442 \u043f\u043e\u0434 \u0431\u0443\u0442\u043e\u043d\u0430 \u201e\u041a\u0443\u043f\u0438\u201c' }, impact: '+10-15% add-to-cart' },
-    { title: { en: 'Rewrite Meta Description', bg: '\u041f\u0440\u0435\u043d\u0430\u043f\u0438\u0448\u0435\u0442\u0435 \u043c\u0435\u0442\u0430 \u043e\u043f\u0438\u0441\u0430\u043d\u0438\u0435' }, impact: '+10-20% CTR' },
-    { title: { en: 'Update Instagram Bio', bg: '\u041e\u0431\u043d\u043e\u0432\u0435\u0442\u0435 Instagram \u0431\u0438\u043e' }, impact: '+50% follow rate' },
-    { title: { en: 'Remove Fake Star Ratings', bg: '\u041f\u0440\u0435\u043c\u0430\u0445\u043d\u0435\u0442\u0435 \u0444\u0430\u043b\u0448\u0438\u0432\u0438\u0442\u0435 \u0437\u0432\u0435\u0437\u0434\u0438' }, impact: { en: 'Prevents trust erosion', bg: '\u041f\u0440\u0435\u0434\u043e\u0442\u0432\u0440\u0430\u0442\u044f\u0432\u0430 \u0435\u0440\u043e\u0437\u0438\u044f \u043d\u0430 \u0434\u043e\u0432\u0435\u0440\u0438\u0435\u0442\u043e' } },
-  ],
-  strategic: [
-    { title: { en: 'Customer Review System', bg: '\u0421\u0438\u0441\u0442\u0435\u043c\u0430 \u0437\u0430 \u043a\u043b\u0438\u0435\u043d\u0442\u0441\u043a\u0438 \u043e\u0442\u0437\u0438\u0432\u0438' }, impact: '+3,000-5,000\u20ac/mo' },
-    { title: { en: 'Category Descriptions', bg: '\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u044f \u043d\u0430 \u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u0438\u0442\u0435' }, impact: '+2,000-4,000\u20ac/mo' },
-    { title: { en: 'Social Media Calendar', bg: '\u041a\u0430\u043b\u0435\u043d\u0434\u0430\u0440 \u0437\u0430 \u0441\u043e\u0446\u0438\u0430\u043b\u043d\u0438 \u043c\u0435\u0434\u0438\u0438' }, impact: '+1,000-2,000\u20ac/mo' },
-    { title: { en: 'Homepage Hero Section', bg: '\u0413\u0435\u0440\u043e\u0439 \u0441\u0435\u043a\u0446\u0438\u044f \u043d\u0430 \u043d\u0430\u0447\u0430\u043b\u043d\u0430\u0442\u0430 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0430' }, impact: '+2,000-3,000\u20ac/mo' },
-    { title: { en: 'Email Marketing Automation', bg: '\u0410\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0437\u0430\u0446\u0438\u044f \u043d\u0430 \u0438\u043c\u0435\u0439\u043b \u043c\u0430\u0440\u043a\u0435\u0442\u0438\u043d\u0433' }, impact: '+2,000-4,000\u20ac/mo' },
-    { title: { en: 'DSK Financing Prominence', bg: '\u0412\u0438\u0434\u0438\u043c\u043e\u0441\u0442 \u043d\u0430 DSK \u0444\u0438\u043d\u0430\u043d\u0441\u0438\u0440\u0430\u043d\u0435' }, impact: '+1,500-3,000\u20ac/mo' },
-  ],
-  longterm: [
-    { title: { en: 'Content Hub "\u041e\u0422 \u041c\u0410\u0419\u0421\u0422\u041e\u0420\u0410"', bg: '\u0421\u044a\u0434\u044a\u0440\u0436\u0430\u0442\u0435\u043b\u0435\u043d \u0445\u044a\u0431 "\u041e\u0422 \u041c\u0410\u0419\u0421\u0422\u041e\u0420\u0410"' }, impact: '+7,000-14,000\u20ac/mo' },
-    { title: { en: 'Automate Checkout', bg: '\u0410\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0437\u0438\u0440\u0430\u0439 \u0447\u0435\u043a\u0430\u0443\u0442' }, impact: '+5,000-10,000\u20ac/mo' },
-    { title: { en: 'Local SEO Domination', bg: '\u0414\u043e\u043c\u0438\u043d\u0430\u0446\u0438\u044f \u0432 \u043b\u043e\u043a\u0430\u043b\u043d\u043e SEO' }, impact: '+3,000-5,000\u20ac/mo' },
-    { title: { en: 'Paid Advertising Launch', bg: '\u0421\u0442\u0430\u0440\u0442\u0438\u0440\u0430\u043d\u0435 \u043d\u0430 \u043f\u043b\u0430\u0442\u0435\u043d\u0430 \u0440\u0435\u043a\u043b\u0430\u043c\u0430' }, impact: '+3,000-6,000\u20ac/mo' },
-    { title: { en: 'Reputation Management', bg: '\u0423\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u043d\u0430 \u0440\u0435\u043f\u0443\u0442\u0430\u0446\u0438\u044f\u0442\u0430' }, impact: '+5-10% conversion' },
-  ],
-  competitors: [
-    { name: 'Bash Maistora', products: '53,000+', stores: '0', online: { en: 'Strong', bg: '\u0421\u0438\u043b\u0435\u043d' }, edge: { en: 'Physical store', bg: '\u0424\u0438\u0437\u0438\u0447\u0435\u0441\u043a\u0438 \u043c\u0430\u0433\u0430\u0437\u0438\u043d' } },
-    { name: 'Mr. Bricolage', products: '15,000+', stores: '11', online: { en: 'Full omni', bg: '\u041f\u044a\u043b\u043d\u043e \u043e\u043c\u043d\u0438' }, edge: { en: 'No Stara Zagora store', bg: '\u041d\u044f\u043c\u0430 \u043c\u0430\u0433\u0430\u0437\u0438\u043d \u0432 \u0421\u0442. \u0417\u0430\u0433\u043e\u0440\u0430' } },
-    { name: 'Praktiker', products: '20,000+', stores: '10+', online: { en: 'App+financing', bg: '\u0410\u043f\u043b\u0438\u043a\u0430\u0446\u0438\u044f+\u0444\u0438\u043d\u0430\u043d\u0441\u0438\u0440\u0430\u043d\u0435' }, edge: { en: 'Local expertise', bg: '\u041c\u0435\u0441\u0442\u043d\u0430 \u0435\u043a\u0441\u043f\u0435\u0440\u0442\u0438\u0437\u0430' } },
-    { name: 'CMX.bg', products: '10,000+', stores: '0', online: 'YouTube', edge: { en: 'Consumer focus', bg: '\u0424\u043e\u043a\u0443\u0441 \u0432\u044a\u0440\u0445\u0443 \u043f\u043e\u0442\u0440\u0435\u0431\u0438\u0442\u0435\u043b\u044f' } },
-    { name: 'Mana.bg', products: '2,000+', stores: '0', online: { en: 'Modern UX', bg: '\u041c\u043e\u0434\u0435\u0440\u0435\u043d UX' }, edge: { en: 'Broader range', bg: '\u041f\u043e-\u0448\u0438\u0440\u043e\u043a\u0430 \u0433\u0430\u043c\u0430' } },
-  ],
-  social: [
-    { platform: 'Facebook', followers: '32,000', status: { en: 'Active but low engagement (0.27%)', bg: '\u0410\u043a\u0442\u0438\u0432\u0435\u043d, \u043d\u043e \u043d\u0438\u0441\u043a\u0430 \u0430\u043d\u0433\u0430\u0436\u0438\u0440\u0430\u043d\u043e\u0441\u0442 (0.27%)' } },
-    { platform: 'Instagram', followers: '120', status: { en: 'Neglected \u2014 needs restart', bg: '\u0417\u0430\u043d\u0435\u043c\u0430\u0440\u0435\u043d \u2014 \u043d\u0443\u0436\u0435\u043d \u0440\u0435\u0441\u0442\u0430\u0440\u0442' } },
-    { platform: 'TikTok', followers: '215', status: { en: 'Early stage', bg: '\u041d\u0430\u0447\u0430\u043b\u0435\u043d \u0435\u0442\u0430\u043f' } },
-  ],
-  seo: [
-    { label: 'SEO Score', value: '52/100', cls: 'warn' },
-    { label: 'TTFB', value: '109ms', cls: 'good', note: { en: 'Good', bg: '\u0414\u043e\u0431\u0440\u043e' } },
-    { label: 'HTTPS', value: { en: 'Yes', bg: '\u0414\u0430' }, cls: 'good' },
-    { label: 'H1', value: { en: 'Empty', bg: '\u041f\u0440\u0430\u0437\u0435\u043d' }, cls: 'bad', note: { en: 'Critical', bg: '\u041a\u0440\u0438\u0442\u0438\u0447\u043d\u043e' } },
-    { label: { en: 'Cyrillic URLs', bg: '\u041a\u0438\u0440\u0438\u043b\u0438\u0446\u0430 URL' }, value: { en: 'Yes (Problem)', bg: '\u0414\u0430 (\u041f\u0440\u043e\u0431\u043b\u0435\u043c)' }, cls: 'bad' },
-    { label: 'WebP Images', value: '0', cls: 'bad' },
-    { label: 'Schema', value: 'Product + BreadcrumbList', cls: 'good' },
-    { label: { en: 'Blog', bg: '\u0411\u043b\u043e\u0433' }, value: { en: 'None', bg: '\u041d\u044f\u043c\u0430' }, cls: 'bad' },
-  ],
-  funnelSteps: [
-    { label: { en: 'Homepage \u2192 Category', bg: '\u041d\u0430\u0447\u0430\u043b\u043d\u0430 \u2192 \u041a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u044f' }, pct: 40, w: 100 },
-    { label: { en: 'Category \u2192 Product', bg: '\u041a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u044f \u2192 \u041f\u0440\u043e\u0434\u0443\u043a\u0442' }, pct: 50, w: 80 },
-    { label: { en: 'Product \u2192 Cart', bg: '\u041f\u0440\u043e\u0434\u0443\u043a\u0442 \u2192 \u041a\u043e\u0448\u043d\u0438\u0446\u0430' }, pct: '3-5', w: 50 },
-    { label: { en: 'Cart \u2192 Purchase', bg: '\u041a\u043e\u0448\u043d\u0438\u0446\u0430 \u2192 \u041f\u043e\u043a\u0443\u043f\u043a\u0430' }, pct: '40-50', w: 35 },
-  ],
-  reports: [
-    { name: 'SEO Audit', icon: '\u{1F50D}' },
-    { name: { en: 'Social Calendar', bg: '\u0421\u043e\u0446\u0438\u0430\u043b\u0435\u043d \u041a\u0430\u043b\u0435\u043d\u0434\u0430\u0440' }, icon: '\u{1F4C5}' },
-    { name: { en: 'Competitor Report', bg: '\u0414\u043e\u043a\u043b\u0430\u0434 \u0437\u0430 \u041a\u043e\u043d\u043a\u0443\u0440\u0435\u043d\u0446\u0438\u044f\u0442\u0430' }, icon: '\u{1F3AF}' },
-    { name: { en: 'Brand Voice', bg: '\u0413\u043b\u0430\u0441 \u043d\u0430 \u041c\u0430\u0440\u043a\u0430\u0442\u0430' }, icon: '\u{1F4E3}' },
-    { name: { en: 'Funnel Analysis', bg: '\u0410\u043d\u0430\u043b\u0438\u0437 \u043d\u0430 \u0424\u0443\u043d\u044a\u043b\u0430' }, icon: '\u{1F4CA}' },
-    { name: 'Landing CRO', icon: '\u{1F680}' },
-    { name: { en: 'Client Proposal', bg: '\u041a\u043b\u0438\u0435\u043d\u0442\u0441\u043a\u043e \u041f\u0440\u0435\u0434\u043b\u043e\u0436\u0435\u043d\u0438\u0435' }, icon: '\u{1F4DD}' },
-    { name: { en: 'Copy Suggestions', bg: '\u041f\u0440\u0435\u0434\u043b\u043e\u0436\u0435\u043d\u0438\u044f \u0437\u0430 \u041a\u043e\u043f\u0438' }, icon: '\u270D\uFE0F' },
-    { name: { en: 'Ad Campaigns', bg: '\u0420\u0435\u043a\u043b\u0430\u043c\u043d\u0438 \u041a\u0430\u043c\u043f\u0430\u043d\u0438\u0438' }, icon: '\u{1F4B0}' },
-    { name: { en: 'Marketing Audit', bg: '\u041c\u0430\u0440\u043a\u0435\u0442\u0438\u043d\u0433 \u041e\u0434\u0438\u0442' }, icon: '\u{1F4CB}' },
-  ],
-};
-
 let lang = 'en';
+const L = (en, bg) => lang === 'bg' ? bg : en;
 
-function t(obj) {
-  if (typeof obj === 'string') return obj;
-  return obj[lang] || obj.en || '';
+function scoreColor(s) {
+  if (s < 40) return 'red';
+  if (s <= 60) return 'orange';
+  if (s <= 75) return 'yellow';
+  return 'green';
 }
+function barCls(s) { return 'bar-' + scoreColor(s); }
+function txtCls(s) { return 'text-' + scoreColor(s); }
 
-function barColor(score) {
-  if (score >= 60) return 'bar-green';
-  if (score >= 40) return 'bar-orange';
-  return 'bar-red';
-}
-function textColor(score) {
-  if (score >= 60) return 'text-green';
-  if (score >= 40) return 'text-orange';
-  return 'text-red';
-}
+const NAV = [
+  { id: 'overview', icon: '&#9733;', en: 'Overview & Score', bg: 'Преглед и Оценка', score: '26/100' },
+  { id: 'seo', icon: '&#128270;', en: 'SEO Audit', bg: 'SEO Одит', score: '38/100' },
+  { id: 'social', icon: '&#128197;', en: 'Social Media', bg: 'Социални Медии', score: '25/100' },
+  { id: 'competitors', icon: '&#127919;', en: 'Competitors', bg: 'Конкуренция', score: 'Weak' },
+  { id: 'brand', icon: '&#128227;', en: 'Brand Voice', bg: 'Бранд Глас', score: '2/10' },
+  { id: 'funnel', icon: '&#128202;', en: 'Funnel Analysis', bg: 'Фуния Анализ', score: '30/100' },
+  { id: 'cro', icon: '&#128640;', en: 'Landing CRO', bg: 'CRO Анализ', score: '25/100' },
+  { id: 'proposal', icon: '&#128221;', en: 'Client Proposal', bg: 'Предложение', score: '' },
+  { id: 'copy', icon: '&#9997;', en: 'Copy Suggestions', bg: 'Копирайтинг', score: '14/100' },
+  { id: 'ads', icon: '&#128176;', en: 'Ad Campaigns', bg: 'Рекламни Кампании', score: '' },
+];
 
-function renderAll() {
-  document.getElementById('headerTitle').textContent = t(T.headerTitle);
-  const mc = document.getElementById('mainContent');
-  mc.innerHTML = '';
-
-  // Build nav
+function buildNav() {
   const nav = document.getElementById('sidebarNav');
-  nav.innerHTML = '';
-  T.sections.forEach((s, i) => {
-    const a = document.createElement('a');
-    a.href = '#' + s.id;
-    a.innerHTML = `<span class="nav-num">${String(i+1).padStart(2,'0')}</span>${t(s.title)}`;
-    a.onclick = () => { closeSidebar(); };
-    nav.appendChild(a);
-  });
-
-  // 1. Overview
-  mc.innerHTML += `
-  <div class="section" id="overview">
-    <div class="section-header" onclick="toggleSection(this)">
-      <h2><span class="sec-num">1</span>${t(T.sections[0].title)}</h2>
-      <div class="section-toggle">\u25BC</div>
-    </div>
-    <div class="section-body">
-      <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:18px;font-size:.88rem;color:var(--text-secondary)">
-        <span><strong>${lang==='en'?'Business':'Бизнес'}:</strong> \u0411\u0410\u0413\u0418\u0420\u0410 \u2014 Technical Hypermarket</span>
-        <span><strong>URL:</strong> <a href="https://www.bagira.bg/" target="_blank" style="color:var(--accent)">bagira.bg</a></span>
-        <span><strong>${lang==='en'?'Date':'Дата'}:</strong> 2026-03-18</span>
-      </div>
-      <div class="overall-score-wrap">
-        <div class="score-circle" style="background:conic-gradient(var(--danger) 0% 35%, var(--content-bg) 35% 100%)">
-          <div style="width:130px;height:130px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;">
-            <div class="score-circle-inner">
-              <div class="score-val">35</div>
-              <div class="score-label">${lang==='en'?'out of':'от'} 100</div>
-            </div>
-          </div>
-        </div>
-        <div class="score-meta">
-          <div style="font-size:.85rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px">${lang==='en'?'Overall Grade':'Обща Оценка'}</div>
-          <div class="grade">F</div>
-          <p>${lang==='en'?'Critical improvements needed across all marketing channels':'Критични подобрения са необходими по всички маркетинг канали'}</p>
-        </div>
-      </div>
-    </div>
-  </div>`;
-
-  // 2. Executive Summary
-  mc.innerHTML += `
-  <div class="section" id="executive">
-    <div class="section-header" onclick="toggleSection(this)">
-      <h2><span class="sec-num">2</span>${t(T.sections[1].title)}</h2>
-      <div class="section-toggle">\u25BC</div>
-    </div>
-    <div class="section-body">
-      <div class="exec-text">${t(T.executive)}</div>
-    </div>
-  </div>`;
-
-  // 3. Score Breakdown
-  let scoreRows = T.scoreBreakdown.map(s => `
-    <div class="score-row">
-      <div class="sr-label">${t(s.label)}</div>
-      <div class="sr-bar-wrap"><div class="sr-bar ${barColor(s.score)}" style="width:${s.score}%"></div></div>
-      <div class="sr-val ${textColor(s.score)}">${s.score}/100</div>
-    </div>
-    <div style="padding:0 0 8px 0;font-size:.82rem;color:var(--text-secondary);border-bottom:1px solid var(--content-bg);margin-bottom:4px">${t(s.finding)}</div>
-  `).join('');
-  mc.innerHTML += `
-  <div class="section" id="scores">
-    <div class="section-header" onclick="toggleSection(this)">
-      <h2><span class="sec-num">3</span>${t(T.sections[2].title)}</h2>
-      <div class="section-toggle">\u25BC</div>
-    </div>
-    <div class="section-body">${scoreRows}</div>
-  </div>`;
-
-  // 4. Quick Wins
-  let qwCards = T.quickWins.map((q,i) => `
-    <div class="rec-card">
-      <div class="rec-num">${i+1}</div>
-      <h4>${t(q.title)}</h4>
-      <div class="rec-impact">${typeof q.impact === 'object' ? t(q.impact) : q.impact}</div>
-    </div>
-  `).join('');
-  mc.innerHTML += `
-  <div class="section" id="quickwins">
-    <div class="section-header" onclick="toggleSection(this)">
-      <h2><span class="sec-num">4</span>${t(T.sections[3].title)}</h2>
-      <div class="section-toggle">\u25BC</div>
-    </div>
-    <div class="section-body"><div class="rec-grid">${qwCards}</div></div>
-  </div>`;
-
-  // 5. Strategic
-  let stCards = T.strategic.map((s,i) => `
-    <div class="rec-card">
-      <div class="rec-num">${i+1}</div>
-      <h4>${t(s.title)}</h4>
-      <div class="rec-impact">${t(s.impact)}</div>
-    </div>
-  `).join('');
-  mc.innerHTML += `
-  <div class="section" id="strategic">
-    <div class="section-header" onclick="toggleSection(this)">
-      <h2><span class="sec-num">5</span>${t(T.sections[4].title)}</h2>
-      <div class="section-toggle">\u25BC</div>
-    </div>
-    <div class="section-body"><div class="rec-grid">${stCards}</div></div>
-  </div>`;
-
-  // 6. Long-Term
-  let ltCards = T.longterm.map((l,i) => `
-    <div class="rec-card">
-      <div class="rec-num">${i+1}</div>
-      <h4>${t(l.title)}</h4>
-      <div class="rec-impact">${t(l.impact)}</div>
-    </div>
-  `).join('');
-  mc.innerHTML += `
-  <div class="section" id="longterm">
-    <div class="section-header" onclick="toggleSection(this)">
-      <h2><span class="sec-num">6</span>${t(T.sections[5].title)}</h2>
-      <div class="section-toggle">\u25BC</div>
-    </div>
-    <div class="section-body"><div class="rec-grid">${ltCards}</div></div>
-  </div>`;
-
-  // 7. Competitors
-  let compRows = T.competitors.map(c => `
-    <tr>
-      <td><strong>${c.name}</strong></td>
-      <td>${c.products}</td>
-      <td>${c.stores}</td>
-      <td>${t(c.online)}</td>
-      <td>${t(c.edge)}</td>
-    </tr>
-  `).join('');
-  mc.innerHTML += `
-  <div class="section" id="competitors">
-    <div class="section-header" onclick="toggleSection(this)">
-      <h2><span class="sec-num">7</span>${t(T.sections[6].title)}</h2>
-      <div class="section-toggle">\u25BC</div>
-    </div>
-    <div class="section-body">
-      <div class="resp-table"><table>
-        <thead><tr>
-          <th>${lang==='en'?'Competitor':'Конкурент'}</th>
-          <th>${lang==='en'?'Products':'Продукти'}</th>
-          <th>${lang==='en'?'Stores':'Магазини'}</th>
-          <th>Online</th>
-          <th>${lang==='en'?'Bagira\'s Edge':'Предимство на Багира'}</th>
-        </tr></thead>
-        <tbody>${compRows}</tbody>
-      </table></div>
-    </div>
-  </div>`;
-
-  // 8. Social
-  let socialRows = T.social.map(s => `
-    <tr>
-      <td><strong>${s.platform}</strong></td>
-      <td>${s.followers}</td>
-      <td>${t(s.status)}</td>
-    </tr>
-  `).join('');
-  mc.innerHTML += `
-  <div class="section" id="social">
-    <div class="section-header" onclick="toggleSection(this)">
-      <h2><span class="sec-num">8</span>${t(T.sections[7].title)}</h2>
-      <div class="section-toggle">\u25BC</div>
-    </div>
-    <div class="section-body">
-      <div class="resp-table"><table>
-        <thead><tr>
-          <th>${lang==='en'?'Platform':'Платформа'}</th>
-          <th>${lang==='en'?'Followers':'Последователи'}</th>
-          <th>${lang==='en'?'Status':'Статус'}</th>
-        </tr></thead>
-        <tbody>${socialRows}</tbody>
-      </table></div>
-    </div>
-  </div>`;
-
-  // 9. Revenue
-  mc.innerHTML += `
-  <div class="section" id="revenue">
-    <div class="section-header" onclick="toggleSection(this)">
-      <h2><span class="sec-num">9</span>${t(T.sections[8].title)}</h2>
-      <div class="section-toggle">\u25BC</div>
-    </div>
-    <div class="section-body">
-      <div class="rev-cards">
-        <div class="rev-card">
-          <div class="rev-label">${lang==='en'?'Total Monthly Potential':'Общ Месечен Потенциал'}</div>
-          <div class="rev-val">+31,500-58,000\u20ac</div>
-        </div>
-        <div class="rev-card">
-          <div class="rev-label">${lang==='en'?'Conservative 6-Month':'Консервативен 6-Месечен'}</div>
-          <div class="rev-val">+20,000\u20ac/${lang==='en'?'mo':'\u043c\u0435\u0441'}</div>
-        </div>
-        <div class="rev-card">
-          <div class="rev-label">${lang==='en'?'Aggressive 6-Month':'Агресивен 6-Месечен'}</div>
-          <div class="rev-val">+50,000\u20ac/${lang==='en'?'mo':'\u043c\u0435\u0441'}</div>
-        </div>
-      </div>
-    </div>
-  </div>`;
-
-  // 10. SEO
-  let seoCards = T.seo.map(s => {
-    let val = t(s.value);
-    let lbl = t(s.label);
-    let note = s.note ? `<div style="font-size:.7rem;margin-top:2px;opacity:.7">${t(s.note)}</div>` : '';
-    return `<div class="stat-card ${s.cls}"><div class="stat-val">${val}</div><div class="stat-label">${lbl}</div>${note}</div>`;
+  nav.innerHTML = NAV.map(n => {
+    const lbl = L(n.en, n.bg);
+    const sc = n.score ? `<span class="nav-score">${n.score}</span>` : '';
+    return `<a href="#${n.id}" onclick="closeSidebar()"><span class="nav-icon">${n.icon}</span>${lbl}${sc}</a>`;
   }).join('');
-  mc.innerHTML += `
-  <div class="section" id="seo">
-    <div class="section-header" onclick="toggleSection(this)">
-      <h2><span class="sec-num">10</span>${t(T.sections[9].title)}</h2>
-      <div class="section-toggle">\u25BC</div>
+}
+
+function render() {
+  document.getElementById('headerTitle').innerHTML = L(
+    'Marketing Audit Report <span>bagira.bg</span>',
+    'Маркетинг Одит Доклад <span>bagira.bg</span>'
+  );
+  document.getElementById('sbSub').textContent = L('Marketing Audit', 'Маркетинг Одит');
+  buildNav();
+
+  const mc = document.getElementById('mc');
+  let h = '';
+
+  // ============ HERO SCORE ============
+  const dashOff = 502 - (502 * 26 / 100);
+  h += `
+  <div class="hero-score" id="overview">
+    <div class="score-ring">
+      <svg viewBox="0 0 180 180"><circle class="ring-bg" cx="90" cy="90" r="80"/><circle class="ring-fg" cx="90" cy="90" r="80" style="stroke-dashoffset:${dashOff}"/></svg>
+      <div class="ring-text"><div class="ring-val">26</div><div class="ring-sub">${L('out of 100','от 100')}</div></div>
     </div>
-    <div class="section-body"><div class="stat-grid">${seoCards}</div></div>
+    <div class="hero-info">
+      <div class="grade-badge">F</div>
+      <h3>${L('БАГИРА — Technical Hypermarket Marketing Audit','БАГИРА — Одит на Маркетинга на Технически Хипермаркет')}</h3>
+      <p>${L(
+        'Bagira has an exceptional physical foundation — 30+ years in business, 50,000+ products, 2,000 sqm hypermarket, 32,000+ Facebook followers — but a critically underdeveloped digital presence. The score of 26/100 reflects not a weak business, but a massive gap between the brand\'s real potential and its online execution.',
+        'БАГИРА е бизнес с изключителен физически фундамент — 30+ години на пазара, 50 000+ продукта, 2000 кв.м. хипермаркет, 32 000+ Facebook последователи — но с критично недоразвито дигитално присъствие. Оценката от 26/100 отразява не слаб бизнес, а огромна пропаст между реалния потенциал на бранда и неговата онлайн реализация.'
+      )}</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="hs-val">30+</div><div class="hs-label">${L('Years','Години')}</div></div>
+        <div class="hero-stat"><div class="hs-val">50K+</div><div class="hs-label">${L('Products','Продукти')}</div></div>
+        <div class="hero-stat"><div class="hs-val">32K+</div><div class="hs-label">${L('FB Followers','FB Последователи')}</div></div>
+        <div class="hero-stat"><div class="hs-val">2,000</div><div class="hs-label">${L('sqm Store','кв.м. Магазин')}</div></div>
+      </div>
+    </div>
   </div>`;
 
-  // 11. Funnel
-  const funnelColors = ['#27ae60','#2ecc71','#f39c12','#e74c3c'];
-  let funnelSteps = T.funnelSteps.map((f,i) => `
-    <div class="funnel-step" style="background:${funnelColors[i]};width:${f.w}%;min-width:200px">
-      ${t(f.label)}<small>~${f.pct}%</small>
+  // ============ 1. EXECUTIVE & SCORES ============
+  h += sec('overview-detail', '&#9733;', L('Score Breakdown & Executive Summary','Разбивка на Оценките и Резюме'), '', false, `
+    <div class="callout success"><strong>${L('Key Opportunity:','Ключова Възможност:')}</strong> ${L(
+      'No competitor in the Bulgarian hardware market does effective content marketing. Bagira has a unique first-mover advantage with the right strategy.',
+      'Нито един конкурент в българския хардуерен пазар не прави ефективен контент маркетинг. БАГИРА има уникална възможност да заеме позицията на дигитален лидер с правилната стратегия.'
+    )}</div>
+    <div class="callout"><strong>${L('Revenue Potential:','Потенциал за Приходи:')}</strong> ${L(
+      'Full implementation can increase online revenue 3-4x within 6 months — from ~6,000 lv/month to 25,000-45,000 lv/month. Annual potential: +220,000-465,000 lv.',
+      'Пълната имплементация може да увеличи онлайн приходите 3-4 пъти в рамките на 6 месеца — от ~6 000 лв/месец до 25 000-45 000 лв/месец. Годишен потенциал: +220 000-465 000 лв.'
+    )}</div>
+    <div class="subsection"><h3>${L('Category Scores','Оценки по Категории')}</h3>
+    ${scoreBar(L('Content & Messaging','Съдържание и Комуникация'), 14, 25, L('Zero content — site is a catalog without copy, brand voice, or educational content','Нулево съдържание — сайтът е каталог без копи, бранд глас или образователно съдържание'))}
+    ${scoreBar(L('Conversion Optimization','Оптимизация на Конверсията'), 25, 20, L('Mandatory registration, hidden shipping costs, no reviews or trust signals','Задължителна регистрация, скрити разходи за доставка, липса на ревюта и trust signals'))}
+    ${scoreBar(L('SEO & Discoverability','SEO и Откритност'), 38, 20, L('Missing H1, meta descriptions, canonical tags; good robots.txt and sitemap','Липсват H1, мета описания, канонични тагове; добра robots.txt и sitemap структура'))}
+    ${scoreBar(L('Competitive Positioning','Конкурентно Позициониране'), 30, 15, L('Strong locally but digitally behind Praktiker, Mr.Bricolage and online specialists','Силно локално присъствие, но дигитално изостава от Praktiker, Mr.Bricolage и онлайн специалисти'))}
+    ${scoreBar(L('Brand & Trust','Марка и Доверие'), 25, 10, L('30-year history invisible online; no reviews, testimonials or brand story','30-годишна история е невидима онлайн; няма ревюта, тестимониали или бранд история'))}
+    ${scoreBar(L('Growth & Strategy','Растеж и Стратегия'), 20, 10, L('No email marketing, no loyalty program, no content strategy, minimal ads','Няма имейл маркетинг, няма лоялност програма, няма контент стратегия, минимални реклами'))}
     </div>
-  `).join('');
-  mc.innerHTML += `
-  <div class="section" id="funnel">
-    <div class="section-header" onclick="toggleSection(this)">
-      <h2><span class="sec-num">11</span>${t(T.sections[10].title)}</h2>
-      <div class="section-toggle">\u25BC</div>
+    <div class="subsection"><h3>${L('Quick Wins (This Week)','Бързи Победи (Тази Седмица)')}</h3>
+    <div class="card-grid">
+      ${qw(1, L('Add Guest Checkout','Добавете Гост Чекаут'), L('Allow purchase without registration — email only','Позволете покупка без регистрация — само с имейл'), '+15-25% conversion', 'green')}
+      ${qw(2, L('Show Shipping in Cart','Покажете Доставката в Количката'), L('Shipping calculator directly in the cart page','Калкулатор за доставка директно в cart страницата'), '+10-15% orders', 'green')}
+      ${qw(3, L('Add H1 Tags to All Pages','Добавете H1 Тагове на Всички Страници'), L('Keyword-optimized H1 headings on homepage, categories, products','Keyword-оптимизирани H1 заглавия на начална, категории, продукти'), '+10-20% SEO', 'blue')}
+      ${qw(4, L('Write Meta Descriptions','Напишете Мета Описания'), L('Unique, compelling meta descriptions for top 20 pages','Уникални мета описания за топ 20 страници'), '+20-35% CTR', 'blue')}
+      ${qw(5, L('Add Trust Bar on Homepage','Добавете Trust Bar'), L('"30+ years | 50,000 products | Delivery 1-5 days | Secure payment"','"30+ години | 50 000 продукта | Доставка 1-5 дни | Сигурно плащане"'), '+5-10% trust', 'orange')}
+      ${qw(6, L('Add Canonical Tags','Добавете Канонични Тагове'), L('Self-referencing canonical tags on every page template','Self-referencing canonical tags на всяка страница'), L('Better indexing','Подобрено индексиране'), 'blue')}
+      ${qw(7, L('Brand Partner Logos','Лога на Бранд Партньори'), L('"Official partner of: Bosch | Makita | DeWalt | Einhell | Gardena"','"Официален партньор на: Bosch | Makita | DeWalt | Einhell | Gardena"'), '+10-15% trust', 'orange')}
+    </div></div>
+  `);
+
+  // ============ 2. SEO AUDIT ============
+  h += sec('seo', '&#128270;', L('SEO Audit','SEO Одит'), '38/100', false, `
+    <div class="stat-grid" style="margin-bottom:20px">
+      <div class="stat-card"><div class="sv ${txtCls(38)}">38/100</div><div class="sl">${L('SEO Score','SEO Оценка')}</div></div>
+      <div class="stat-card"><div class="sv text-red">0</div><div class="sl">${L('H1 Tags','H1 Тагове')}</div></div>
+      <div class="stat-card"><div class="sv text-red">0</div><div class="sl">${L('Meta Descriptions','Мета Описания')}</div></div>
+      <div class="stat-card"><div class="sv text-green">14</div><div class="sl">${L('Sub-Sitemaps','Под-Карти')}</div></div>
+      <div class="stat-card"><div class="sv text-red">3/10</div><div class="sl">E-E-A-T</div></div>
+    </div>
+    <div class="subsection"><h3>${L('What Works','Какво Работи')}</h3>
+    <ul class="check-list">
+      <li><span class="icon-pass">&#10003;</span> ${L('robots.txt properly configured','robots.txt е правилно конфигуриран')}</li>
+      <li><span class="icon-pass">&#10003;</span> ${L('Sitemap index with 14 sub-sitemaps','Sitemap index с 14 sub-sitemaps')}</li>
+      <li><span class="icon-pass">&#10003;</span> ${L('Google Analytics & GTM installed','Google Analytics и GTM инсталирани')}</li>
+      <li><span class="icon-pass">&#10003;</span> ${L('HTTPS active','HTTPS активен')}</li>
+      <li><span class="icon-pass">&#10003;</span> ${L('LocalBusiness schema present','LocalBusiness schema присъства')}</li>
+    </ul></div>
+    <div class="subsection"><h3>${L('What Doesn\'t Work','Какво Не Работи')}</h3>
+    <ul class="check-list">
+      <li><span class="icon-fail">&#10007;</span> ${L('No H1 tags on any page','Няма H1 тагове')}</li>
+      <li><span class="icon-fail">&#10007;</span> ${L('No meta descriptions','Няма мета описания')}</li>
+      <li><span class="icon-fail">&#10007;</span> ${L('No canonical tags','Няма канонични тагове')}</li>
+      <li><span class="icon-fail">&#10007;</span> ${L('No breadcrumb navigation','Няма breadcrumb навигация')}</li>
+      <li><span class="icon-fail">&#10007;</span> ${L('Mixed Cyrillic/Latin URLs','Смесени Cyrillic/Latin URL-и')}</li>
+      <li><span class="icon-fail">&#10007;</span> ${L('No alt text on images','Няма alt текст на изображения')}</li>
+      <li><span class="icon-fail">&#10007;</span> ${L('No Product schema on product pages','Няма Product schema на продуктови страници')}</li>
+      <li><span class="icon-fail">&#10007;</span> ${L('Sitemap without lastmod dates','Sitemap без lastmod дати')}</li>
+    </ul></div>
+    <div class="subsection"><h3>${L('Title Tag','Title Tag')}</h3>
+    <p style="font-size:.85rem;color:var(--text-secondary);margin-bottom:8px"><strong>${L('Current:','Текущо:')}</strong> "Технически хипермаркет - БАГИРА - електронен магазин | Bagira"</p>
+    <p style="font-size:.85rem;color:var(--text-secondary)"><strong>${L('Recommended:','Препоръчано:')}</strong> "Технически Хипермаркет БАГИРА Стара Загора | Машини, Инструменти, Строителство"</p>
+    </div>
+    <div class="subsection"><h3>${L('Content Gap Analysis','Анализ на Липсващо Съдържание')}</h3>
+    <div class="resp-table"><table>
+      <thead><tr><th>${L('Missing Topic','Липсваща Тема')}</th><th>${L('Priority','Приоритет')}</th><th>${L('Type','Тип')}</th></tr></thead>
+      <tbody>
+        <tr><td>${L('Buying guides ("How to choose a drill")','Ръководства за покупка ("Как да изберем бормашина")')}</td><td><span class="badge badge-red">${L('Critical','Критичен')}</span></td><td>Blog/Guide</td></tr>
+        <tr><td>${L('Product comparison articles','Статии за сравнение на продукти')}</td><td><span class="badge badge-red">${L('Critical','Критичен')}</span></td><td>Blog</td></tr>
+        <tr><td>${L('Category descriptions (all pages)','Описания на категории (всички)')}</td><td><span class="badge badge-red">${L('Critical','Критичен')}</span></td><td>${L('On-page','На страницата')}</td></tr>
+        <tr><td>${L('FAQ section','FAQ секция')}</td><td><span class="badge badge-orange">${L('High','Висок')}</span></td><td>FAQ</td></tr>
+        <tr><td>${L('Customer reviews & testimonials','Клиентски отзиви и тестимониали')}</td><td><span class="badge badge-red">${L('Critical','Критичен')}</span></td><td>UGC</td></tr>
+      </tbody>
+    </table></div></div>
+  `);
+
+  // ============ 3. SOCIAL MEDIA ============
+  h += sec('social', '&#128197;', L('Social Media','Социални Медии'), '25/100', false, `
+    <div class="stat-grid" style="margin-bottom:20px">
+      <div class="stat-card"><div class="sv text-orange">45/100</div><div class="sl">Facebook</div></div>
+      <div class="stat-card"><div class="sv text-red">5/100</div><div class="sl">Instagram</div></div>
+      <div class="stat-card"><div class="sv text-red">0/100</div><div class="sl">YouTube</div></div>
+      <div class="stat-card"><div class="sv text-red">0/100</div><div class="sl">TikTok</div></div>
+    </div>
+    <div class="resp-table"><table>
+      <thead><tr><th>${L('Platform','Платформа')}</th><th>${L('Followers','Последователи')}</th><th>${L('Status','Статус')}</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Facebook</strong></td><td>~32,384</td><td>${L('Active, primary channel — needs content diversification','Активен, основен канал — нужда от разнообразяване на съдържанието')}</td></tr>
+        <tr><td><strong>Instagram</strong></td><td>~106</td><td><span class="badge badge-red">${L('DORMANT — 2 posts, needs immediate action','НЕАКТИВЕН — 2 поста, нужно е незабавно действие')}</span></td></tr>
+        <tr><td><strong>YouTube</strong></td><td>0</td><td>${L('Non-existent — massive missed opportunity','Несъществуващ — огромна пропусната възможност')}</td></tr>
+        <tr><td><strong>TikTok</strong></td><td>0</td><td>${L('Non-existent — consider for Q3 2026','Несъществуващ — да се обмисли за Q3 2026')}</td></tr>
+      </tbody>
+    </table></div>
+    <div class="subsection"><h3>${L('Content Pillars (Recommended)','Стълбове на Съдържанието (Препоръчани)')}</h3>
+    <div class="card-grid">
+      ${qw('35%', L('Expert Tips','Майстор Съвети'), L('How-to guides, tool comparisons, buying advice','Ръководства, сравнения на инструменти, съвети за покупка'), L('Educational','Образователен'), 'blue')}
+      ${qw('25%', L('Product in Action','Продукт в Действие'), L('Product demos, unboxings, before/after results','Продуктови демонстрации, before/after резултати'), L('Demonstration','Демонстрация'), 'green')}
+      ${qw('15%', L('Seasonal Focus','Сезонен Фокус'), L('Spring garden prep, summer projects, winter heating','Пролетна градина, летни проекти, зимно отопление'), L('Timely','Навременен'), 'orange')}
+      ${qw('15%', L('Behind the Scenes','Зад Кулисите'), L('Store tours, staff expertise, warehouse insights','Обиколки на магазина, експертиза на персонала'), L('Trust','Доверие'), 'orange')}
+      ${qw('10%', L('Deals & Offers','Промоции и Оферти'), L('Sales, bundles, new arrivals','Разпродажби, комплекти, нови постъпления'), L('Promotional','Промоционален'), 'green')}
+    </div></div>
+    <div class="subsection"><h3>${L('Instagram 30-Day Growth Plan','Instagram 30-дневен План за Растеж')}</h3>
+    <ul class="check-list">
+      <li><span class="icon-warn">&#9679;</span> ${L('Post minimum 4 times/week (carousel + Reel mix)','Публикувайте минимум 4 пъти/седмица (carousel + Reel mix)')}</li>
+      <li><span class="icon-warn">&#9679;</span> ${L('Use Reels aggressively — algorithm favors them for discovery','Използвайте Reels агресивно — алгоритъмът ги предпочита')}</li>
+      <li><span class="icon-warn">&#9679;</span> ${L('Cross-promote: Share every Instagram post to Facebook Stories','Cross-promote: Споделяйте всеки Instagram пост във Facebook Stories')}</li>
+      <li><span class="icon-warn">&#9679;</span> ${L('Target: 500 followers by Month 1, 2,000 by Month 3','Цел: 500 последователи за Месец 1, 2,000 за Месец 3')}</li>
+      <li><span class="icon-warn">&#9679;</span> ${L('Branded hashtag: #БагираМайстор on ALL posts','Branded hashtag: #БагираМайстор на ВСИЧКИ постове')}</li>
+    </ul></div>
+  `);
+
+  // ============ 4. COMPETITORS ============
+  h += sec('competitors', '&#127919;', L('Competitor Analysis','Анализ на Конкуренцията'), L('Weak-Moderate','Слаба-Умерена'), false, `
+    <div class="callout success"><strong>${L('Key Opportunity:','Ключова Възможност:')}</strong> ${L(
+      'NO competitor in the Bulgarian hardware market does content marketing well. This is the single biggest opportunity for БАГИРА — first-mover advantage is available.',
+      'НИКОЙ конкурент в българския хардуерен пазар не прави контент маркетинг добре. Това е най-голямата възможност за БАГИРА — first-mover advantage.'
+    )}</div>
+    <div class="resp-table"><table>
+      <thead><tr><th>${L('Competitor','Конкурент')}</th><th>${L('Type','Тип')}</th><th>${L('Stores','Магазини')}</th><th>${L('Products','Продукти')}</th><th>${L('Online','Онлайн')}</th><th>${L('Threat','Заплаха')}</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Praktiker</strong></td><td>${L('Chain hypermarket','Верига хипермаркети')}</td><td>16</td><td>30,000+</td><td>${L('Strong','Силно')}</td><td><span class="badge badge-red">${L('HIGH','ВИСОКА')}</span></td></tr>
+        <tr><td><strong>Mr.Bricolage</strong></td><td>${L('International chain','Международна верига')}</td><td>11</td><td>25,000+</td><td>${L('Strong + TikTok','Силно + TikTok')}</td><td><span class="badge badge-orange">${L('MEDIUM','СРЕДНА')}</span></td></tr>
+        <tr><td><strong>TopInstrumenti</strong></td><td>${L('Online specialist','Онлайн специалист')}</td><td>0</td><td>10,000+</td><td>${L('Very strong','Много силно')}</td><td><span class="badge badge-orange">${L('MED-HIGH','СРЕДНА-ВИСОКА')}</span></td></tr>
+        <tr><td><strong>Mashini.bg</strong></td><td>${L('Online specialist','Онлайн специалист')}</td><td>0</td><td>20,000+</td><td>${L('Strong + aggressive prices','Силно + агресивни цени')}</td><td><span class="badge badge-orange">${L('MEDIUM','СРЕДНА')}</span></td></tr>
+      </tbody>
+    </table></div>
+    <div class="subsection"><h3>${L('Feature Comparison','Сравнение по Показатели')}</h3>
+    <div class="resp-table"><table>
+      <thead><tr><th>${L('Factor','Показател')}</th><th>БАГИРА</th><th>Praktiker</th><th>Mr.Bricolage</th><th>TopInstr.</th></tr></thead>
+      <tbody>
+        <tr><td>${L('Headline Clarity','Яснота на Заглавие')}</td><td class="text-red">1/10</td><td>5/10</td><td>5/10</td><td>4/10</td></tr>
+        <tr><td>${L('Trust Signals','Сигнали за Доверие')}</td><td class="text-red">2/10</td><td>6/10</td><td>5/10</td><td>7/10</td></tr>
+        <tr><td>${L('Content Depth','Дълбочина на Съдържание')}</td><td class="text-red">0/10</td><td>2/10</td><td>3/10</td><td>1/10</td></tr>
+        <tr><td>${L('E-commerce UX','E-commerce UX')}</td><td class="text-red">3/10</td><td>7/10</td><td>6/10</td><td>7/10</td></tr>
+        <tr><td>${L('Local Presence','Местно Присъствие')}</td><td class="text-green">9/10</td><td>7/10</td><td>0/10</td><td>0/10</td></tr>
+        <tr><td>${L('Product Range','Асортимент')}</td><td class="text-green">9/10</td><td>7/10</td><td>6/10</td><td>5/10</td></tr>
+        <tr><td>${L('Expert Advice','Експертен Съвет')}</td><td class="text-green">9/10</td><td>4/10</td><td>4/10</td><td>2/10</td></tr>
+      </tbody>
+    </table></div></div>
+    <div class="subsection"><h3>${L('SWOT Summary','SWOT Обобщение')}</h3>
+    <div class="card-grid">
+      ${qw('S', L('Strengths','Силни Страни'), L('30+ years, 50K products, 2000sqm store, expert staff, 32K FB followers','30+ години, 50K продукта, 2000кв.м., експертен персонал, 32K FB последователи'), '', 'green')}
+      ${qw('W', L('Weaknesses','Слаби Страни'), L('Single location, weak e-commerce, zero content, dormant Instagram, weak SEO','Едно местоположение, слаб e-commerce, нулево съдържание, неактивен Instagram, слабо SEO'), '', 'orange')}
+      ${qw('O', L('Opportunities','Възможности'), L('First-mover in content, local SEO dominance, omnichannel experience, video content','Първи в контент маркетинга, локално SEO доминиране, omnichannel опит, видео'), '', 'blue')}
+      ${qw('T', L('Threats','Заплахи'), L('Praktiker expansion, online specialists\' UX, price pressure, consumer shift to online','Разширяване на Praktiker, UX на онлайн специалисти, ценови натиск, онлайн тенденция'), '', 'orange')}
+    </div></div>
+  `);
+
+  // ============ 5. BRAND VOICE ============
+  h += sec('brand', '&#128227;', L('Brand Voice','Бранд Глас'), '2/10', true, `
+    <div class="callout danger"><strong>${L('Consistency Score: 2/10','Консистентност: 2/10')}</strong> — ${L(
+      'There is essentially no brand voice to be consistent with. Every channel uses minimum functional language. The good news: building from scratch means nothing conflicting to fix.',
+      'Няма бранд глас, с който да бъде консистентен. Всеки канал използва минимален функционален език. Добрата новина: изграждането от нулата означава, че няма конфликтни неща за поправяне.'
+    )}</div>
+    <div class="subsection"><h3>${L('Voice Dimensions','Измерения на Гласа')}</h3>
+    ${scoreBar(L('Formal <> Casual','Формален <> Неформален'), 30, null, L('Leans formal. No conversational tone, no direct address to customer.','Клони към формалност. Няма разговорен тон, няма директно обръщение.'))}
+    ${scoreBar(L('Serious <> Playful','Сериозен <> Игрив'), 20, null, L('Almost entirely serious. No humor, wordplay, or light-hearted elements.','Почти изцяло сериозен. Без хумор или леки елементи.'))}
+    ${scoreBar(L('Technical <> Simple','Технически <> Прост'), 40, null, L('Moderately technical — specs without explanation.','Умерено технически — спецификации без обяснение.'))}
+    ${scoreBar(L('Reserved <> Bold','Сдържан <> Смел'), 20, null, L('Very reserved. No strong claims despite having genuine differentiators.','Много сдържан. Без силни твърдения въпреки реалните предимства.'))}
+    </div>
+    <div class="subsection"><h3>${L('Recommended Archetype: The Guide','Препоръчан Архетип: Водачът')}</h3>
+    <p style="font-size:.88rem;color:var(--text-secondary)">${L(
+      'Bagira should become The Guide — wise, patient, methodical, trustworthy. The brand has 30+ years of experience, expert staff, and massive product range. This experience should translate into helpful, educational communication.',
+      'БАГИРА трябва да стане Водачът — мъдър, търпелив, методичен, достоверен. Брандът има 30+ години опит, експертен персонал и масивен асортимент. Този опит трябва да се преведе в полезна, образователна комуникация.'
+    )}</p></div>
+    <div class="subsection"><h3>${L('Recommended Tagline','Препоръчан Тагланн')}</h3>
+    <p style="font-size:1.1rem;font-weight:700;color:var(--accent);margin:8px 0">"${L('The Right Tool. The Right Advice.','Правилният инструмент. Правилният съвет.')}"</p>
+    <p style="font-size:.85rem;color:var(--text-secondary)">${L('Alternative:','Алтернатива:')} "30 ${L('years to the right choice.','години до правилния избор.')}"</p>
+    </div>
+    <div class="subsection"><h3>${L('Voice Chart','Таблица на Гласа')}</h3>
+    <div class="resp-table"><table>
+      <thead><tr><th>${L('Our Voice IS','Нашият Глас Е')}</th><th>${L('Our Voice IS NOT','Нашият Глас НЕ Е')}</th></tr></thead>
+      <tbody>
+        <tr><td><strong>${L('Knowledgeable','Осведомен')}</strong> — ${L('Deep tool & home improvement knowledge','Дълбоко познаване на инструменти')}</td><td><strong>${L('Condescending','Снизходителен')}</strong> — ${L('Never talk down to beginners','Никога не говорим отгоре')}</td></tr>
+        <tr><td><strong>${L('Helpful','Полезен')}</strong> — ${L('Guide customers to the right choice','Насочваме клиентите към правилния избор')}</td><td><strong>${L('Pushy','Натрапчив')}</strong> — ${L('We recommend, not pressure','Препоръчваме, не натискаме')}</td></tr>
+        <tr><td><strong>${L('Practical','Практичен')}</strong> — ${L('Actionable, specific advice','Конкретни, приложими съвети')}</td><td><strong>${L('Vague','Неясен')}</strong> — ${L('No generic statements','Без общи твърдения')}</td></tr>
+        <tr><td><strong>${L('Warm','Топъл')}</strong> — ${L('Friendly expert at the store','Приятелски настроен експерт')}</td><td><strong>${L('Corporate','Корпоративен')}</strong> — ${L('Not a faceless chain','Не безлична верига')}</td></tr>
+      </tbody>
+    </table></div></div>
+  `);
+
+  // ============ 6. FUNNEL ANALYSIS ============
+  h += sec('funnel', '&#128202;', L('Funnel Analysis','Анализ на Фунията'), '30/100', false, `
+    <div class="stat-grid" style="margin-bottom:20px">
+      <div class="stat-card"><div class="sv text-red">30/100</div><div class="sl">${L('Funnel Health','Здраве на Фунията')}</div></div>
+      <div class="stat-card"><div class="sv text-red">0.5-1%</div><div class="sl">${L('Est. Conversion','Оценена Конверсия')}</div></div>
+      <div class="stat-card"><div class="sv text-orange">1-3%</div><div class="sl">${L('Benchmark','Бенчмарк')}</div></div>
+      <div class="stat-card"><div class="sv text-red">~6,000</div><div class="sl">${L('лв/mo Revenue','лв/мес Приход')}</div></div>
+    </div>
+    <div class="callout danger"><strong>${L('Biggest Bottleneck:','Най-Голямо Затруднение:')}</strong> ${L(
+      'Cart to Checkout — forced registration + hidden shipping. 24% of shoppers abandon when forced to create an account (Baymard Institute).',
+      'Количка до Чекаут — задължителна регистрация + скрити доставки. 24% от купувачите изоставят количката заради задължителна регистрация.'
+    )}</div>
+    <div class="subsection"><h3>${L('Funnel Steps','Стъпки на Фунията')}</h3>
+    <div class="funnel-wrap">
+      <div class="funnel-step" style="background:#3498db;width:95%;min-width:220px">${L('Homepage','Начална Страница')} <span class="fs-pct">100%</span></div>
+      <div class="funnel-arrow">&#9660;</div>
+      <div class="funnel-step" style="background:#e67e22;width:78%;min-width:220px">${L('Homepage &rarr; Category','Начална &rarr; Категория')} <span class="fs-pct">40%</span> <small>(${L('benchmark','бенчмарк')}: 55%)</small></div>
+      <div class="funnel-arrow">&#9660;</div>
+      <div class="funnel-step" style="background:#e67e22;width:62%;min-width:220px">${L('Category &rarr; Product','Категория &rarr; Продукт')} <span class="fs-pct">50%</span> <small>(${L('benchmark','бенчмарк')}: 60%)</small></div>
+      <div class="funnel-arrow">&#9660;</div>
+      <div class="funnel-step" style="background:#e74c3c;width:45%;min-width:220px">${L('Product &rarr; Cart','Продукт &rarr; Количка')} <span class="fs-pct">8%</span> <small>(${L('benchmark','бенчмарк')}: 12%)</small></div>
+      <div class="funnel-arrow">&#9660;</div>
+      <div class="funnel-step" style="background:#c0392b;width:30%;min-width:220px">${L('Cart &rarr; Checkout','Количка &rarr; Чекаут')} <span class="fs-pct">35%</span> <small>(${L('benchmark','бенчмарк')}: 55%)</small></div>
+      <div class="funnel-arrow">&#9660;</div>
+      <div class="funnel-step" style="background:#e67e22;width:20%;min-width:220px">${L('Checkout &rarr; Purchase','Чекаут &rarr; Покупка')} <span class="fs-pct">70%</span> <small>(${L('benchmark','бенчмарк')}: 80%)</small></div>
+    </div></div>
+    <div class="subsection"><h3>${L('Optimized Funnel Projection','Проекция на Оптимизирана Фуния')}</h3>
+    <div class="resp-table"><table>
+      <thead><tr><th>${L('Metric','Метрика')}</th><th>${L('Current','Текущо')}</th><th>${L('Optimized','Оптимизирано')}</th><th>${L('Change','Промяна')}</th></tr></thead>
+      <tbody>
+        <tr><td>${L('Overall Conversion','Обща Конверсия')}</td><td class="text-red">0.8%</td><td class="text-green">2.9%</td><td>+263%</td></tr>
+        <tr><td>${L('AOV','Средна Поръчка')}</td><td>100 лв</td><td>120 лв</td><td>+20%</td></tr>
+        <tr><td>${L('Monthly Revenue','Месечен Приход')}</td><td class="text-red">6,000 лв</td><td class="text-green">26,100 лв</td><td>+335%</td></tr>
+      </tbody>
+    </table></div></div>
+  `);
+
+  // ============ 7. LANDING CRO ============
+  h += sec('cro', '&#128640;', L('Landing Page CRO','CRO на Началната Страница'), '25/100', true, `
+    <div class="subsection"><h3>${L('7-Point Framework Scores','Оценки по 7-точков Framework')}</h3>
+    ${scoreBar(L('Hero Section','Геройска Секция'), 20, 25, L('No headline, no hero banner, no CTA above the fold','Няма заглавие, няма hero банер, няма CTA above the fold'))}
+    ${scoreBar(L('Value Proposition','Стойностно Предложение'), 10, 20, L('No value proposition anywhere on homepage','Няма стойностно предложение никъде на началната страница'))}
+    ${scoreBar(L('Social Proof','Социални Доказателства'), 10, 15, L('Zero testimonials, reviews, or customer counts','Нулеви тестимониали, ревюта или брой клиенти'))}
+    ${scoreBar(L('Features & Benefits','Характеристики и Предимства'), 20, 15, L('Products listed as grid without context or benefits','Продукти без контекст или предимства'))}
+    ${scoreBar(L('Objection Handling','Обработка на Възражения'), 20, 10, L('No FAQ, no guarantee messaging, hidden delivery costs','Няма FAQ, няма гаранция, скрити разходи за доставка'))}
+    ${scoreBar(L('Call-to-Action','Призив за Действие'), 30, 10, L('Generic "Buy" button — no urgency, no microcopy','Генеричен бутон "Купи" — без спешност, без микротекст'))}
+    ${scoreBar(L('Footer & Secondary','Футър и Допълнителни'), 40, 5, L('Payment logos present but missing newsletter, trust badges','Лога за плащане има, но липсва нюзлетър, trust badges'))}
+    </div>
+    <div class="subsection"><h3>${L('A/B Test Recommendations','A/B Тест Препоръки')}</h3>
+    <ul class="check-list">
+      <li><span class="icon-warn">&#9679;</span> <strong>${L('Hero Banner Addition:','Добавяне на Hero Банер:')}</strong> ${L('Expected +25-40% homepage-to-category CTR','Очакван +25-40% CTR от начална до категория')}</li>
+      <li><span class="icon-warn">&#9679;</span> <strong>${L('Guest Checkout:','Гост Чекаут:')}</strong> ${L('Expected +15-25% cart-to-purchase conversion','Очаквана +15-25% конверсия от количка до покупка')}</li>
+      <li><span class="icon-warn">&#9679;</span> <strong>${L('Trust Bar Above Fold:','Trust Bar Above Fold:')}</strong> ${L('Expected +10-15% overall conversion','Очаквана +10-15% обща конверсия')}</li>
+      <li><span class="icon-warn">&#9679;</span> <strong>${L('Product Reviews:','Продуктови Ревюта:')}</strong> ${L('Expected +15-30% add-to-cart rate','Очакван +15-30% add-to-cart rate')}</li>
+      <li><span class="icon-warn">&#9679;</span> <strong>${L('Shipping Transparency:','Прозрачност на Доставката:')}</strong> ${L('Expected +10-15% checkout completion','Очаквано +10-15% завършване на чекаут')}</li>
+    </ul></div>
+  `);
+
+  // ============ 8. CLIENT PROPOSAL ============
+  h += sec('proposal', '&#128221;', L('Client Proposal','Клиентско Предложение'), '', true, `
+    <div class="callout success">${L(
+      'A 6-month program focused on transforming online presence, increasing e-commerce sales, and building a digital community. Expected result: 3-4x increase in online revenue.',
+      '6-месечна програма, фокусирана върху трансформация на онлайн присъствието и увеличаване на e-commerce продажбите. Очакван резултат: 3-4 пъти увеличение на онлайн приходите.'
+    )}</div>
+    <div class="subsection"><h3>${L('3 Phases','3 Фази')}</h3>
+    <div class="card-grid">
+      ${qw('1', L('Phase 1: Foundations (Month 1-2)','Фаза 1: Основи (Месец 1-2)'), L('Fix critical issues: guest checkout, shipping transparency, SEO basics, hero banner, Instagram launch','Поправете критичните проблеми: гост чекаут, прозрачни доставки, SEO основи, hero банер, Instagram стартиране'), L('"Stop the Leaks"','"Спрете Течовете"'), 'green')}
+      ${qw('2', L('Phase 2: Growth (Month 3-4)','Фаза 2: Растеж (Месец 3-4)'), L('Build content engine: blog launch, buying guides, email automation, review system, YouTube','Изградете двигателя: блог, ръководства, имейл автоматизация, ревюта, YouTube'), L('"Build the Engine"','"Създайте Двигателя"'), 'blue')}
+      ${qw('3', L('Phase 3: Scale (Month 5-6)','Фаза 3: Мащабиране (Месец 5-6)'), L('Scale what works: ad campaigns, loyalty program, A/B testing, referral program','Мащабирайте работещото: реклами, лоялност програма, A/B тестове, реферална програма'), L('"Accelerate"','"Ускорете"'), 'orange')}
+    </div></div>
+    <div class="subsection"><h3>${L('Investment Packages','Инвестиционни Пакети')}</h3>
+    <div class="resp-table"><table>
+      <thead><tr><th>${L('Component','Компонент')}</th><th>&#127793; ${L('GROWTH','РАСТЕЖ')}</th><th>&#11088; ${L('ACCELERATE','УСКОРЕНИЕ')}</th><th>&#128640; ${L('DOMINATE','ДОМИНИРАНЕ')}</th></tr></thead>
+      <tbody>
+        <tr><td>SEO</td><td>${L('Technical basics','Технически основи')}</td><td>${L('Full program','Пълна програма')}</td><td>${L('Full + link building','Пълно + линк билдинг')}</td></tr>
+        <tr><td>${L('Content','Съдържание')}</td><td>${L('2 articles/mo','2 статии/мес')}</td><td>${L('4 articles/mo + 8 guides','4 статии/мес + 8 гайда')}</td><td>${L('8 articles/mo + 12 guides','8 статии/мес + 12 гайда')}</td></tr>
+        <tr><td>${L('Social Media','Социални Мрежи')}</td><td>FB + IG</td><td>FB + IG + YouTube</td><td>FB + IG + YT + TikTok</td></tr>
+        <tr><td>${L('Email','Имейл')}</td><td>${L('Basic automation','Основни автоматизации')}</td><td>${L('Full + newsletter','Пълна + нюзлетър')}</td><td>${L('Full + segmentation','Пълна + сегментация')}</td></tr>
+        <tr style="font-weight:700;font-size:.95rem"><td>${L('Monthly Investment','Месечна Инвестиция')}</td><td>2,500 лв</td><td style="color:var(--accent)">4,500 лв</td><td>8,000 лв</td></tr>
+        <tr><td>${L('6-Month Total','6-Месечно Общо')}</td><td>15,000 лв</td><td style="color:var(--accent)">27,000 лв</td><td>48,000 лв</td></tr>
+      </tbody>
+    </table></div>
+    <p style="font-size:.82rem;color:var(--text-secondary);margin-top:10px">&#11088; ${L('Recommended: ACCELERATE package — best balance of scope and ROI','Препоръчан: пакет УСКОРЕНИЕ — най-добрият баланс между обхват и ROI')}</p>
+    </div>
+    <div class="subsection"><h3>${L('ROI Projection (Conservative, Accelerate Package)','ROI Проекция (Консервативен, Пакет Ускорение)')}</h3>
+    <div class="rev-grid">
+      <div class="rev-card"><div class="rl">${L('Current Monthly Revenue','Текущ Месечен Приход')}</div><div class="rv">6,000 лв</div></div>
+      <div class="rev-card"><div class="rl">${L('Projected Month 6','Проекция Месец 6')}</div><div class="rv" style="color:#2ecc71">45,000 лв</div></div>
+      <div class="rev-card"><div class="rl">${L('6-Month ROI','6-Месечна Възвръщаемост')}</div><div class="rv">~3.8x</div></div>
+    </div></div>
+  `);
+
+  // ============ 9. COPY SUGGESTIONS ============
+  h += sec('copy', '&#9997;', L('Copy Suggestions','Копирайтинг Предложения'), '14/100', true, `
+    <div class="callout danger">${L(
+      'The website has a critical copy deficit. It functions as a product database with almost no persuasive copy. The homepage has no headline, no value proposition, no benefit statements, and no social proof.',
+      'Уебсайтът има критичен дефицит на копи. Функционира като продуктова база с почти нулево убеждаващо съдържание. Началната страница няма заглавие, стойностно предложение или социални доказателства.'
+    )}</div>
+    <div class="subsection"><h3>${L('Copy Score Breakdown','Разбивка на Копирайтинг Оценка')}</h3>
+    ${scoreBar(L('Clarity','Яснота'), 30, null, L('No clear message about what Bagira offers','Няма ясно послание какво предлага Багира'))}
+    ${scoreBar(L('Persuasion','Убеждение'), 10, null, L('Zero persuasive elements — no benefits, no urgency','Нулеви убеждаващи елементи — без предимства, без спешност'))}
+    ${scoreBar(L('Specificity','Конкретност'), 20, null, L('"50,000 products" and "30 years" never mentioned on site','"50 000 продукта" и "30 години" никога не се споменават на сайта'))}
+    ${scoreBar(L('Emotion','Емоция'), 10, null, L('No emotional copy — no connection to customer\'s project','Без емоционален текст — без връзка с проекта на клиента'))}
+    ${scoreBar(L('Action','Действие'), 10, null, L('Only CTA is generic "Buy" on product cards','Единствен CTA е генеричен "Купи" на продуктови карти'))}
+    </div>
+    <div class="subsection"><h3>${L('Top Headline Recommendations','Топ Препоръки за Заглавие')}</h3>
+    <div class="resp-table"><table>
+      <thead><tr><th>#</th><th>${L('Headline','Заглавие')}</th><th>${L('Effectiveness','Ефективност')}</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><strong>50 000 Продукта. 30 Години Опит. Вашият Следващ Проект Започва Тук.</strong></td><td>9/10</td></tr>
+        <tr><td>2</td><td><strong>Правилният Инструмент за Всяка Задача — С Експертен Съвет на Място</strong></td><td>9/10</td></tr>
+        <tr><td>3</td><td><strong>Всичко за Дома и Професията. Пазарувайте с Доверие от 1993 г.</strong></td><td>8/10</td></tr>
+        <tr><td>4</td><td><strong>30 Години Помагаме на Майсторите да Изберат Правилно</strong></td><td>8/10</td></tr>
+      </tbody>
+    </table></div></div>
+    <div class="subsection"><h3>${L('Before/After Examples','Преди/След Примери')}</h3>
+    <div class="card-grid">
+      ${qw('1', L('Homepage Headline','Заглавие на Началната'), L('Before: Nothing (title tag only). After: "50 000 Продукта. 30 Години Опит. Вашият Проект Започва Тук."','Преди: Нищо (само title tag). След: "50 000 Продукта. 30 Години Опит. Вашият Проект Започва Тук."'), '+20-35%', 'green')}
+      ${qw('2', L('Value Section','Секция за Стойност'), L('Before: Doesn\'t exist. After: "БАГИРА е повече от магазин. От 1993 година помагаме на майсторите..."','Преди: Не съществува. След: "БАГИРА е повече от магазин. От 1993 година помагаме..."'), '+10-15%', 'green')}
+      ${qw('3', L('Product Description','Описание на Продукт'), L('Before: "Bosch GSB 13 RE. 600W. [Buy]". After: Benefit-first copy with use cases and delivery info','Преди: "Bosch GSB 13 RE. 600W. [Купи]". След: Benefit-first копи с употреба и доставка'), '+10-20%', 'blue')}
+      ${qw('4', L('Category Intro','Въведение на Категория'), L('Before: Nothing. After: 200-300 word SEO-optimized description with buying guidance','Преди: Нищо. След: 200-300 думи SEO-оптимизирано описание с ръководство за покупка'), '+15-25% SEO', 'blue')}
+    </div></div>
+  `);
+
+  // ============ 10. AD CAMPAIGNS ============
+  h += sec('ads', '&#128176;', L('Ad Campaigns','Рекламни Кампании'), '', true, `
+    <div class="callout"><strong>${L('Critical prerequisite:','Критична предпоставка:')}</strong> ${L(
+      'Funnel fixes (guest checkout, shipping transparency, reviews) should be implemented BEFORE scaling ad spend. Sending paid traffic to a broken funnel wastes money.',
+      'Поправките на фунията (гост чекаут, прозрачни доставки, ревюта) трябва да бъдат имплементирани ПРЕДИ мащабиране на рекламния бюджет.'
+    )}</div>
+    <div class="subsection"><h3>${L('Platform Strategy','Стратегия по Платформи')}</h3>
+    <div class="resp-table"><table>
+      <thead><tr><th>${L('Platform','Платформа')}</th><th>${L('Monthly Budget','Месечен Бюджет')}</th><th>%</th><th>${L('Purpose','Цел')}</th></tr></thead>
+      <tbody>
+        <tr><td>Google Search Ads</td><td>900 лв</td><td>33%</td><td>${L('Capture active purchase intent','Уловете активно намерение за покупка')}</td></tr>
+        <tr><td>Google Shopping</td><td>600 лв</td><td>22%</td><td>${L('Product-level visibility','Видимост на ниво продукт')}</td></tr>
+        <tr><td>Meta Ads (FB+IG)</td><td>1,000 лв</td><td>37%</td><td>${L('Awareness, consideration, retargeting','Осведоменост, обмисляне, ретаргетинг')}</td></tr>
+        <tr><td>YouTube</td><td>200 лв</td><td>8%</td><td>${L('Brand awareness video ads','Видео реклами за осведоменост')}</td></tr>
+        <tr style="font-weight:700"><td>${L('Total','Общо')}</td><td>2,700 лв</td><td>100%</td><td></td></tr>
+      </tbody>
+    </table></div></div>
+    <div class="subsection"><h3>${L('3-Stage Retargeting Funnel','3-Степенна Ретаргетинг Фуния')}</h3>
+    <div class="card-grid">
+      ${qw('1', L('Awareness (40% budget)','Осведоменост (40% бюджет)'), L('Cold audience: interest-based + lookalikes. Brand video, educational carousels, seasonal content.','Студена аудитория: интереси + lookalikes. Брандово видео, образователни карусели, сезонно съдържание.'), 'CPM < 8 лв', 'blue')}
+      ${qw('2', L('Consideration (35% budget)','Обмисляне (35% бюджет)'), L('Warm audience: site visitors, video viewers, FB engaged. Product demos, expert advice, testimonials.','Топла аудитория: посетители, гледали видео, FB ангажирани. Продуктови демонстрации, съвети.'), 'CPC < 0.80 лв', 'orange')}
+      ${qw('3', L('Conversion (25% budget)','Конверсия (25% бюджет)'), L('Hot audience: cart abandoners, product viewers, past customers. Dynamic retargeting, urgency, free shipping.','Гореща аудитория: изоставили количка, гледали продукти. Динамичен ретаргетинг, спешност.'), 'ROAS > 5:1', 'green')}
+    </div></div>
+    <div class="subsection"><h3>${L('Scaling Plan','План за Мащабиране')}</h3>
+    <div class="resp-table"><table>
+      <thead><tr><th>${L('Phase','Фаза')}</th><th>${L('Monthly Budget','Месечен Бюджет')}</th><th>${L('Condition','Условие')}</th></tr></thead>
+      <tbody>
+        <tr><td>${L('Month 1-2','Месец 1-2')}</td><td>1,500 лв</td><td>${L('Test and learn phase','Тестова фаза')}</td></tr>
+        <tr><td>${L('Month 3-4','Месец 3-4')}</td><td>2,700 лв</td><td>${L('If ROAS > 3:1','Ако ROAS > 3:1')}</td></tr>
+        <tr><td>${L('Month 5-6','Месец 5-6')}</td><td>4,500 лв</td><td>${L('If ROAS > 4:1','Ако ROAS > 4:1')}</td></tr>
+        <tr><td>${L('Month 7+','Месец 7+')}</td><td>6,000+ лв</td><td>${L('If ROAS maintained','Ако ROAS се поддържа')}</td></tr>
+      </tbody>
+    </table></div></div>
+  `);
+
+  // ============ REVENUE SUMMARY ============
+  h += `
+  <div class="section" id="revenue-summary">
+    <div class="section-header" onclick="toggle(this)">
+      <h2><span class="sec-icon">&#128200;</span> ${L('Revenue Impact Summary','Обобщение на Приходния Потенциал')}</h2>
+      <div class="section-toggle">&#9660;</div>
     </div>
     <div class="section-body">
-      <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:20px">
-        <div class="stat-card bad" style="flex:1;min-width:140px"><div class="stat-val">38/100</div><div class="stat-label">${lang==='en'?'Funnel Score':'Оценка на Фунъла'}</div></div>
-        <div class="stat-card bad" style="flex:1;min-width:140px"><div class="stat-val">1-1.5%</div><div class="stat-label">${lang==='en'?'Overall Conversion':'Обща Конверсия'}</div></div>
-        <div class="stat-card warn" style="flex:1;min-width:140px"><div class="stat-val">2-4%</div><div class="stat-label">${lang==='en'?'Industry Benchmark':'Индустриален Бенчмарк'}</div></div>
+      <div class="rev-grid" style="margin-bottom:20px">
+        <div class="rev-card"><div class="rl">${L('Current Monthly Revenue','Текущ Месечен Приход')}</div><div class="rv">~6,000 лв</div></div>
+        <div class="rev-card"><div class="rl">${L('Projected Month 6','Проекция Месец 6')}</div><div class="rv" style="color:#2ecc71">~45,000 лв</div></div>
+        <div class="rev-card"><div class="rl">${L('Annual Potential','Годишен Потенциал')}</div><div class="rv" style="color:#f39c12">+220-465K лв</div></div>
       </div>
-      <div class="funnel-visual">${funnelSteps}</div>
+      <div class="resp-table"><table>
+        <thead><tr><th>${L('Recommendation','Препоръка')}</th><th>${L('Monthly Impact','Месечен Ефект')}</th><th>${L('Confidence','Увереност')}</th><th>${L('Timeline','Срок')}</th></tr></thead>
+        <tbody>
+          <tr><td>${L('Guest checkout','Гост чекаут')}</td><td>+1,500-2,500 лв</td><td><span class="badge badge-green">${L('High','Висока')}</span></td><td>1 ${L('week','седмица')}</td></tr>
+          <tr><td>${L('Transparent shipping','Прозрачна доставка')}</td><td>+800-1,200 лв</td><td><span class="badge badge-green">${L('High','Висока')}</span></td><td>1 ${L('week','седмица')}</td></tr>
+          <tr><td>${L('Hero section + value prop','Hero секция + value proposition')}</td><td>+2,000-3,500 лв</td><td><span class="badge badge-orange">${L('Medium','Средна')}</span></td><td>2 ${L('weeks','седмици')}</td></tr>
+          <tr><td>${L('Customer reviews','Ревю система')}</td><td>+1,500-3,000 лв</td><td><span class="badge badge-green">${L('High','Висока')}</span></td><td>1 ${L('month','месец')}</td></tr>
+          <tr><td>${L('SEO optimization','SEO оптимизация')}</td><td>+1,500-3,000 лв</td><td><span class="badge badge-orange">${L('Medium','Средна')}</span></td><td>2 ${L('weeks','седмици')}</td></tr>
+          <tr><td>${L('Email automation','Имейл автоматизация')}</td><td>+1,500-3,000 лв</td><td><span class="badge badge-orange">${L('Medium','Средна')}</span></td><td>1 ${L('month','месец')}</td></tr>
+          <tr><td>${L('Optimized ad campaigns','Оптимизирани рекламни кампании')}</td><td>+3,000-8,000 лв</td><td><span class="badge badge-orange">${L('Medium','Средна')}</span></td><td>2 ${L('months','месеца')}</td></tr>
+          <tr><td>${L('Content marketing (blog)','Контент маркетинг (блог)')}</td><td>+3,000-6,000 лв</td><td><span class="badge badge-orange">${L('Medium','Средна')}</span></td><td>3-6 ${L('months','месеца')}</td></tr>
+          <tr style="font-weight:700;background:#fafbfc"><td>${L('TOTAL POTENTIAL','ОБЩ ПОТЕНЦИАЛ')}</td><td>+18,300-38,700 лв/${L('mo','мес')}</td><td></td><td></td></tr>
+        </tbody>
+      </table></div>
     </div>
-  </div>`;
-
-  // 12. Reports
-  let reportItems = T.reports.map(r => `
-    <div class="report-item">
-      <div class="ri-icon">${r.icon}</div>
-      <span>${t(r.name)}</span>
-    </div>
-  `).join('');
-  mc.innerHTML += `
-  <div class="section" id="reports">
-    <div class="section-header" onclick="toggleSection(this)">
-      <h2><span class="sec-num">12</span>${t(T.sections[11].title)}</h2>
-      <div class="section-toggle">\u25BC</div>
-    </div>
-    <div class="section-body"><div class="reports-list">${reportItems}</div></div>
   </div>`;
 
   // Footer
-  mc.innerHTML += `<div class="footer">Generated by AI Marketing Suite \u2014 2026-03-18</div>`;
+  h += `<div class="footer">${L('Generated by AI Marketing Suite','Генерирано от AI Marketing Suite')} &mdash; 2026-03-18 &mdash; bagira.bg</div>`;
 
-  // Restore collapsed states
-  Object.keys(collapsedState).forEach(id => {
-    if (collapsedState[id]) {
-      const el = document.getElementById(id);
-      if (el) el.classList.add('collapsed');
-    }
-  });
+  mc.innerHTML = h;
 }
 
-const collapsedState = {};
+// Helper: section
+function sec(id, icon, title, score, collapsed, body) {
+  const scoreBadge = score ? `<span class="sec-score ${scoreColor(parseInt(score) || 0)}">${score}</span>` : '';
+  const cls = collapsed ? ' collapsed' : '';
+  return `
+  <div class="section${cls}" id="${id}">
+    <div class="section-header" onclick="toggle(this)">
+      <h2><span class="sec-icon">${icon}</span> ${title} ${scoreBadge}</h2>
+      <div class="section-toggle">&#9660;</div>
+    </div>
+    <div class="section-body">${body}</div>
+  </div>`;
+}
 
-function toggleSection(header) {
-  const section = header.parentElement;
-  section.classList.toggle('collapsed');
-  collapsedState[section.id] = section.classList.contains('collapsed');
+// Helper: score bar
+function scoreBar(label, score, weight, finding) {
+  const w = weight ? `<span style="font-size:.72rem;color:var(--text-secondary);margin-left:6px">(${weight}%)</span>` : '';
+  return `
+  <div class="score-row">
+    <div class="sr-label">${label}${w}</div>
+    <div class="sr-bar-wrap"><div class="sr-bar ${barCls(score)}" style="width:${score}%"></div></div>
+    <div class="sr-val ${txtCls(score)}">${score}/100</div>
+  </div>
+  ${finding ? `<div style="padding:0 0 6px;font-size:.8rem;color:var(--text-secondary);border-bottom:1px solid var(--content-bg);margin-bottom:2px">${finding}</div>` : ''}`;
+}
+
+// Helper: quick win card
+function qw(num, title, desc, impact, impactCls) {
+  const impactHtml = impact ? `<div class="rc-impact ${impactCls}">${impact}</div>` : '';
+  return `
+  <div class="rec-card">
+    <div class="rc-num">${num}</div>
+    <h4>${title}</h4>
+    <p>${desc}</p>
+    ${impactHtml}
+  </div>`;
+}
+
+function toggle(header) {
+  header.parentElement.classList.toggle('collapsed');
 }
 
 function setLang(l) {
@@ -710,7 +795,7 @@ function setLang(l) {
   document.getElementById('btnEN').classList.toggle('active', l === 'en');
   document.getElementById('btnBG').classList.toggle('active', l === 'bg');
   document.documentElement.lang = l === 'bg' ? 'bg' : 'en';
-  renderAll();
+  render();
 }
 
 function toggleSidebar() {
@@ -725,17 +810,15 @@ function closeSidebar() {
 // Active nav on scroll
 window.addEventListener('scroll', () => {
   const links = document.querySelectorAll('.sidebar-nav a');
-  const sections = T.sections.map(s => document.getElementById(s.id)).filter(Boolean);
   let current = '';
-  sections.forEach(s => {
-    if (s.getBoundingClientRect().top < 150) current = s.id;
+  NAV.forEach(n => {
+    const el = document.getElementById(n.id);
+    if (el && el.getBoundingClientRect().top < 150) current = n.id;
   });
-  links.forEach(a => {
-    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
-  });
+  links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
 });
 
-renderAll();
+render();
 </script>
 </body>
 </html>
