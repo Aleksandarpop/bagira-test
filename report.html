@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BAGIRA Marketing Audit Report</title>
+<style>
+:root {
+  --accent: #e31e24;
+  --accent-dark: #b8181d;
+  --sidebar-bg: #1a1a2e;
+  --sidebar-hover: #16213e;
+  --content-bg: #f5f6fa;
+  --card-bg: #ffffff;
+  --text-primary: #2c3e50;
+  --text-secondary: #6c757d;
+  --border: #e0e0e0;
+  --success: #27ae60;
+  --warning: #f39c12;
+  --danger: #e74c3c;
+  --sidebar-w: 260px;
+  --header-h: 64px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--content-bg); color: var(--text-primary); line-height: 1.6; }
+
+/* Sidebar */
+.sidebar {
+  position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh;
+  background: var(--sidebar-bg); color: #fff; z-index: 1000;
+  display: flex; flex-direction: column; transition: transform .3s ease;
+  overflow-y: auto;
+}
+.sidebar-brand { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,.1); }
+.sidebar-brand h2 { font-size: 1.3rem; font-weight: 700; letter-spacing: 2px; color: var(--accent); }
+.sidebar-brand small { color: rgba(255,255,255,.5); font-size: .75rem; }
+.sidebar-nav { flex: 1; padding: 10px 0; }
+.sidebar-nav a {
+  display: block; padding: 10px 20px; color: rgba(255,255,255,.7);
+  text-decoration: none; font-size: .85rem; transition: all .2s;
+  border-left: 3px solid transparent;
+}
+.sidebar-nav a:hover, .sidebar-nav a.active {
+  background: var(--sidebar-hover); color: #fff; border-left-color: var(--accent);
+}
+.sidebar-nav a .nav-num { color: var(--accent); font-weight: 700; margin-right: 8px; font-size: .75rem; }
+
+/* Hamburger */
+.hamburger {
+  display: none; position: fixed; top: 14px; left: 14px; z-index: 1100;
+  background: var(--sidebar-bg); border: none; color: #fff; width: 38px; height: 38px;
+  border-radius: 6px; cursor: pointer; font-size: 1.3rem; align-items: center; justify-content: center;
+}
+.overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 999;
+}
+
+/* Header */
+.main-header {
+  position: fixed; top: 0; left: var(--sidebar-w); right: 0; height: var(--header-h);
+  background: #fff; border-bottom: 1px solid var(--border); z-index: 900;
+  display: flex; align-items: center; justify-content: space-between; padding: 0 30px;
+}
+.main-header h1 { font-size: 1.15rem; color: var(--text-primary); }
+.lang-toggle {
+  display: flex; align-items: center; gap: 0;
+  background: var(--content-bg); border-radius: 20px; overflow: hidden; border: 1px solid var(--border);
+}
+.lang-btn {
+  padding: 6px 16px; border: none; background: transparent; cursor: pointer;
+  font-weight: 600; font-size: .85rem; color: var(--text-secondary); transition: all .2s;
+}
+.lang-btn.active { background: var(--accent); color: #fff; }
+
+/* Content */
+.content { margin-left: var(--sidebar-w); margin-top: var(--header-h); padding: 30px; max-width: 1200px; }
+
+/* Sections */
+.section { background: var(--card-bg); border-radius: 12px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,.06); overflow: hidden; }
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 24px; cursor: pointer; user-select: none; border-bottom: 1px solid var(--border);
+  transition: background .2s;
+}
+.section-header:hover { background: var(--content-bg); }
+.section-header h2 { font-size: 1.1rem; display: flex; align-items: center; gap: 10px; }
+.section-header h2 .sec-num {
+  background: var(--accent); color: #fff; width: 28px; height: 28px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center; font-size: .8rem; flex-shrink: 0;
+}
+.section-toggle {
+  width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center; transition: transform .3s;
+  font-size: .8rem; color: var(--text-secondary); flex-shrink: 0;
+}
+.section.collapsed .section-toggle { transform: rotate(-90deg); }
+.section-body { padding: 24px; transition: max-height .4s ease, opacity .3s ease; overflow: hidden; }
+.section.collapsed .section-body { max-height: 0 !important; padding: 0 24px; opacity: 0; }
+
+/* Overall Score */
+.overall-score-wrap { display: flex; align-items: center; gap: 40px; flex-wrap: wrap; padding: 20px 0; }
+.score-circle {
+  width: 160px; height: 160px; border-radius: 50%; position: relative;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.score-circle .score-val { font-size: 2.5rem; font-weight: 800; color: var(--text-primary); }
+.score-circle .score-label { font-size: .85rem; color: var(--text-secondary); }
+.score-circle-inner { text-align: center; }
+.score-meta { flex: 1; min-width: 200px; }
+.score-meta .grade { font-size: 3rem; font-weight: 800; color: var(--danger); }
+.score-meta p { color: var(--text-secondary); margin-top: 4px; }
+
+/* Score gauge rows */
+.score-row { display: flex; align-items: center; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--content-bg); }
+.score-row:last-child { border-bottom: none; }
+.score-row .sr-label { width: 220px; font-weight: 600; font-size: .9rem; flex-shrink: 0; }
+.score-row .sr-bar-wrap { flex: 1; height: 10px; background: var(--content-bg); border-radius: 5px; overflow: hidden; min-width: 100px; }
+.score-row .sr-bar { height: 100%; border-radius: 5px; transition: width .6s ease; }
+.score-row .sr-val { width: 60px; text-align: right; font-weight: 700; font-size: .9rem; flex-shrink: 0; }
+.score-row .sr-finding { color: var(--text-secondary); font-size: .83rem; margin-top: 2px; }
+
+/* Color helpers */
+.bar-red { background: var(--danger); }
+.bar-orange { background: var(--warning); }
+.bar-green { background: var(--success); }
+.text-red { color: var(--danger); }
+.text-orange { color: var(--warning); }
+.text-green { color: var(--success); }
+
+/* Recommendation cards */
+.rec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+.rec-card {
+  border: 1px solid var(--border); border-radius: 10px; padding: 18px;
+  transition: box-shadow .2s; position: relative; overflow: hidden;
+}
+.rec-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+.rec-card .rec-num {
+  position: absolute; top: 0; right: 0; background: var(--accent); color: #fff;
+  width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+  border-radius: 0 10px 0 10px; font-weight: 700; font-size: .85rem;
+}
+.rec-card h4 { font-size: .95rem; margin-bottom: 6px; padding-right: 36px; }
+.rec-card .rec-impact {
+  display: inline-block; background: #e8f5e9; color: var(--success); padding: 2px 10px;
+  border-radius: 12px; font-size: .8rem; font-weight: 600; margin-top: 6px;
+}
+
+/* Tables */
+.resp-table { width: 100%; overflow-x: auto; }
+.resp-table table { width: 100%; border-collapse: collapse; font-size: .88rem; min-width: 500px; }
+.resp-table th {
+  background: var(--sidebar-bg); color: #fff; padding: 12px 14px; text-align: left;
+  font-weight: 600; font-size: .82rem; text-transform: uppercase; letter-spacing: .5px;
+}
+.resp-table td { padding: 11px 14px; border-bottom: 1px solid var(--content-bg); }
+.resp-table tr:hover td { background: #fafbfc; }
+
+/* Mini gauge (inline) */
+.mini-gauge {
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.mini-gauge .mg-bar { width: 60px; height: 6px; background: var(--content-bg); border-radius: 3px; overflow: hidden; }
+.mini-gauge .mg-fill { height: 100%; border-radius: 3px; }
+
+/* SEO / Funnel grid */
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
+.stat-card {
+  background: var(--content-bg); border-radius: 10px; padding: 16px; text-align: center;
+}
+.stat-card .stat-val { font-size: 1.5rem; font-weight: 800; }
+.stat-card .stat-label { font-size: .8rem; color: var(--text-secondary); margin-top: 4px; }
+.stat-card.good .stat-val { color: var(--success); }
+.stat-card.warn .stat-val { color: var(--warning); }
+.stat-card.bad .stat-val { color: var(--danger); }
+
+/* Funnel visual */
+.funnel-visual { display: flex; flex-direction: column; align-items: center; gap: 0; padding: 20px 0; }
+.funnel-step {
+  padding: 12px 20px; text-align: center; color: #fff; font-weight: 600; font-size: .85rem;
+  position: relative; border-radius: 4px; margin-bottom: 4px;
+}
+.funnel-step small { display: block; font-weight: 400; opacity: .85; font-size: .75rem; }
+
+/* Reports list */
+.reports-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.report-item {
+  display: flex; align-items: center; gap: 12px; padding: 14px 16px;
+  background: var(--content-bg); border-radius: 10px; font-weight: 500; font-size: .9rem;
+}
+.report-item .ri-icon {
+  width: 36px; height: 36px; border-radius: 8px; background: var(--accent);
+  color: #fff; display: flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0;
+}
+
+/* Revenue summary */
+.rev-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 10px; }
+.rev-card {
+  background: linear-gradient(135deg, var(--sidebar-bg), #16213e); color: #fff;
+  border-radius: 12px; padding: 24px; text-align: center;
+}
+.rev-card .rev-val { font-size: 1.6rem; font-weight: 800; margin: 8px 0; }
+.rev-card .rev-label { font-size: .82rem; opacity: .8; }
+
+/* Footer */
+.footer {
+  text-align: center; padding: 20px; color: var(--text-secondary); font-size: .82rem;
+  border-top: 1px solid var(--border); margin-top: 10px;
+}
+
+/* Executive summary */
+.exec-text { font-size: .95rem; line-height: 1.8; color: var(--text-secondary); }
+.exec-text strong { color: var(--text-primary); }
+
+/* Print */
+@media print {
+  .sidebar, .hamburger, .overlay, .main-header, .lang-toggle, .section-toggle { display: none !important; }
+  .content { margin: 0 !important; padding: 10px !important; }
+  .section { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+  .section.collapsed .section-body { max-height: none !important; padding: 24px !important; opacity: 1 !important; }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  :root { --sidebar-w: 220px; }
+}
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); width: 280px; }
+  .sidebar.open { transform: translateX(0); }
+  .overlay.open { display: block; }
+  .hamburger { display: flex; }
+  .main-header { left: 0; padding: 0 14px 0 60px; }
+  .main-header h1 { font-size: .95rem; }
+  .content { margin-left: 0; padding: 20px 14px; }
+  .overall-score-wrap { flex-direction: column; align-items: flex-start; gap: 20px; }
+  .score-row { flex-wrap: wrap; }
+  .score-row .sr-label { width: 100%; }
+  .rec-grid { grid-template-columns: 1fr; }
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .rev-cards { grid-template-columns: 1fr; }
+}
+
+/* Scrollbar */
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- Hamburger -->
+<button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">&#9776;</button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<!-- Sidebar -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <h2>&#1041;&#1040;&#1043;&#1048;&#1056;&#1040;</h2>
+    <small>Technical Hypermarket</small>
+  </div>
+  <div class="sidebar-nav" id="sidebarNav"></div>
+</nav>
+
+<!-- Header -->
+<header class="main-header">
+  <h1 id="headerTitle">Marketing Audit Report</h1>
+  <div class="lang-toggle">
+    <button class="lang-btn active" id="btnEN" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" id="btnBG" onclick="setLang('bg')">BG</button>
+  </div>
+</header>
+
+<!-- Content -->
+<main class="content" id="mainContent"></main>
+
+<script>
+const T = {
+  headerTitle: { en: 'Marketing Audit Report', bg: 'Маркетинг Одит Доклад' },
+  sections: [
+    {
+      id: 'overview',
+      title: { en: 'Overview & Overall Score', bg: 'Преглед и Обща Оценка' },
+    },
+    {
+      id: 'executive',
+      title: { en: 'Executive Summary', bg: 'Резюме' },
+    },
+    {
+      id: 'scores',
+      title: { en: 'Score Breakdown', bg: 'Разбивка на Оценките' },
+    },
+    {
+      id: 'quickwins',
+      title: { en: 'Quick Wins', bg: 'Бързи Победи' },
+    },
+    {
+      id: 'strategic',
+      title: { en: 'Strategic Recommendations', bg: 'Стратегически Препоръки' },
+    },
+    {
+      id: 'longterm',
+      title: { en: 'Long-Term Initiatives', bg: 'Дългосрочни Инициативи' },
+    },
+    {
+      id: 'competitors',
+      title: { en: 'Competitor Overview', bg: 'Преглед на Конкуренцията' },
+    },
+    {
+      id: 'social',
+      title: { en: 'Social Media Overview', bg: 'Преглед на Социалните Медии' },
+    },
+    {
+      id: 'revenue',
+      title: { en: 'Revenue Impact Summary', bg: 'Обобщение на Приходите' },
+    },
+    {
+      id: 'seo',
+      title: { en: 'SEO Health Highlights', bg: 'SEO Здраве' },
+    },
+    {
+      id: 'funnel',
+      title: { en: 'Funnel Health', bg: 'Здраве на Фунъла' },
+    },
+    {
+      id: 'reports',
+      title: { en: 'Reports Generated', bg: 'Генерирани Доклади' },
+    },
+  ],
+  executive: {
+    en: `Bagira is an established technical hypermarket in Stara Zagora with real competitive advantages — physical store in a region without national chain competition, <strong>32,000 Facebook followers</strong>, broad product catalog, and DSK financing. Despite these strengths, digital marketing execution is critically weak with an overall score of <strong>35/100</strong>. The most critical issue is opaque delivery pricing — customers outside Stara Zagora cannot see shipping costs until staff calls them. This alone likely causes loss of approximately <strong>5,000-7,000\u20ac/month</strong>. The second critical gap is complete lack of content marketing. Implementing all recommendations could add <strong>20,000-50,000\u20ac/month</strong> within 6 months.`,
+    bg: `\u0411\u0410\u0413\u0418\u0420\u0410 \u0435 \u0443\u0442\u0432\u044a\u0440\u0434\u0435\u043d \u0442\u0435\u0445\u043d\u0438\u0447\u0435\u0441\u043a\u0438 \u0445\u0438\u043f\u0435\u0440\u043c\u0430\u0440\u043a\u0435\u0442 \u0432 \u0421\u0442\u0430\u0440\u0430 \u0417\u0430\u0433\u043e\u0440\u0430 \u0441 \u0440\u0435\u0430\u043b\u043d\u0438 \u043a\u043e\u043d\u043a\u0443\u0440\u0435\u043d\u0442\u043d\u0438 \u043f\u0440\u0435\u0434\u0438\u043c\u0441\u0442\u0432\u0430 \u2014 \u0444\u0438\u0437\u0438\u0447\u0435\u0441\u043a\u0438 \u043c\u0430\u0433\u0430\u0437\u0438\u043d \u0432 \u0440\u0435\u0433\u0438\u043e\u043d \u0431\u0435\u0437 \u043a\u043e\u043d\u043a\u0443\u0440\u0435\u043d\u0446\u0438\u044f \u043e\u0442 \u043d\u0430\u0446\u0438\u043e\u043d\u0430\u043b\u043d\u0438 \u0432\u0435\u0440\u0438\u0433\u0438, <strong>32,000 Facebook \u043f\u043e\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u0435\u043b\u0438</strong>, \u0448\u0438\u0440\u043e\u043a \u043f\u0440\u043e\u0434\u0443\u043a\u0442\u043e\u0432 \u043a\u0430\u0442\u0430\u043b\u043e\u0433 \u0438 \u0444\u0438\u043d\u0430\u043d\u0441\u0438\u0440\u0430\u043d\u0435 \u043e\u0442 DSK. \u0412\u044a\u043f\u0440\u0435\u043a\u0438 \u0442\u0435\u0437\u0438 \u0441\u0438\u043b\u043d\u0438 \u0441\u0442\u0440\u0430\u043d\u0438, \u0434\u0438\u0433\u0438\u0442\u0430\u043b\u043d\u043e\u0442\u043e \u043c\u0430\u0440\u043a\u0435\u0442\u0438\u043d\u0433 \u0438\u0437\u043f\u044a\u043b\u043d\u0435\u043d\u0438\u0435 \u0435 \u043a\u0440\u0438\u0442\u0438\u0447\u043d\u043e \u0441\u043b\u0430\u0431\u043e \u0441 \u043e\u0431\u0449\u0430 \u043e\u0446\u0435\u043d\u043a\u0430 <strong>35/100</strong>. \u041d\u0430\u0439-\u043a\u0440\u0438\u0442\u0438\u0447\u043d\u0438\u044f\u0442 \u043f\u0440\u043e\u0431\u043b\u0435\u043c \u0435 \u043d\u0435\u043f\u0440\u043e\u0437\u0440\u0430\u0447\u043d\u043e\u0442\u043e \u0446\u0435\u043d\u043e\u043e\u0431\u0440\u0430\u0437\u0443\u0432\u0430\u043d\u0435 \u0437\u0430 \u0434\u043e\u0441\u0442\u0430\u0432\u043a\u0430 \u2014 \u043a\u043b\u0438\u0435\u043d\u0442\u0438\u0442\u0435 \u0438\u0437\u0432\u044a\u043d \u0421\u0442\u0430\u0440\u0430 \u0417\u0430\u0433\u043e\u0440\u0430 \u043d\u0435 \u043c\u043e\u0433\u0430\u0442 \u0434\u0430 \u0432\u0438\u0434\u044f\u0442 \u0446\u0435\u043d\u0430\u0442\u0430 \u0437\u0430 \u0434\u043e\u0441\u0442\u0430\u0432\u043a\u0430, \u0434\u043e\u043a\u0430\u0442\u043e \u0441\u043b\u0443\u0436\u0438\u0442\u0435\u043b \u043d\u0435 \u0441\u0435 \u043e\u0431\u0430\u0434\u0438. \u0422\u043e\u0432\u0430 \u0435\u0434\u0438\u043d\u0441\u0442\u0432\u0435\u043d\u043e \u0432\u043e\u0434\u0438 \u0434\u043e \u0437\u0430\u0433\u0443\u0431\u0430 \u043d\u0430 \u043f\u0440\u0438\u0431\u043b\u0438\u0437\u0438\u0442\u0435\u043b\u043d\u043e <strong>5,000-7,000\u20ac/\u043c\u0435\u0441\u0435\u0447\u043d\u043e</strong>. \u0412\u0442\u043e\u0440\u0438\u044f\u0442 \u043a\u0440\u0438\u0442\u0438\u0447\u0435\u043d \u043f\u0440\u043e\u043f\u0443\u0441\u043a \u0435 \u043f\u044a\u043b\u043d\u0430\u0442\u0430 \u043b\u0438\u043f\u0441\u0430 \u043d\u0430 \u0441\u044a\u0434\u044a\u0440\u0436\u0430\u0442\u0435\u043b\u0435\u043d \u043c\u0430\u0440\u043a\u0435\u0442\u0438\u043d\u0433. \u041f\u0440\u0438 \u043f\u044a\u043b\u043d\u043e \u0438\u0437\u043f\u044a\u043b\u043d\u0435\u043d\u0438\u0435 \u043d\u0430 \u043f\u0440\u0435\u043f\u043e\u0440\u044a\u043a\u0438\u0442\u0435, \u043e\u0447\u0430\u043a\u0432\u0430\u043d\u0438\u044f\u0442 \u0434\u043e\u043f\u044a\u043b\u043d\u0438\u0442\u0435\u043b\u0435\u043d \u043f\u0440\u0438\u0445\u043e\u0434 \u0435 <strong>20,000-50,000\u20ac/\u043c\u0435\u0441\u0435\u0447\u043d\u043e</strong> \u0432 \u0440\u0430\u043c\u043a\u0438\u0442\u0435 \u043d\u0430 6 \u043c\u0435\u0441\u0435\u0446\u0430.`
+  },
+  scoreBreakdown: [
+    { label: { en: 'Content & Messaging', bg: '\u0421\u044a\u0434\u044a\u0440\u0436\u0430\u043d\u0438\u0435 \u0438 \u041a\u043e\u043c\u0443\u043d\u0438\u043a\u0430\u0446\u0438\u044f' }, score: 24, finding: { en: 'No headline, no value prop, no blog', bg: '\u0411\u0435\u0437 \u0437\u0430\u0433\u043b\u0430\u0432\u0438\u0435, \u0431\u0435\u0437 \u0441\u0442\u043e\u0439\u043d\u043e\u0441\u0442\u043d\u043e \u043f\u0440\u0435\u0434\u043b\u043e\u0436\u0435\u043d\u0438\u0435, \u0431\u0435\u0437 \u0431\u043b\u043e\u0433' } },
+    { label: { en: 'Conversion Optimization', bg: '\u041e\u043f\u0442\u0438\u043c\u0438\u0437\u0430\u0446\u0438\u044f \u043d\u0430 \u041a\u043e\u043d\u0432\u0435\u0440\u0441\u0438\u044f\u0442\u0430' }, score: 34, finding: { en: 'Hidden shipping costs, broken funnel', bg: '\u0421\u043a\u0440\u0438\u0442\u0438 \u0440\u0430\u0437\u0445\u043e\u0434\u0438 \u0437\u0430 \u0434\u043e\u0441\u0442\u0430\u0432\u043a\u0430, \u0441\u0447\u0443\u043f\u0435\u043d \u0444\u0443\u043d\u044a\u043b' } },
+    { label: { en: 'SEO & Discoverability', bg: 'SEO \u0438 \u041e\u0442\u043a\u0440\u0438\u0432\u0430\u0435\u043c\u043e\u0441\u0442' }, score: 52, finding: { en: 'Good tech base, empty H1, no content', bg: '\u0414\u043e\u0431\u0440\u0430 \u0442\u0435\u0445\u043d\u0438\u0447\u0435\u0441\u043a\u0430 \u0431\u0430\u0437\u0430, \u043f\u0440\u0430\u0437\u0435\u043d H1, \u0431\u0435\u0437 \u0441\u044a\u0434\u044a\u0440\u0436\u0430\u043d\u0438\u0435' } },
+    { label: { en: 'Competitive Positioning', bg: '\u041a\u043e\u043d\u043a\u0443\u0440\u0435\u043d\u0442\u043d\u043e \u041f\u043e\u0437\u0438\u0446\u0438\u043e\u043d\u0438\u0440\u0430\u043d\u0435' }, score: 40, finding: { en: 'Local advantage but no messaging', bg: '\u041c\u0435\u0441\u0442\u043d\u043e \u043f\u0440\u0435\u0434\u0438\u043c\u0441\u0442\u0432\u043e, \u043d\u043e \u0431\u0435\u0437 \u043a\u043e\u043c\u0443\u043d\u0438\u043a\u0430\u0446\u0438\u044f' } },
+    { label: { en: 'Brand & Trust', bg: '\u041c\u0430\u0440\u043a\u0430 \u0438 \u0414\u043e\u0432\u0435\u0440\u0438\u0435' }, score: 30, finding: { en: '60% FB recommendation, no site reviews', bg: '60% FB \u043f\u0440\u0435\u043f\u043e\u0440\u044a\u043a\u0430, \u0431\u0435\u0437 \u043e\u0442\u0437\u0438\u0432\u0438 \u043d\u0430 \u0441\u0430\u0439\u0442\u0430' } },
+    { label: { en: 'Growth & Strategy', bg: '\u0420\u0430\u0441\u0442\u0435\u0436 \u0438 \u0421\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u044f' }, score: 35, finding: { en: 'Infrastructure exists, no strategy', bg: '\u0418\u043d\u0444\u0440\u0430\u0441\u0442\u0440\u0443\u043a\u0442\u0443\u0440\u0430\u0442\u0430 \u0441\u044a\u0449\u0435\u0441\u0442\u0432\u0443\u0432\u0430, \u0431\u0435\u0437 \u0441\u0442\u0440\u0430\u0442\u0435\u0433\u0438\u044f' } },
+  ],
+  quickWins: [
+    { title: { en: 'Make Shipping Transparent', bg: '\u041f\u0440\u043e\u0437\u0440\u0430\u0447\u043d\u0438 \u0440\u0430\u0437\u0445\u043e\u0434\u0438 \u0437\u0430 \u0434\u043e\u0441\u0442\u0430\u0432\u043a\u0430' }, impact: '+5,000-7,000\u20ac/mo' },
+    { title: { en: 'Add Trust Bar', bg: '\u0414\u043e\u0431\u0430\u0432\u0435\u0442\u0435 \u043b\u0435\u043d\u0442\u0430 \u0437\u0430 \u0434\u043e\u0432\u0435\u0440\u0438\u0435' }, impact: '+10-15% engagement' },
+    { title: { en: 'Add Homepage H1', bg: '\u0414\u043e\u0431\u0430\u0432\u0435\u0442\u0435 H1 \u0437\u0430\u0433\u043b\u0430\u0432\u0438\u0435' }, impact: '+5% SEO' },
+    { title: { en: 'Add Buy Button Microcopy', bg: '\u041c\u0438\u043a\u0440\u043e\u0442\u0435\u043a\u0441\u0442 \u043f\u043e\u0434 \u0431\u0443\u0442\u043e\u043d\u0430 \u201e\u041a\u0443\u043f\u0438\u201c' }, impact: '+10-15% add-to-cart' },
+    { title: { en: 'Rewrite Meta Description', bg: '\u041f\u0440\u0435\u043d\u0430\u043f\u0438\u0448\u0435\u0442\u0435 \u043c\u0435\u0442\u0430 \u043e\u043f\u0438\u0441\u0430\u043d\u0438\u0435' }, impact: '+10-20% CTR' },
+    { title: { en: 'Update Instagram Bio', bg: '\u041e\u0431\u043d\u043e\u0432\u0435\u0442\u0435 Instagram \u0431\u0438\u043e' }, impact: '+50% follow rate' },
+    { title: { en: 'Remove Fake Star Ratings', bg: '\u041f\u0440\u0435\u043c\u0430\u0445\u043d\u0435\u0442\u0435 \u0444\u0430\u043b\u0448\u0438\u0432\u0438\u0442\u0435 \u0437\u0432\u0435\u0437\u0434\u0438' }, impact: { en: 'Prevents trust erosion', bg: '\u041f\u0440\u0435\u0434\u043e\u0442\u0432\u0440\u0430\u0442\u044f\u0432\u0430 \u0435\u0440\u043e\u0437\u0438\u044f \u043d\u0430 \u0434\u043e\u0432\u0435\u0440\u0438\u0435\u0442\u043e' } },
+  ],
+  strategic: [
+    { title: { en: 'Customer Review System', bg: '\u0421\u0438\u0441\u0442\u0435\u043c\u0430 \u0437\u0430 \u043a\u043b\u0438\u0435\u043d\u0442\u0441\u043a\u0438 \u043e\u0442\u0437\u0438\u0432\u0438' }, impact: '+3,000-5,000\u20ac/mo' },
+    { title: { en: 'Category Descriptions', bg: '\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u044f \u043d\u0430 \u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u0438\u0442\u0435' }, impact: '+2,000-4,000\u20ac/mo' },
+    { title: { en: 'Social Media Calendar', bg: '\u041a\u0430\u043b\u0435\u043d\u0434\u0430\u0440 \u0437\u0430 \u0441\u043e\u0446\u0438\u0430\u043b\u043d\u0438 \u043c\u0435\u0434\u0438\u0438' }, impact: '+1,000-2,000\u20ac/mo' },
+    { title: { en: 'Homepage Hero Section', bg: '\u0413\u0435\u0440\u043e\u0439 \u0441\u0435\u043a\u0446\u0438\u044f \u043d\u0430 \u043d\u0430\u0447\u0430\u043b\u043d\u0430\u0442\u0430 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0430' }, impact: '+2,000-3,000\u20ac/mo' },
+    { title: { en: 'Email Marketing Automation', bg: '\u0410\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0437\u0430\u0446\u0438\u044f \u043d\u0430 \u0438\u043c\u0435\u0439\u043b \u043c\u0430\u0440\u043a\u0435\u0442\u0438\u043d\u0433' }, impact: '+2,000-4,000\u20ac/mo' },
+    { title: { en: 'DSK Financing Prominence', bg: '\u0412\u0438\u0434\u0438\u043c\u043e\u0441\u0442 \u043d\u0430 DSK \u0444\u0438\u043d\u0430\u043d\u0441\u0438\u0440\u0430\u043d\u0435' }, impact: '+1,500-3,000\u20ac/mo' },
+  ],
+  longterm: [
+    { title: { en: 'Content Hub "\u041e\u0422 \u041c\u0410\u0419\u0421\u0422\u041e\u0420\u0410"', bg: '\u0421\u044a\u0434\u044a\u0440\u0436\u0430\u0442\u0435\u043b\u0435\u043d \u0445\u044a\u0431 "\u041e\u0422 \u041c\u0410\u0419\u0421\u0422\u041e\u0420\u0410"' }, impact: '+7,000-14,000\u20ac/mo' },
+    { title: { en: 'Automate Checkout', bg: '\u0410\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0437\u0438\u0440\u0430\u0439 \u0447\u0435\u043a\u0430\u0443\u0442' }, impact: '+5,000-10,000\u20ac/mo' },
+    { title: { en: 'Local SEO Domination', bg: '\u0414\u043e\u043c\u0438\u043d\u0430\u0446\u0438\u044f \u0432 \u043b\u043e\u043a\u0430\u043b\u043d\u043e SEO' }, impact: '+3,000-5,000\u20ac/mo' },
+    { title: { en: 'Paid Advertising Launch', bg: '\u0421\u0442\u0430\u0440\u0442\u0438\u0440\u0430\u043d\u0435 \u043d\u0430 \u043f\u043b\u0430\u0442\u0435\u043d\u0430 \u0440\u0435\u043a\u043b\u0430\u043c\u0430' }, impact: '+3,000-6,000\u20ac/mo' },
+    { title: { en: 'Reputation Management', bg: '\u0423\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u043d\u0430 \u0440\u0435\u043f\u0443\u0442\u0430\u0446\u0438\u044f\u0442\u0430' }, impact: '+5-10% conversion' },
+  ],
+  competitors: [
+    { name: 'Bash Maistora', products: '53,000+', stores: '0', online: { en: 'Strong', bg: '\u0421\u0438\u043b\u0435\u043d' }, edge: { en: 'Physical store', bg: '\u0424\u0438\u0437\u0438\u0447\u0435\u0441\u043a\u0438 \u043c\u0430\u0433\u0430\u0437\u0438\u043d' } },
+    { name: 'Mr. Bricolage', products: '15,000+', stores: '11', online: { en: 'Full omni', bg: '\u041f\u044a\u043b\u043d\u043e \u043e\u043c\u043d\u0438' }, edge: { en: 'No Stara Zagora store', bg: '\u041d\u044f\u043c\u0430 \u043c\u0430\u0433\u0430\u0437\u0438\u043d \u0432 \u0421\u0442. \u0417\u0430\u0433\u043e\u0440\u0430' } },
+    { name: 'Praktiker', products: '20,000+', stores: '10+', online: { en: 'App+financing', bg: '\u0410\u043f\u043b\u0438\u043a\u0430\u0446\u0438\u044f+\u0444\u0438\u043d\u0430\u043d\u0441\u0438\u0440\u0430\u043d\u0435' }, edge: { en: 'Local expertise', bg: '\u041c\u0435\u0441\u0442\u043d\u0430 \u0435\u043a\u0441\u043f\u0435\u0440\u0442\u0438\u0437\u0430' } },
+    { name: 'CMX.bg', products: '10,000+', stores: '0', online: 'YouTube', edge: { en: 'Consumer focus', bg: '\u0424\u043e\u043a\u0443\u0441 \u0432\u044a\u0440\u0445\u0443 \u043f\u043e\u0442\u0440\u0435\u0431\u0438\u0442\u0435\u043b\u044f' } },
+    { name: 'Mana.bg', products: '2,000+', stores: '0', online: { en: 'Modern UX', bg: '\u041c\u043e\u0434\u0435\u0440\u0435\u043d UX' }, edge: { en: 'Broader range', bg: '\u041f\u043e-\u0448\u0438\u0440\u043e\u043a\u0430 \u0433\u0430\u043c\u0430' } },
+  ],
+  social: [
+    { platform: 'Facebook', followers: '32,000', status: { en: 'Active but low engagement (0.27%)', bg: '\u0410\u043a\u0442\u0438\u0432\u0435\u043d, \u043d\u043e \u043d\u0438\u0441\u043a\u0430 \u0430\u043d\u0433\u0430\u0436\u0438\u0440\u0430\u043d\u043e\u0441\u0442 (0.27%)' } },
+    { platform: 'Instagram', followers: '120', status: { en: 'Neglected \u2014 needs restart', bg: '\u0417\u0430\u043d\u0435\u043c\u0430\u0440\u0435\u043d \u2014 \u043d\u0443\u0436\u0435\u043d \u0440\u0435\u0441\u0442\u0430\u0440\u0442' } },
+    { platform: 'TikTok', followers: '215', status: { en: 'Early stage', bg: '\u041d\u0430\u0447\u0430\u043b\u0435\u043d \u0435\u0442\u0430\u043f' } },
+  ],
+  seo: [
+    { label: 'SEO Score', value: '52/100', cls: 'warn' },
+    { label: 'TTFB', value: '109ms', cls: 'good', note: { en: 'Good', bg: '\u0414\u043e\u0431\u0440\u043e' } },
+    { label: 'HTTPS', value: { en: 'Yes', bg: '\u0414\u0430' }, cls: 'good' },
+    { label: 'H1', value: { en: 'Empty', bg: '\u041f\u0440\u0430\u0437\u0435\u043d' }, cls: 'bad', note: { en: 'Critical', bg: '\u041a\u0440\u0438\u0442\u0438\u0447\u043d\u043e' } },
+    { label: { en: 'Cyrillic URLs', bg: '\u041a\u0438\u0440\u0438\u043b\u0438\u0446\u0430 URL' }, value: { en: 'Yes (Problem)', bg: '\u0414\u0430 (\u041f\u0440\u043e\u0431\u043b\u0435\u043c)' }, cls: 'bad' },
+    { label: 'WebP Images', value: '0', cls: 'bad' },
+    { label: 'Schema', value: 'Product + BreadcrumbList', cls: 'good' },
+    { label: { en: 'Blog', bg: '\u0411\u043b\u043e\u0433' }, value: { en: 'None', bg: '\u041d\u044f\u043c\u0430' }, cls: 'bad' },
+  ],
+  funnelSteps: [
+    { label: { en: 'Homepage \u2192 Category', bg: '\u041d\u0430\u0447\u0430\u043b\u043d\u0430 \u2192 \u041a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u044f' }, pct: 40, w: 100 },
+    { label: { en: 'Category \u2192 Product', bg: '\u041a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u044f \u2192 \u041f\u0440\u043e\u0434\u0443\u043a\u0442' }, pct: 50, w: 80 },
+    { label: { en: 'Product \u2192 Cart', bg: '\u041f\u0440\u043e\u0434\u0443\u043a\u0442 \u2192 \u041a\u043e\u0448\u043d\u0438\u0446\u0430' }, pct: '3-5', w: 50 },
+    { label: { en: 'Cart \u2192 Purchase', bg: '\u041a\u043e\u0448\u043d\u0438\u0446\u0430 \u2192 \u041f\u043e\u043a\u0443\u043f\u043a\u0430' }, pct: '40-50', w: 35 },
+  ],
+  reports: [
+    { name: 'SEO Audit', icon: '\u{1F50D}' },
+    { name: { en: 'Social Calendar', bg: '\u0421\u043e\u0446\u0438\u0430\u043b\u0435\u043d \u041a\u0430\u043b\u0435\u043d\u0434\u0430\u0440' }, icon: '\u{1F4C5}' },
+    { name: { en: 'Competitor Report', bg: '\u0414\u043e\u043a\u043b\u0430\u0434 \u0437\u0430 \u041a\u043e\u043d\u043a\u0443\u0440\u0435\u043d\u0446\u0438\u044f\u0442\u0430' }, icon: '\u{1F3AF}' },
+    { name: { en: 'Brand Voice', bg: '\u0413\u043b\u0430\u0441 \u043d\u0430 \u041c\u0430\u0440\u043a\u0430\u0442\u0430' }, icon: '\u{1F4E3}' },
+    { name: { en: 'Funnel Analysis', bg: '\u0410\u043d\u0430\u043b\u0438\u0437 \u043d\u0430 \u0424\u0443\u043d\u044a\u043b\u0430' }, icon: '\u{1F4CA}' },
+    { name: 'Landing CRO', icon: '\u{1F680}' },
+    { name: { en: 'Client Proposal', bg: '\u041a\u043b\u0438\u0435\u043d\u0442\u0441\u043a\u043e \u041f\u0440\u0435\u0434\u043b\u043e\u0436\u0435\u043d\u0438\u0435' }, icon: '\u{1F4DD}' },
+    { name: { en: 'Copy Suggestions', bg: '\u041f\u0440\u0435\u0434\u043b\u043e\u0436\u0435\u043d\u0438\u044f \u0437\u0430 \u041a\u043e\u043f\u0438' }, icon: '\u270D\uFE0F' },
+    { name: { en: 'Ad Campaigns', bg: '\u0420\u0435\u043a\u043b\u0430\u043c\u043d\u0438 \u041a\u0430\u043c\u043f\u0430\u043d\u0438\u0438' }, icon: '\u{1F4B0}' },
+    { name: { en: 'Marketing Audit', bg: '\u041c\u0430\u0440\u043a\u0435\u0442\u0438\u043d\u0433 \u041e\u0434\u0438\u0442' }, icon: '\u{1F4CB}' },
+  ],
+};
+
+let lang = 'en';
+
+function t(obj) {
+  if (typeof obj === 'string') return obj;
+  return obj[lang] || obj.en || '';
+}
+
+function barColor(score) {
+  if (score >= 60) return 'bar-green';
+  if (score >= 40) return 'bar-orange';
+  return 'bar-red';
+}
+function textColor(score) {
+  if (score >= 60) return 'text-green';
+  if (score >= 40) return 'text-orange';
+  return 'text-red';
+}
+
+function renderAll() {
+  document.getElementById('headerTitle').textContent = t(T.headerTitle);
+  const mc = document.getElementById('mainContent');
+  mc.innerHTML = '';
+
+  // Build nav
+  const nav = document.getElementById('sidebarNav');
+  nav.innerHTML = '';
+  T.sections.forEach((s, i) => {
+    const a = document.createElement('a');
+    a.href = '#' + s.id;
+    a.innerHTML = `<span class="nav-num">${String(i+1).padStart(2,'0')}</span>${t(s.title)}`;
+    a.onclick = () => { closeSidebar(); };
+    nav.appendChild(a);
+  });
+
+  // 1. Overview
+  mc.innerHTML += `
+  <div class="section" id="overview">
+    <div class="section-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">1</span>${t(T.sections[0].title)}</h2>
+      <div class="section-toggle">\u25BC</div>
+    </div>
+    <div class="section-body">
+      <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:18px;font-size:.88rem;color:var(--text-secondary)">
+        <span><strong>${lang==='en'?'Business':'Бизнес'}:</strong> \u0411\u0410\u0413\u0418\u0420\u0410 \u2014 Technical Hypermarket</span>
+        <span><strong>URL:</strong> <a href="https://www.bagira.bg/" target="_blank" style="color:var(--accent)">bagira.bg</a></span>
+        <span><strong>${lang==='en'?'Date':'Дата'}:</strong> 2026-03-18</span>
+      </div>
+      <div class="overall-score-wrap">
+        <div class="score-circle" style="background:conic-gradient(var(--danger) 0% 35%, var(--content-bg) 35% 100%)">
+          <div style="width:130px;height:130px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;">
+            <div class="score-circle-inner">
+              <div class="score-val">35</div>
+              <div class="score-label">${lang==='en'?'out of':'от'} 100</div>
+            </div>
+          </div>
+        </div>
+        <div class="score-meta">
+          <div style="font-size:.85rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px">${lang==='en'?'Overall Grade':'Обща Оценка'}</div>
+          <div class="grade">F</div>
+          <p>${lang==='en'?'Critical improvements needed across all marketing channels':'Критични подобрения са необходими по всички маркетинг канали'}</p>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  // 2. Executive Summary
+  mc.innerHTML += `
+  <div class="section" id="executive">
+    <div class="section-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">2</span>${t(T.sections[1].title)}</h2>
+      <div class="section-toggle">\u25BC</div>
+    </div>
+    <div class="section-body">
+      <div class="exec-text">${t(T.executive)}</div>
+    </div>
+  </div>`;
+
+  // 3. Score Breakdown
+  let scoreRows = T.scoreBreakdown.map(s => `
+    <div class="score-row">
+      <div class="sr-label">${t(s.label)}</div>
+      <div class="sr-bar-wrap"><div class="sr-bar ${barColor(s.score)}" style="width:${s.score}%"></div></div>
+      <div class="sr-val ${textColor(s.score)}">${s.score}/100</div>
+    </div>
+    <div style="padding:0 0 8px 0;font-size:.82rem;color:var(--text-secondary);border-bottom:1px solid var(--content-bg);margin-bottom:4px">${t(s.finding)}</div>
+  `).join('');
+  mc.innerHTML += `
+  <div class="section" id="scores">
+    <div class="section-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">3</span>${t(T.sections[2].title)}</h2>
+      <div class="section-toggle">\u25BC</div>
+    </div>
+    <div class="section-body">${scoreRows}</div>
+  </div>`;
+
+  // 4. Quick Wins
+  let qwCards = T.quickWins.map((q,i) => `
+    <div class="rec-card">
+      <div class="rec-num">${i+1}</div>
+      <h4>${t(q.title)}</h4>
+      <div class="rec-impact">${typeof q.impact === 'object' ? t(q.impact) : q.impact}</div>
+    </div>
+  `).join('');
+  mc.innerHTML += `
+  <div class="section" id="quickwins">
+    <div class="section-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">4</span>${t(T.sections[3].title)}</h2>
+      <div class="section-toggle">\u25BC</div>
+    </div>
+    <div class="section-body"><div class="rec-grid">${qwCards}</div></div>
+  </div>`;
+
+  // 5. Strategic
+  let stCards = T.strategic.map((s,i) => `
+    <div class="rec-card">
+      <div class="rec-num">${i+1}</div>
+      <h4>${t(s.title)}</h4>
+      <div class="rec-impact">${t(s.impact)}</div>
+    </div>
+  `).join('');
+  mc.innerHTML += `
+  <div class="section" id="strategic">
+    <div class="section-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">5</span>${t(T.sections[4].title)}</h2>
+      <div class="section-toggle">\u25BC</div>
+    </div>
+    <div class="section-body"><div class="rec-grid">${stCards}</div></div>
+  </div>`;
+
+  // 6. Long-Term
+  let ltCards = T.longterm.map((l,i) => `
+    <div class="rec-card">
+      <div class="rec-num">${i+1}</div>
+      <h4>${t(l.title)}</h4>
+      <div class="rec-impact">${t(l.impact)}</div>
+    </div>
+  `).join('');
+  mc.innerHTML += `
+  <div class="section" id="longterm">
+    <div class="section-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">6</span>${t(T.sections[5].title)}</h2>
+      <div class="section-toggle">\u25BC</div>
+    </div>
+    <div class="section-body"><div class="rec-grid">${ltCards}</div></div>
+  </div>`;
+
+  // 7. Competitors
+  let compRows = T.competitors.map(c => `
+    <tr>
+      <td><strong>${c.name}</strong></td>
+      <td>${c.products}</td>
+      <td>${c.stores}</td>
+      <td>${t(c.online)}</td>
+      <td>${t(c.edge)}</td>
+    </tr>
+  `).join('');
+  mc.innerHTML += `
+  <div class="section" id="competitors">
+    <div class="section-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">7</span>${t(T.sections[6].title)}</h2>
+      <div class="section-toggle">\u25BC</div>
+    </div>
+    <div class="section-body">
+      <div class="resp-table"><table>
+        <thead><tr>
+          <th>${lang==='en'?'Competitor':'Конкурент'}</th>
+          <th>${lang==='en'?'Products':'Продукти'}</th>
+          <th>${lang==='en'?'Stores':'Магазини'}</th>
+          <th>Online</th>
+          <th>${lang==='en'?'Bagira\'s Edge':'Предимство на Багира'}</th>
+        </tr></thead>
+        <tbody>${compRows}</tbody>
+      </table></div>
+    </div>
+  </div>`;
+
+  // 8. Social
+  let socialRows = T.social.map(s => `
+    <tr>
+      <td><strong>${s.platform}</strong></td>
+      <td>${s.followers}</td>
+      <td>${t(s.status)}</td>
+    </tr>
+  `).join('');
+  mc.innerHTML += `
+  <div class="section" id="social">
+    <div class="section-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">8</span>${t(T.sections[7].title)}</h2>
+      <div class="section-toggle">\u25BC</div>
+    </div>
+    <div class="section-body">
+      <div class="resp-table"><table>
+        <thead><tr>
+          <th>${lang==='en'?'Platform':'Платформа'}</th>
+          <th>${lang==='en'?'Followers':'Последователи'}</th>
+          <th>${lang==='en'?'Status':'Статус'}</th>
+        </tr></thead>
+        <tbody>${socialRows}</tbody>
+      </table></div>
+    </div>
+  </div>`;
+
+  // 9. Revenue
+  mc.innerHTML += `
+  <div class="section" id="revenue">
+    <div class="section-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">9</span>${t(T.sections[8].title)}</h2>
+      <div class="section-toggle">\u25BC</div>
+    </div>
+    <div class="section-body">
+      <div class="rev-cards">
+        <div class="rev-card">
+          <div class="rev-label">${lang==='en'?'Total Monthly Potential':'Общ Месечен Потенциал'}</div>
+          <div class="rev-val">+31,500-58,000\u20ac</div>
+        </div>
+        <div class="rev-card">
+          <div class="rev-label">${lang==='en'?'Conservative 6-Month':'Консервативен 6-Месечен'}</div>
+          <div class="rev-val">+20,000\u20ac/${lang==='en'?'mo':'\u043c\u0435\u0441'}</div>
+        </div>
+        <div class="rev-card">
+          <div class="rev-label">${lang==='en'?'Aggressive 6-Month':'Агресивен 6-Месечен'}</div>
+          <div class="rev-val">+50,000\u20ac/${lang==='en'?'mo':'\u043c\u0435\u0441'}</div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  // 10. SEO
+  let seoCards = T.seo.map(s => {
+    let val = t(s.value);
+    let lbl = t(s.label);
+    let note = s.note ? `<div style="font-size:.7rem;margin-top:2px;opacity:.7">${t(s.note)}</div>` : '';
+    return `<div class="stat-card ${s.cls}"><div class="stat-val">${val}</div><div class="stat-label">${lbl}</div>${note}</div>`;
+  }).join('');
+  mc.innerHTML += `
+  <div class="section" id="seo">
+    <div class="section-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">10</span>${t(T.sections[9].title)}</h2>
+      <div class="section-toggle">\u25BC</div>
+    </div>
+    <div class="section-body"><div class="stat-grid">${seoCards}</div></div>
+  </div>`;
+
+  // 11. Funnel
+  const funnelColors = ['#27ae60','#2ecc71','#f39c12','#e74c3c'];
+  let funnelSteps = T.funnelSteps.map((f,i) => `
+    <div class="funnel-step" style="background:${funnelColors[i]};width:${f.w}%;min-width:200px">
+      ${t(f.label)}<small>~${f.pct}%</small>
+    </div>
+  `).join('');
+  mc.innerHTML += `
+  <div class="section" id="funnel">
+    <div class="section-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">11</span>${t(T.sections[10].title)}</h2>
+      <div class="section-toggle">\u25BC</div>
+    </div>
+    <div class="section-body">
+      <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:20px">
+        <div class="stat-card bad" style="flex:1;min-width:140px"><div class="stat-val">38/100</div><div class="stat-label">${lang==='en'?'Funnel Score':'Оценка на Фунъла'}</div></div>
+        <div class="stat-card bad" style="flex:1;min-width:140px"><div class="stat-val">1-1.5%</div><div class="stat-label">${lang==='en'?'Overall Conversion':'Обща Конверсия'}</div></div>
+        <div class="stat-card warn" style="flex:1;min-width:140px"><div class="stat-val">2-4%</div><div class="stat-label">${lang==='en'?'Industry Benchmark':'Индустриален Бенчмарк'}</div></div>
+      </div>
+      <div class="funnel-visual">${funnelSteps}</div>
+    </div>
+  </div>`;
+
+  // 12. Reports
+  let reportItems = T.reports.map(r => `
+    <div class="report-item">
+      <div class="ri-icon">${r.icon}</div>
+      <span>${t(r.name)}</span>
+    </div>
+  `).join('');
+  mc.innerHTML += `
+  <div class="section" id="reports">
+    <div class="section-header" onclick="toggleSection(this)">
+      <h2><span class="sec-num">12</span>${t(T.sections[11].title)}</h2>
+      <div class="section-toggle">\u25BC</div>
+    </div>
+    <div class="section-body"><div class="reports-list">${reportItems}</div></div>
+  </div>`;
+
+  // Footer
+  mc.innerHTML += `<div class="footer">Generated by AI Marketing Suite \u2014 2026-03-18</div>`;
+
+  // Restore collapsed states
+  Object.keys(collapsedState).forEach(id => {
+    if (collapsedState[id]) {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('collapsed');
+    }
+  });
+}
+
+const collapsedState = {};
+
+function toggleSection(header) {
+  const section = header.parentElement;
+  section.classList.toggle('collapsed');
+  collapsedState[section.id] = section.classList.contains('collapsed');
+}
+
+function setLang(l) {
+  lang = l;
+  document.getElementById('btnEN').classList.toggle('active', l === 'en');
+  document.getElementById('btnBG').classList.toggle('active', l === 'bg');
+  document.documentElement.lang = l === 'bg' ? 'bg' : 'en';
+  renderAll();
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+// Active nav on scroll
+window.addEventListener('scroll', () => {
+  const links = document.querySelectorAll('.sidebar-nav a');
+  const sections = T.sections.map(s => document.getElementById(s.id)).filter(Boolean);
+  let current = '';
+  sections.forEach(s => {
+    if (s.getBoundingClientRect().top < 150) current = s.id;
+  });
+  links.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+});
+
+renderAll();
+</script>
+</body>
+</html>
