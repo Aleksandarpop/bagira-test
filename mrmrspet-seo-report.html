@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mr. &amp; Mrs. PET Hotel — SEO Content Audit Report</title>
+<style>
+:root {
+  --accent: #e67e22;
+  --accent-dark: #d35400;
+  --sidebar-bg: #1a1a2e;
+  --sidebar-hover: #16213e;
+  --content-bg: #f5f6fa;
+  --card-bg: #ffffff;
+  --text-primary: #2c3e50;
+  --text-secondary: #6c757d;
+  --border: #e0e0e0;
+  --success: #27ae60;
+  --warning: #f39c12;
+  --danger: #e74c3c;
+  --yellow: #f1c40f;
+  --sidebar-w: 270px;
+  --header-h: 64px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--content-bg); color: var(--text-primary); line-height: 1.6; }
+
+/* Sidebar */
+.sidebar {
+  position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh;
+  background: var(--sidebar-bg); color: #fff; z-index: 1000;
+  display: flex; flex-direction: column; transition: transform .3s ease;
+  overflow-y: auto;
+}
+.sidebar-brand { padding: 24px 20px 18px; text-align: center; border-bottom: 1px solid rgba(255,255,255,.08); }
+.sidebar-brand h2 { font-size: 1.2rem; font-weight: 800; letter-spacing: 2px; color: var(--accent); }
+.sidebar-brand small { color: rgba(255,255,255,.45); font-size: .72rem; display: block; margin-top: 4px; letter-spacing: 1px; text-transform: uppercase; }
+.sidebar-nav { flex: 1; padding: 8px 0; }
+.sidebar-nav a {
+  display: flex; align-items: center; gap: 10px; padding: 11px 20px; color: rgba(255,255,255,.6);
+  text-decoration: none; font-size: .82rem; transition: all .2s;
+  border-left: 3px solid transparent;
+}
+.sidebar-nav a:hover, .sidebar-nav a.active {
+  background: var(--sidebar-hover); color: #fff; border-left-color: var(--accent);
+}
+.sidebar-nav .nav-icon { font-size: .9rem; width: 20px; text-align: center; flex-shrink: 0; }
+.sidebar-nav .nav-score {
+  margin-left: auto; font-size: .7rem; font-weight: 700; padding: 2px 7px;
+  border-radius: 10px; background: rgba(255,255,255,.1);
+}
+
+/* Hamburger */
+.hamburger {
+  display: none; position: fixed; top: 14px; left: 14px; z-index: 1100;
+  background: var(--sidebar-bg); border: none; color: #fff; width: 40px; height: 40px;
+  border-radius: 8px; cursor: pointer; font-size: 1.4rem; align-items: center; justify-content: center;
+}
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 999; }
+
+/* Header */
+.main-header {
+  position: fixed; top: 0; left: var(--sidebar-w); right: 0; height: var(--header-h);
+  background: #fff; border-bottom: 1px solid var(--border); z-index: 900;
+  display: flex; align-items: center; justify-content: space-between; padding: 0 30px;
+}
+.main-header h1 { font-size: 1.1rem; color: var(--text-primary); }
+.main-header h1 span { color: var(--text-secondary); font-weight: 400; font-size: .9rem; margin-left: 8px; }
+.lang-toggle {
+  display: flex; align-items: center; gap: 0;
+  background: var(--content-bg); border-radius: 20px; overflow: hidden; border: 1px solid var(--border);
+}
+.lang-btn {
+  padding: 6px 18px; border: none; background: transparent; cursor: pointer;
+  font-weight: 700; font-size: .82rem; color: var(--text-secondary); transition: all .2s;
+}
+.lang-btn.active { background: var(--accent); color: #fff; }
+
+/* Content */
+.content { margin-left: var(--sidebar-w); margin-top: var(--header-h); padding: 30px; max-width: 1100px; }
+
+/* Section cards */
+.section { background: var(--card-bg); border-radius: 12px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,.05); overflow: hidden; }
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 24px; cursor: pointer; user-select: none;
+  transition: background .2s;
+}
+.section-header:hover { background: #fafbfc; }
+.section-header h2 { font-size: 1.05rem; display: flex; align-items: center; gap: 12px; }
+.section-header h2 .sec-icon { font-size: 1.1rem; }
+.section-header .sec-score {
+  font-size: .78rem; font-weight: 700; padding: 3px 10px; border-radius: 12px; margin-left: 10px;
+}
+.sec-score.red { background: #fde8e8; color: var(--danger); }
+.sec-score.orange { background: #fef3e2; color: #e67e22; }
+.sec-score.yellow { background: #fef9e7; color: #b7950b; }
+.sec-score.green { background: #e8f8ef; color: var(--success); }
+.section-toggle {
+  width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center; transition: transform .3s;
+  font-size: .7rem; color: var(--text-secondary); flex-shrink: 0;
+}
+.section.collapsed .section-toggle { transform: rotate(-90deg); }
+.section-body { padding: 24px; border-top: 1px solid var(--content-bg); }
+.section.collapsed .section-body { display: none; }
+
+/* Overall Score Hero */
+.hero-score {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  border-radius: 12px; padding: 40px; color: #fff; margin-bottom: 24px;
+  display: flex; align-items: center; gap: 40px; flex-wrap: wrap;
+}
+.score-ring { position: relative; width: 180px; height: 180px; flex-shrink: 0; }
+.score-ring svg { width: 180px; height: 180px; transform: rotate(-90deg); }
+.score-ring circle { fill: none; stroke-width: 10; }
+.score-ring .ring-bg { stroke: rgba(255,255,255,.1); }
+.score-ring .ring-fg { stroke: var(--danger); stroke-dasharray: 502; stroke-linecap: round; transition: stroke-dashoffset .8s ease; }
+.score-ring .ring-text {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.score-ring .ring-val { font-size: 3rem; font-weight: 800; line-height: 1; }
+.score-ring .ring-sub { font-size: .85rem; opacity: .7; margin-top: 4px; }
+.hero-info { flex: 1; min-width: 250px; }
+.hero-info .grade-badge {
+  display: inline-block; background: var(--danger); color: #fff;
+  font-size: 2rem; font-weight: 800; width: 52px; height: 52px;
+  border-radius: 12px; text-align: center; line-height: 52px; margin-bottom: 12px;
+}
+.hero-info h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; opacity: .95; }
+.hero-info p { font-size: .9rem; opacity: .7; line-height: 1.7; }
+.hero-stats { display: flex; gap: 24px; margin-top: 20px; flex-wrap: wrap; }
+.hero-stat { text-align: center; }
+.hero-stat .hs-val { font-size: 1.5rem; font-weight: 800; }
+.hero-stat .hs-label { font-size: .72rem; opacity: .6; text-transform: uppercase; letter-spacing: .5px; }
+
+/* Score bars */
+.score-row { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--content-bg); }
+.score-row:last-child { border-bottom: none; }
+.score-row .sr-label { width: 200px; font-weight: 600; font-size: .88rem; flex-shrink: 0; }
+.score-row .sr-bar-wrap { flex: 1; height: 8px; background: var(--content-bg); border-radius: 4px; overflow: hidden; min-width: 80px; }
+.score-row .sr-bar { height: 100%; border-radius: 4px; transition: width .8s ease; }
+.score-row .sr-val { width: 55px; text-align: right; font-weight: 700; font-size: .88rem; flex-shrink: 0; }
+.bar-red { background: var(--danger); }
+.bar-orange { background: var(--warning); }
+.bar-yellow { background: var(--yellow); }
+.bar-green { background: var(--success); }
+.text-red { color: var(--danger); }
+.text-orange { color: var(--warning); }
+.text-yellow { color: #b7950b; }
+.text-green { color: var(--success); }
+
+/* Subsection */
+.subsection { margin-top: 20px; }
+.subsection h3 { font-size: .95rem; font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--content-bg); }
+.subsection h4 { font-size: .88rem; font-weight: 700; margin: 16px 0 8px; color: var(--text-primary); }
+
+/* Cards grid */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.rec-card {
+  border: 1px solid var(--border); border-radius: 10px; padding: 18px;
+  transition: box-shadow .2s; position: relative; overflow: hidden;
+}
+.rec-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+.rec-card .rc-num {
+  position: absolute; top: 0; right: 0; background: var(--accent); color: #fff;
+  width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+  border-radius: 0 10px 0 10px; font-weight: 700; font-size: .8rem;
+}
+.rec-card h4 { font-size: .9rem; margin-bottom: 6px; padding-right: 34px; }
+.rec-card p { font-size: .82rem; color: var(--text-secondary); margin-bottom: 8px; }
+.rec-card .rc-impact {
+  display: inline-block; padding: 2px 10px; border-radius: 12px;
+  font-size: .76rem; font-weight: 700;
+}
+.rc-impact.green { background: #e8f8ef; color: var(--success); }
+.rc-impact.orange { background: #fef3e2; color: #e67e22; }
+.rc-impact.blue { background: #ebf5fb; color: #2980b9; }
+.rc-impact.red { background: #fde8e8; color: var(--danger); }
+
+/* Tables */
+.resp-table { width: 100%; overflow-x: auto; }
+.resp-table table { width: 100%; border-collapse: collapse; font-size: .85rem; min-width: 500px; }
+.resp-table th {
+  background: var(--sidebar-bg); color: #fff; padding: 11px 14px; text-align: left;
+  font-weight: 600; font-size: .78rem; text-transform: uppercase; letter-spacing: .5px;
+}
+.resp-table td { padding: 10px 14px; border-bottom: 1px solid var(--content-bg); }
+.resp-table tr:hover td { background: #fafbfc; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: .72rem; font-weight: 700; }
+.badge-red { background: #fde8e8; color: var(--danger); }
+.badge-orange { background: #fef3e2; color: #e67e22; }
+.badge-green { background: #e8f8ef; color: var(--success); }
+.badge-blue { background: #ebf5fb; color: #2980b9; }
+.badge-yellow { background: #fef9e7; color: #b7950b; }
+
+/* Stat cards */
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.stat-card {
+  background: var(--content-bg); border-radius: 10px; padding: 16px; text-align: center;
+}
+.stat-card .sv { font-size: 1.4rem; font-weight: 800; }
+.stat-card .sl { font-size: .76rem; color: var(--text-secondary); margin-top: 4px; }
+
+/* Key finding callout */
+.callout {
+  background: #fef9e7; border-left: 4px solid var(--warning); padding: 14px 18px;
+  border-radius: 0 8px 8px 0; margin: 14px 0; font-size: .88rem;
+}
+.callout.danger { background: #fde8e8; border-left-color: var(--danger); }
+.callout.success { background: #e8f8ef; border-left-color: var(--success); }
+.callout strong { color: var(--text-primary); }
+
+/* Check list */
+.check-list { list-style: none; }
+.check-list li { padding: 6px 0; font-size: .88rem; display: flex; align-items: flex-start; gap: 8px; }
+.check-list .icon-pass { color: var(--success); font-weight: 700; }
+.check-list .icon-fail { color: var(--danger); font-weight: 700; }
+.check-list .icon-warn { color: var(--warning); font-weight: 700; }
+
+/* Exec text */
+.exec-text { font-size: .92rem; line-height: 1.8; color: var(--text-secondary); }
+.exec-text strong { color: var(--text-primary); }
+
+/* Code block */
+.code-block { background: #1a1a2e; color: #e8e8e8; border-radius: 8px; padding: 16px; font-family: 'Consolas', 'Monaco', monospace; font-size: .78rem; overflow-x: auto; line-height: 1.6; margin: 12px 0; white-space: pre; }
+
+/* Footer */
+.footer {
+  text-align: center; padding: 24px; color: var(--text-secondary); font-size: .8rem;
+  border-top: 1px solid var(--border); margin-top: 10px;
+}
+
+/* Print */
+@media print {
+  .sidebar, .hamburger, .overlay, .main-header, .lang-toggle, .section-toggle { display: none !important; }
+  .content { margin: 0 !important; padding: 10px !important; max-width: none; }
+  .section { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+  .section.collapsed .section-body { display: block !important; }
+  .hero-score { color: #000 !important; background: #f5f5f5 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* Responsive */
+@media (max-width: 1024px) { :root { --sidebar-w: 240px; } }
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); width: 280px; }
+  .sidebar.open { transform: translateX(0); }
+  .overlay.open { display: block; }
+  .hamburger { display: flex; }
+  .main-header { left: 0; padding: 0 14px 0 62px; }
+  .main-header h1 { font-size: .9rem; }
+  .main-header h1 span { display: none; }
+  .content { margin-left: 0; padding: 20px 14px; }
+  .hero-score { flex-direction: column; align-items: center; text-align: center; padding: 30px 20px; }
+  .score-row { flex-wrap: wrap; }
+  .score-row .sr-label { width: 100%; font-size: .82rem; }
+  .card-grid { grid-template-columns: 1fr; }
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Scrollbar */
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">&#9776;</button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <h2>Mr. &amp; Mrs. PET</h2>
+    <small id="sbSub">SEO Content Audit</small>
+  </div>
+  <div class="sidebar-nav" id="sidebarNav"></div>
+</nav>
+
+<header class="main-header">
+  <h1 id="headerTitle">SEO Content Audit Report <span>mrmrspet.bg</span></h1>
+  <div class="lang-toggle">
+    <button class="lang-btn active" id="btnEN" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" id="btnBG" onclick="setLang('bg')">BG</button>
+  </div>
+</header>
+
+<main class="content" id="mc"></main>
+
+<script>
+let lang = 'en';
+const L = (en, bg) => lang === 'bg' ? bg : en;
+
+function scoreColor(s) {
+  if (s < 40) return 'red';
+  if (s <= 60) return 'orange';
+  if (s <= 75) return 'yellow';
+  return 'green';
+}
+function barCls(s) { return 'bar-' + scoreColor(s); }
+function txtCls(s) { return 'text-' + scoreColor(s); }
+
+const NAV = [
+  { id: 'overview', icon: '&#9733;', en: 'Overview & Score', bg: 'Преглед и Оценка', score: '34/100' },
+  { id: 'bugs', icon: '&#128027;', en: 'Bugs & Issues', bg: 'Бъгове и Проблеми', score: '4' },
+  { id: 'titles', icon: '&#127991;', en: 'Title Tags & Meta', bg: 'Title тагове и Мета', score: '15/100' },
+  { id: 'headings', icon: '&#128196;', en: 'Heading & Content', bg: 'Заглавия и Съдържание', score: '25/100' },
+  { id: 'keywords', icon: '&#128269;', en: 'Keyword Targeting', bg: 'Ключови Думи', score: '20/100' },
+  { id: 'eeat', icon: '&#128101;', en: 'E-E-A-T Assessment', bg: 'E-E-A-T Оценка', score: '38/100' },
+  { id: 'techseo', icon: '&#9881;', en: 'Technical SEO', bg: 'Техническо SEO', score: '30/100' },
+  { id: 'local', icon: '&#128205;', en: 'Local SEO', bg: 'Локално SEO', score: '15/100' },
+  { id: 'gaps', icon: '&#128200;', en: 'Content Gap Analysis', bg: 'Анализ на Липси', score: '' },
+  { id: 'schema', icon: '&#128295;', en: 'Schema & Structured Data', bg: 'Schema и Данни', score: '25/100' },
+  { id: 'blog', icon: '&#9997;', en: 'Blog & Content Strategy', bg: 'Блог и Стратегия', score: '25/100' },
+  { id: 'social', icon: '&#128242;', en: 'Social Media', bg: 'Социални Медии', score: '45/100' },
+  { id: 'action', icon: '&#128221;', en: 'Action Plan', bg: 'План за Действие', score: '' },
+];
+
+function buildNav() {
+  const nav = document.getElementById('sidebarNav');
+  nav.innerHTML = NAV.map(n => {
+    const lbl = L(n.en, n.bg);
+    const sc = n.score ? `<span class="nav-score">${n.score}</span>` : '';
+    return `<a href="#${n.id}" onclick="closeSidebar()"><span class="nav-icon">${n.icon}</span>${lbl}${sc}</a>`;
+  }).join('');
+}
+
+function render() {
+  document.getElementById('headerTitle').innerHTML = L(
+    'SEO Content Audit Report <span>mrmrspet.bg</span>',
+    'SEO Одит на Съдържанието <span>mrmrspet.bg</span>'
+  );
+  document.getElementById('sbSub').textContent = L('SEO Content Audit', 'SEO Одит на Съдържанието');
+  buildNav();
+
+  const mc = document.getElementById('mc');
+  let h = '';
+
+  // ============ HERO SCORE ============
+  const dashOff = 502 - (502 * 34 / 100);
+  h += `
+  <div class="hero-score" id="overview">
+    <div class="score-ring">
+      <svg viewBox="0 0 180 180"><circle class="ring-bg" cx="90" cy="90" r="80"/><circle class="ring-fg" cx="90" cy="90" r="80" style="stroke-dashoffset:${dashOff}"/></svg>
+      <div class="ring-text"><div class="ring-val">34</div><div class="ring-sub">${L('out of 100','от 100')}</div></div>
+    </div>
+    <div class="hero-info">
+      <div class="grade-badge">F</div>
+      <h3>${L('Mr. & Mrs. PET Hotel \u2014 SEO Content Audit','Mr. & Mrs. PET Hotel \u2014 SEO Одит на Съдържанието')}</h3>
+      <p>${L(
+        "Mr. & Mrs. PET Hotel's website is underperforming in SEO. Primary keywords ('хотел за кучета София', 'хотел за котки София') appear in zero title tags, the H1 is brand-only, meta descriptions are duplicated or auto-generated, there is no LocalBusiness schema, no Google Business Profile, and 0 Google reviews \u2014 while competitors have 130\u2013408. The business has 6 Facebook reviews (100% recommendation) and active social media presence. The blog has 5 posts (last updated July 2025) with thin, unlinked content. The site has a functional booking system and professional photography, but is virtually invisible in local search results.",
+        "Уебсайтът на хотел Mr. & Mrs. PET изостава в SEO. Основните ключови думи ('хотел за кучета София', 'хотел за котки София') не присъстват в нито един title таг, H1 е само бранд, мета описанията са дублирани или автоматично генерирани, липсва LocalBusiness schema, няма Google Business профил и 0 Google ревюта \u2014 докато конкурентите имат 130\u2013408. Бизнесът има 6 Facebook ревюта (100% препоръка) и активно присъствие в социалните медии. Блогът има 5 публикации (последно обновен юли 2025) с кратко, несвързано съдържание. Сайтът има функционална система за резервации и професионална фотография, но е практически невидим в локалните резултати от търсенето."
+      )}</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="hs-val" style="color:#e74c3c">0</div><div class="hs-label">${L('Keywords in Titles','Ключови думи в заглавия')}</div></div>
+        <div class="hero-stat"><div class="hs-val" style="color:#e74c3c">0</div><div class="hs-label">${L('Google Reviews','Google ревюта')}</div></div>
+        <div class="hero-stat"><div class="hs-val" style="color:#f39c12">5</div><div class="hs-label">${L('Blog Posts (8mo stale)','Блог поста (8мес неактивни)')}</div></div>
+        <div class="hero-stat"><div class="hs-val" style="color:#e74c3c">59</div><div class="hs-label">${L('JS Files','JS файла')}</div></div>
+      </div>
+    </div>
+  </div>`;
+
+  // ============ SCORE BREAKDOWN ============
+  h += sec('overview-detail', '&#9733;', L('Score Breakdown','Разбивка на Оценките'), '34/100', false, `
+    <div class="subsection"><h3>${L('Category Scores','Оценки по Категории')}</h3>
+    ${scoreBar(L('Title Tags','Title тагове'), 20, 10, L('Duplicate/missing keywords across all pages','Дублирани/липсващи ключови думи на всички страници'))}
+    ${scoreBar(L('Meta Descriptions','Мета описания'), 20, 10, L('Too short, duplicated, or auto-generated','Твърде кратки, дублирани или автоматично генерирани'))}
+    ${scoreBar(L('Heading Structure','Структура на заглавия'), 30, 10, L('48 headings, many duplicates, H6 misuse','48 заглавия, много дублирани, неправилна употреба на H6'))}
+    ${scoreBar(L('Image Optimization','Оптимизация на изображения'), 40, 10, L('35% missing alt text, 0% lazy loading','35% липсващ alt текст, 0% lazy loading'))}
+    ${scoreBar(L('E-E-A-T Quality','E-E-A-T качество'), 40, 10, L('Thin blog posts, no author bios, weak authority. 6 Facebook reviews (100% recommendation) provide some trust signal.','Кратки блог постове, без автор биографии, слаб авторитет. 6 Facebook ревюта (100% препоръка) осигуряват известен сигнал за доверие.'))}
+    ${scoreBar(L('Schema / Structured Data','Schema / Структурирани данни'), 30, 10, L('Missing LocalBusiness, incomplete Organization','Липсва LocalBusiness, непълен Organization'))}
+    ${scoreBar(L('Internal Linking','Вътрешно линкване'), 20, 10, L('Blog posts have zero internal links in body','Блог постовете нямат вътрешни линкове в текста'))}
+    ${scoreBar(L('Technical SEO','Техническо SEO'), 40, 10, L('59 JS files, demo domain CTAs, minor footer email href discrepancy','59 JS файла, CTA към demo домейна, малко несъответствие в href на footer имейла'))}
+    ${scoreBar(L('Local SEO','Локално SEO'), 20, 10, L('No GBP, 0 Google reviews (6 FB reviews), zero directory listings','Няма GBP, 0 Google ревюта (6 FB ревюта), нула директории'))}
+    ${scoreBar(L('Keyword Targeting','Таргетиране на ключови думи'), 30, 10, L('Primary keywords absent from titles, H1, meta','Основните ключови думи липсват в заглавия, H1, мета'))}
+    ${scoreBar(L('Mobile & Performance','Мобилно и производителност'), 20, 10, L('40 CSS files, currency converter on setInterval','40 CSS файла, конвертор на валути на setInterval'))}
+    </div>
+    <div class="callout danger"><strong>${L('Biggest Problem:','Най-Голям Проблем:')}</strong> ${L(
+      'Not a single primary keyword appears in any title tag or H1 on the entire site. Google cannot rank pages for terms they never mention in their most important on-page elements.',
+      'Нито една основна ключова дума не присъства в нито един title таг или H1 на целия сайт. Google не може да класира страници за термини, които никога не се споменават в най-важните on-page елементи.'
+    )}</div>
+    <div class="callout success"><strong>${L('Key Strength:','Ключово Предимство:')}</strong> ${L(
+      'Professional photography and a functional online booking system with Stripe payments provide a strong foundation once SEO visibility is established.',
+      'Професионалната фотография и функционалната система за онлайн резервации със Stripe плащания осигуряват солидна основа, след като SEO видимостта бъде установена.'
+    )}</div>
+  `);
+
+  // ============ CRITICAL BUGS ============
+  h += sec('bugs', '&#128027;', L('Bugs & Issues','Бъгове и Проблеми'), L('4 Found','4 Намерени'), false, `
+    <div class="callout danger"><strong>${L('Action Required:','Необходимо е Действие:')}</strong> ${L(
+      'These verified issues are found on the live production site and affect SEO performance.',
+      'Тези верифицирани проблеми са намерени на живия production сайт и засягат SEO представянето.'
+    )}</div>
+    <div class="resp-table"><table>
+      <thead><tr><th>#</th><th>${L('Issue','Проблем')}</th><th>${L('Severity','Сериозност')}</th><th>${L('Description','Описание')}</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><strong>${L('Duplicate title tags','Дублирани title тагове')}</strong></td><td><span class="badge badge-orange">${L('High','Висок')}</span></td><td>${L('Homepage and Pricing page have identical title: "Хотел Mr. & Mrs. PET"','Началната страница и страницата за цени имат идентично заглавие: "Хотел Mr. & Mrs. PET"')}</td></tr>
+        <tr><td>2</td><td><strong>${L('About page title bug','Бъг в заглавието на страницата За нас')}</strong></td><td><span class="badge badge-yellow">${L('Medium','Среден')}</span></td><td>${L('Title tag has leading hyphen: "- Хотел Mr. & Mrs. PET"','Title тагът има водеща тире: "- Хотел Mr. & Mrs. PET"')}</td></tr>
+        <tr><td>3</td><td><strong>${L('Demo domain CTAs','CTA бутони към demo домейна')}</strong></td><td><span class="badge badge-blue">${L('Low / SEO Note','Нисък / SEO Бележка')}</span></td><td>${L('Two CTAs link to demo.mrmrspet.bg instead of the main domain. While the content is valid, having the same content on two domains creates a duplicate content risk for SEO. Recommend consolidating to one domain.','Два CTA бутона водят към demo.mrmrspet.bg вместо към основния домейн. Въпреки че съдържанието е валидно, наличието на едно и също съдържание на два домейна създава риск от дублирано съдържание за SEO. Препоръчва се консолидация в един домейн.')}</td></tr>
+        <tr><td>4</td><td><strong>${L('Footer email href discrepancy','Несъответствие в href на footer имейла')}</strong></td><td><span class="badge badge-blue">${L('Low / Note','Нисък / Бележка')}</span></td><td>${L('Footer email link has a minor href discrepancy (iinfo@ vs info@) — verify email routing','Footer имейл линкът има малко несъответствие в href (iinfo@ vs info@) — проверете маршрутизацията на имейла')}</td></tr>
+      </tbody>
+    </table></div>
+  `);
+
+  // ============ TITLE TAGS & META ============
+  h += sec('titles', '&#127991;', L('Title Tags & Meta Descriptions','Title тагове и Мета описания'), '15/100', false, `
+    <div class="callout danger"><strong>${L('Critical Finding:','Критична Констатация:')}</strong> ${L(
+      'No page on the entire site has a properly optimized title tag. The homepage and pricing page share the exact same 20-character title with zero keywords.',
+      'Нито една страница на целия сайт няма правилно оптимизиран title таг. Началната страница и страницата за цени споделят идентично 20-символно заглавие с нула ключови думи.'
+    )}</div>
+
+    <div class="subsection"><h3>${L('Title Tag Audit','Одит на Title Тагове')}</h3>
+    <div class="resp-table"><table>
+      <thead><tr><th>${L('Page','Страница')}</th><th>${L('Current Title','Текущо Заглавие')}</th><th>${L('Issues','Проблеми')}</th><th>${L('Recommended','Препоръчано')}</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>${L('Homepage','Начална')}</strong></td>
+          <td><code>${L('Хотел Mr. & Mrs. PET','Хотел Mr. & Mrs. PET')}</code> (20 ${L('chars','симв.')})</td>
+          <td>${L('Too short, no keywords, identical to Prices','Твърде кратко, без ключови думи, идентично с Цени')}</td>
+          <td><strong>${L('Хотел за Кучета и Котки до София | Mr. & Mrs. PET \u2013 Пансион Горни Богров','Хотел за Кучета и Котки до София | Mr. & Mrs. PET \u2013 Пансион Горни Богров')}</strong> (72 ${L('chars','симв.')})</td>
+        </tr>
+        <tr>
+          <td><strong>${L('Prices /цени/','Цени /цени/')}</strong></td>
+          <td><code>${L('Хотел Mr. & Mrs. PET','Хотел Mr. & Mrs. PET')}</code> (20 ${L('chars','симв.')})</td>
+          <td>${L('Duplicate of homepage, no pricing keywords','Дубликат на началната, без ключови думи за цени')}</td>
+          <td><strong>${L('Цени за Хотел за Кучета и Котки | Mr. & Mrs. PET \u2013 Пансион до София','Цени за Хотел за Кучета и Котки | Mr. & Mrs. PET \u2013 Пансион до София')}</strong> (67 ${L('chars','симв.')})</td>
+        </tr>
+        <tr>
+          <td><strong>${L('About /за-хотела/','За хотела /за-хотела/')}</strong></td>
+          <td><code>${L('- Хотел Mr. & Mrs. PET','- Хотел Mr. & Mrs. PET')}</code> (23 ${L('chars','симв.')})</td>
+          <td>${L('Leading hyphen bug, no descriptive keywords','Бъг с водеща тире, без описателни ключови думи')}</td>
+          <td><strong>${L('За Хотела Mr. & Mrs. PET | Хотел за Домашни Любимци в Горни Богров','За Хотела Mr. & Mrs. PET | Хотел за Домашни Любимци в Горни Богров')}</strong> (67 ${L('chars','симв.')})</td>
+        </tr>
+        <tr>
+          <td><strong>${L('Grooming /груминг/','Груминг /груминг/')}</strong></td>
+          <td><code>${L('Груминг - Хотел Mr. & Mrs. PET','Груминг - Хотел Mr. & Mrs. PET')}</code> (30 ${L('chars','симв.')})</td>
+          <td>${L('Too short, missing location keyword','Твърде кратко, липсва локационна ключова дума')}</td>
+          <td><strong>${L('Груминг за Кучета и Котки до София | Mr. & Mrs. PET \u2013 Професионална Грижа','Груминг за Кучета и Котки до София | Mr. & Mrs. PET \u2013 Професионална Грижа')}</strong> (73 ${L('chars','симв.')})</td>
+        </tr>
+        <tr>
+          <td><strong>${L('Contacts /контакти/','Контакти /контакти/')}</strong></td>
+          <td><code>${L('КОНТАКТИ - Хотел Mr. & Mrs. PET','КОНТАКТИ - Хотел Mr. & Mrs. PET')}</code> (31 ${L('chars','симв.')})</td>
+          <td>${L('ALL CAPS, no location keywords','ВСИЧКИ ГЛАВНИ, без локационни ключови думи')}</td>
+          <td><strong>${L('Контакти и Адрес | Mr. & Mrs. PET \u2013 Горни Богров, до София','Контакти и Адрес | Mr. & Mrs. PET \u2013 Горни Богров, до София')}</strong> (58 ${L('chars','симв.')})</td>
+        </tr>
+      </tbody>
+    </table></div></div>
+
+    <div class="subsection"><h3>${L('Meta Description Audit','Одит на Мета Описания')}</h3>
+    <div class="resp-table"><table>
+      <thead><tr><th>${L('Page','Страница')}</th><th>${L('Current','Текущо')}</th><th>${L('Issues','Проблеми')}</th><th>${L('Recommended','Препоръчано')}</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>${L('Homepage','Начална')}</strong></td>
+          <td>${L('82 chars, no services, no animals, no CTA','82 симв., без услуги, без животни, без CTA')}</td>
+          <td>${L('Too short, no keywords','Твърде кратко, без ключови думи')}</td>
+          <td><em>${L('"Хотел за кучета и котки Mr. & Mrs. PET в Горни Богров, на минути от София. Настаняване, дневни грижи, груминг и ветеринарно партньорство. Резервирайте онлайн!"','"Хотел за кучета и котки Mr. & Mrs. PET в Горни Богров, на минути от София. Настаняване, дневни грижи, груминг и ветеринарно партньорство. Резервирайте онлайн!"')}</em> (159 ${L('chars','симв.')})</td>
+        </tr>
+        <tr>
+          <td><strong>${L('Prices','Цени')}</strong></td>
+          <td>${L('46 chars, duplicate with Contacts','46 симв., дубликат с Контакти')}</td>
+          <td>${L('Duplicate, no pricing info','Дубликат, без информация за цени')}</td>
+          <td><em>${L('"Цени за настаняване на кучета и котки в Mr. & Mrs. PET \u2013 Горни Богров до София. Дневен и нощен престой, груминг, отстъпки. Вижте актуалните ни цени в EUR."','"Цени за настаняване на кучета и котки в Mr. & Mrs. PET \u2013 Горни Богров до София. Дневен и нощен престой, груминг, отстъпки. Вижте актуалните ни цени в EUR."')}</em> (155 ${L('chars','симв.')})</td>
+        </tr>
+        <tr>
+          <td><strong>${L('Grooming','Груминг')}</strong></td>
+          <td>${L('Auto-generated garbage','Автоматично генериран текст')}</td>
+          <td>${L('Truncated, incoherent','Отрязано, нечетливо')}</td>
+          <td><em>${L('"Професионален груминг за кучета и котки в Mr. & Mrs. PET до София. Къпане, подстригване, грижа за нокти и козина. Запазете час онлайн или по телефон."','"Професионален груминг за кучета и котки в Mr. & Mrs. PET до София. Къпане, подстригване, грижа за нокти и козина. Запазете час онлайн или по телефон."')}</em> (152 ${L('chars','симв.')})</td>
+        </tr>
+        <tr>
+          <td><strong>${L('Contacts','Контакти')}</strong></td>
+          <td>${L('46 chars, duplicate with Prices','46 симв., дубликат с Цени')}</td>
+          <td>${L('Duplicate, irrelevant to contacts','Дубликат, неуместно за контакти')}</td>
+          <td><em>${L('"Свържете се с Mr. & Mrs. PET \u2013 хотел за кучета и котки в с. Горни Богров, до София. Адрес, телефон, работно време и упътване. Резервации онлайн."','"Свържете се с Mr. & Mrs. PET \u2013 хотел за кучета и котки в с. Горни Богров, до София. Адрес, телефон, работно време и упътване. Резервации онлайн."')}</em> (146 ${L('chars','симв.')})</td>
+        </tr>
+      </tbody>
+    </table></div></div>
+  `);
+
+  // ============ HEADING & CONTENT STRUCTURE ============
+  h += sec('headings', '&#128196;', L('Heading & Content Structure','Структура на Заглавия и Съдържание'), '25/100', false, `
+    <div class="stat-grid" style="margin-bottom:20px">
+      <div class="stat-card"><div class="sv text-red">48</div><div class="sl">${L('Total Headings','Общо заглавия')}</div></div>
+      <div class="stat-card"><div class="sv text-red">1</div><div class="sl">${L('H1 (brand only)','H1 (само бранд)')}</div></div>
+      <div class="stat-card"><div class="sv text-orange">7</div><div class="sl">H2</div></div>
+      <div class="stat-card"><div class="sv text-orange">33</div><div class="sl">${L('H3 (3x dupes)','H3 (3 дублирани)')}</div></div>
+      <div class="stat-card"><div class="sv text-orange">2</div><div class="sl">H4</div></div>
+      <div class="stat-card"><div class="sv text-red">4</div><div class="sl">${L('H6 (misused)','H6 (неправилни)')}</div></div>
+    </div>
+
+    <div class="subsection"><h3>${L('Heading Issues','Проблеми със Заглавия')}</h3>
+    <ul class="check-list">
+      <li><span class="icon-fail">\u2716</span> ${L('<strong>H1: "Mr. & Mrs. PET"</strong> \u2014 brand-only, zero service or location keywords. Google uses H1 as a primary ranking signal.','<strong>H1: "Mr. & Mrs. PET"</strong> \u2014 само бранд, нула ключови думи за услуги или локация. Google използва H1 като основен сигнал за класиране.')}</li>
+      <li><span class="icon-fail">\u2716</span> ${L('<strong>H3: "Търсене" appears 3 times</strong> \u2014 triplicated booking form heading (the form is rendered 3 times on the page)','<strong>H3: "Търсене" се появява 3 пъти</strong> \u2014 утроено заглавие на формата за резервация (формата е рендерирана 3 пъти)')}</li>
+      <li><span class="icon-fail">\u2716</span> ${L('<strong>H6 used for footer navigation</strong> \u2014 semantic misuse; footer nav should use lists, not headings','<strong>H6 използвано за навигация в footer</strong> \u2014 семантична злоупотреба; навигацията в footer трябва да използва списъци, не заглавия')}</li>
+      <li><span class="icon-fail">\u2716</span> ${L('<strong>H4 used for tagline</strong> \u2014 "Любов, грижа и уют за вашия най-добър приятел" is emotional copy, not a heading','<strong>H4 използвано за слоган</strong> \u2014 "Любов, грижа и уют за вашия най-добър приятел" е емоционален текст, не заглавие')}</li>
+      <li><span class="icon-fail">\u2716</span> ${L('<strong>48 headings total</strong> \u2014 excessive for a single page; many are duplicates or decorative','<strong>48 заглавия общо</strong> \u2014 прекалено много за една страница; много са дублирани или декоративни')}</li>
+    </ul></div>
+
+    <div class="callout"><strong>${L('Recommended H1:','Препоръчан H1:')}</strong><br><code>${L('Хотел за Кучета и Котки до София \u2013 Mr. & Mrs. PET, Горни Богров','Хотел за Кучета и Котки до София \u2013 Mr. & Mrs. PET, Горни Богров')}</code></div>
+  `);
+
+  // ============ KEYWORD TARGETING ============
+  h += sec('keywords', '&#128269;', L('Keyword Targeting','Таргетиране на Ключови Думи'), '20/100', false, `
+    <div class="callout danger"><strong>${L('Zero Keywords in Critical Elements:','Нула Ключови Думи в Критични Елементи:')}</strong> ${L(
+      'None of the primary target keywords appear in any title tag, H1 heading, or meta description on the entire website.',
+      'Нито една от основните целеви ключови думи не присъства в нито един title таг, H1 заглавие или мета описание на целия уебсайт.'
+    )}</div>
+
+    <div class="subsection"><h3>${L('Primary Keywords Placement','Позициониране на Основни Ключови Думи')}</h3>
+    <div class="resp-table"><table>
+      <thead><tr><th>${L('Keyword','Ключова дума')}</th><th>${L('In Title?','В Title?')}</th><th>${L('In H1?','В H1?')}</th><th>${L('In Meta?','В Meta?')}</th><th>${L('On Homepage?','На началната?')}</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>хотел за кучета София</strong></td>
+          <td><span class="badge badge-red">${L('No','Не')}</span></td>
+          <td><span class="badge badge-red">${L('No','Не')}</span></td>
+          <td><span class="badge badge-red">${L('No','Не')}</span></td>
+          <td><span class="badge badge-yellow">${L('Partial','Частично')}</span></td>
+        </tr>
+        <tr>
+          <td><strong>хотел за котки София</strong></td>
+          <td><span class="badge badge-red">${L('No','Не')}</span></td>
+          <td><span class="badge badge-red">${L('No','Не')}</span></td>
+          <td><span class="badge badge-red">${L('No','Не')}</span></td>
+          <td><span class="badge badge-yellow">${L('Partial','Частично')}</span></td>
+        </tr>
+        <tr>
+          <td><strong>пансион за домашни любимци</strong></td>
+          <td><span class="badge badge-red">${L('No','Не')}</span></td>
+          <td><span class="badge badge-red">${L('No','Не')}</span></td>
+          <td><span class="badge badge-red">${L('No','Не')}</span></td>
+          <td><span class="badge badge-red">${L('No','Не')}</span></td>
+        </tr>
+      </tbody>
+    </table></div></div>
+
+    <div class="subsection"><h3>${L('Keyword Placement Failures','Грешки в Позиционирането на Ключови Думи')}</h3>
+    <ul class="check-list">
+      <li><span class="icon-fail">\u2716</span> ${L('<strong>Title tags</strong> contain only the brand name \u2014 zero search-intent keywords','<strong>Title таговете</strong> съдържат само името на бранда \u2014 нула ключови думи за търсене')}</li>
+      <li><span class="icon-fail">\u2716</span> ${L('<strong>H1 heading</strong> is "Mr. & Mrs. PET" on all pages \u2014 no service or location terms','<strong>H1 заглавието</strong> е "Mr. & Mrs. PET" на всички страници \u2014 без термини за услуги или локация')}</li>
+      <li><span class="icon-fail">\u2716</span> ${L('<strong>Meta descriptions</strong> are duplicated or auto-generated \u2014 no keyword integration','<strong>Мета описанията</strong> са дублирани или автоматично генерирани \u2014 без интеграция на ключови думи')}</li>
+      <li><span class="icon-fail">\u2716</span> ${L('<strong>Blog posts</strong> do not target any local or service keywords','<strong>Блог постовете</strong> не таргетират локални или свързани с услуги ключови думи')}</li>
+      <li><span class="icon-fail">\u2716</span> ${L('<strong>Alt text</strong> \u2014 35% of images have no alt text at all, rest are generic','<strong>Alt текст</strong> \u2014 35% от изображенията нямат alt текст, останалите са генерични')}</li>
+    </ul></div>
+  `);
+
+  // ============ E-E-A-T ASSESSMENT ============
+  h += sec('eeat', '&#128101;', L('E-E-A-T Assessment','E-E-A-T Оценка'), '38/100', false, `
+    <div class="subsection"><h3>${L('E-E-A-T Component Scores','Оценки по E-E-A-T Компоненти')}</h3>
+    ${scoreBar(L('Experience','Опит'), 50, null, L('Facility photos present \u2014 professional and authentic. No video tours, no "day in the life" content, no behind-the-scenes material.','Снимки на съоръжението присъстват \u2014 професионални и автентични. Няма видео турове, няма съдържание "един ден в хотела", няма материали зад кулисите.'))}
+    ${scoreBar(L('Expertise','Експертиза'), 30, null, L('No author bios on blog posts, no credentials displayed, no veterinary partnerships highlighted in content. Blog posts are generic and thin (350-500 words).','Няма авторски биографии в блог постовете, няма показани квалификации, няма подчертани ветеринарни партньорства в съдържанието. Блог постовете са генерични и кратки (350-500 думи).'))}
+    ${scoreBar(L('Authoritativeness','Авторитет'), 25, null, L('6 Facebook reviews (100% recommendation) but 0 Google reviews. Not listed in any industry roundups, no media mentions found. Competitors dominate "best pet hotel Sofia" content.','6 Facebook ревюта (100% препоръка), но 0 Google ревюта. Не е включен в индустриални обзори, не са намерени медийни споменавания. Конкурентите доминират в съдържанието за "най-добър хотел за любимци София".'))}
+    ${scoreBar(L('Trustworthiness','Достоверност'), 55, null, L('HTTPS active, address and phone visible, language switcher (GTranslate) functional with BG/EN/DE. Minor footer email href discrepancy (iinfo@ in href).','HTTPS активен, адрес и телефон видими, езиковият превключвател (GTranslate) функционален с BG/EN/DE. Малко несъответствие в href на footer имейла (iinfo@ в href).'))}
+    </div>
+
+    <div class="subsection"><h3>${L('Recommendations','Препоръки')}</h3>
+    <div class="card-grid">
+      ${qw(1, L('Add Author Bios to Blog','Добавете Авторски Биографии в Блога'), L('Add author bios with credentials, photo, and role to every blog post','Добавете авторски биографии с квалификации, снимка и роля към всеки блог пост'), L('E-E-A-T','E-E-A-T'), 'orange')}
+      ${qw(2, L('Create Video Tour Content','Създайте Видео Тур Съдържание'), L('Film and publish a facility video tour \u2014 shows real experience, boosts trust','Заснемете и публикувайте видео тур на съоръжението \u2014 показва реален опит, повишава доверието'), L('Experience','Опит'), 'blue')}
+      ${qw(3, L('Showcase Veterinary Partnership','Покажете Ветеринарното Партньорство'), L('Prominently display vet partner credentials and partnership details in content','Покажете видимо квалификациите на ветеринарния партньор и детайли за партньорството в съдържанието'), L('Expertise','Експертиза'), 'blue')}
+      ${qw(4, L('Leverage Facebook Reviews for Trust','Използвайте Facebook Ревюта за Доверие'), L('Embed 6 Facebook reviews (100% recommendation) on site and actively pursue Google reviews to build authority','Вградете 6-те Facebook ревюта (100% препоръка) на сайта и активно преследвайте Google ревюта за изграждане на авторитет'), L('Trust','Доверие'), 'orange')}
+    </div></div>
+  `);
+
+  // ============ TECHNICAL SEO ============
+  h += sec('techseo', '&#9881;', L('Technical SEO','Техническо SEO'), '30/100', false, `
+    <div class="stat-grid" style="margin-bottom:20px">
+      <div class="stat-card"><div class="sv text-red">59</div><div class="sl">${L('JS Files','JS Файлове')}</div></div>
+      <div class="stat-card"><div class="sv text-red">40</div><div class="sl">${L('CSS Files','CSS Файлове')}</div></div>
+      <div class="stat-card"><div class="sv text-red">3x</div><div class="sl">${L('Booking Form Duplicated','Форма дублирана')}</div></div>
+      <div class="stat-card"><div class="sv text-red">0%</div><div class="sl">${L('Lazy Loading','Lazy Loading')}</div></div>
+    </div>
+
+    <div class="subsection"><h3>${L('Technical Issues','Технически Проблеми')}</h3>
+    <ul class="check-list">
+      <li><span class="icon-fail">\u2716</span> ${L('<strong>Page speed likely poor:</strong> Estimated LCP >4s, FID >200ms, CLS >0.15 due to 59 JS and 40 CSS files','<strong>Скоростта на страницата вероятно е лоша:</strong> Очакван LCP >4s, FID >200ms, CLS >0.15 заради 59 JS и 40 CSS файла')}</li>
+      <li><span class="icon-fail">\u2716</span> ${L('<strong>Weather widget</strong> adds unnecessary external dependency','<strong>Метеорологичен уиджет</strong> добавя ненужна външна зависимост')}</li>
+      <li><span class="icon-fail">\u2716</span> ${L('<strong>Currency converter on setInterval</strong> \u2014 unnecessary since Bulgaria adopted the Euro on Jan 1, 2026','<strong>Конвертор на валути на setInterval</strong> \u2014 ненужен, тъй като България прие еврото на 1 януари 2026')}</li>
+      <li><span class="icon-fail">\u2716</span> ${L('<strong>Zero lazy loading</strong> on any images \u2014 all images load on initial page render','<strong>Нула lazy loading</strong> за изображения \u2014 всички изображения се зареждат при първоначалното рендериране')}</li>
+      <li><span class="icon-fail">\u2716</span> ${L('<strong>Booking form rendered 3 times</strong> on the homepage \u2014 unnecessary DOM bloat','<strong>Формата за резервация е рендерирана 3 пъти</strong> на началната страница \u2014 ненужно натоварване на DOM')}</li>
+      <li><span class="icon-pass">\u2714</span> ${L('<strong>GA + GTM present</strong> \u2014 analytics tracking is functional','<strong>GA + GTM присъстват</strong> \u2014 проследяването на аналитика работи')}</li>
+    </ul></div>
+
+    <div class="subsection"><h3>${L('Recommendations','Препоръки')}</h3>
+    <div class="card-grid">
+      ${qw(1, L('Audit & Defer Unused JS/CSS','Одитирайте и Отложете Неизползваните JS/CSS'), L('59 JS files and 40 CSS files for a 7-page site is extreme \u2014 audit and defer or remove unused resources','59 JS файла и 40 CSS файла за сайт със 7 страници е екстремно \u2014 одитирайте и отложете или премахнете неизползвани ресурси'), L('Performance','Производителност'), 'red')}
+      ${qw(2, L('Add Lazy Loading to Images','Добавете Lazy Loading към Изображенията'), L('Add loading="lazy" to all below-the-fold images','Добавете loading="lazy" към всички изображения под видимата зона'), L('Performance','Производителност'), 'orange')}
+      ${qw(3, L('Remove Duplicate Booking Forms','Премахнете Дублираните Форми за Резервация'), L('Booking form is rendered 3 times \u2014 keep one, remove the duplicates','Формата за резервация е рендерирана 3 пъти \u2014 запазете една, премахнете дублиратите'), L('DOM Bloat','DOM Натоварване'), 'orange')}
+      ${qw(4, L('Remove Currency Converter','Премахнете Конвертора на Валути'), L('Currency converter running on setInterval is no longer needed since Euro adoption \u2014 remove it','Конверторът на валути на setInterval вече не е необходим след приемането на еврото \u2014 премахнете го'), L('Quick Win','Бърза Победа'), 'green')}
+      ${qw(5, L('Remove Weather Widget','Премахнете Метеорологичния Уиджет'), L('Weather widget adds external dependency with no SEO or conversion value','Метеорологичният уиджет добавя външна зависимост без стойност за SEO или конверсии'), L('Performance','Производителност'), 'blue')}
+    </div></div>
+  `);
+
+  // ============ LOCAL SEO ============
+  h += sec('local', '&#128205;', L('Local SEO','Локално SEO'), '15/100', false, `
+    <div class="callout danger"><strong>${L('Most Critical Section:','Най-Критична Секция:')}</strong> ${L(
+      'With no Google Business Profile, 0 Google reviews, and zero directory listings, the business is virtually invisible in local search. 6 Facebook reviews (100% recommendation) provide some social proof but do not substitute for Google presence.',
+      'Без Google Business профил, 0 Google ревюта и нула регистрации в директории, бизнесът е практически невидим в локалното търсене. 6 Facebook ревюта (100% препоръка) дават някакво социално доказателство, но не заместват Google присъствието.'
+    )}</div>
+    <div class="stat-grid" style="margin-bottom:20px">
+      <div class="stat-card"><div class="sv text-red">0</div><div class="sl">${L('Google Business Profile','Google Business профил')}</div></div>
+      <div class="stat-card"><div class="sv text-red">0</div><div class="sl">${L('Google Reviews','Google ревюта')}</div></div>
+      <div class="stat-card"><div class="sv text-red">0</div><div class="sl">${L('Directory Listings','Директорийни обяви')}</div></div>
+    </div>
+
+    <div class="subsection"><h3>${L('Competitor Review Gap','Разлика в Ревюта с Конкурентите')}</h3>
+    <div class="resp-table"><table>
+      <thead><tr><th>${L('Competitor','Конкурент')}</th><th>${L('Google Reviews','Google Ревюта')}</th><th>${L('Rating','Рейтинг')}</th><th>${L('Gap','Разлика')}</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Mr. & Mrs. PET</strong></td><td class="text-red"><strong>${L('0 Google / 6 FB','0 Google / 6 FB')}</strong></td><td>${L('N/A Google / 100% FB','N/A Google / 100% FB')}</td><td>-</td></tr>
+        <tr><td>Happy Paws</td><td>408</td><td>4.5\u2605</td><td><span class="badge badge-red">-408</span></td></tr>
+        <tr><td>Hubba Hubba</td><td>350</td><td>4.8\u2605</td><td><span class="badge badge-red">-350</span></td></tr>
+        <tr><td>Liberta</td><td>231</td><td>4.8\u2605</td><td><span class="badge badge-red">-231</span></td></tr>
+        <tr><td>Lapalandia</td><td>132</td><td>4.8\u2605</td><td><span class="badge badge-red">-132</span></td></tr>
+      </tbody>
+    </table></div></div>
+
+    <div class="subsection"><h3>${L('Recommendations','Препоръки')}</h3>
+    <div class="card-grid">
+      ${qw(1, L('Create & Verify Google Business Profile','Създайте и Верифицирайте Google Business Профил'), L('This is the single highest-impact action \u2014 enables Maps visibility, reviews, and Local Pack ranking','Това е действието с най-голямо въздействие \u2014 активира видимост в Maps, ревюта и класиране в Local Pack'), L('#1 Priority','#1 Приоритет'), 'red')}
+      ${qw(2, L('Start Review Collection System','Стартирайте Система за Събиране на Ревюта'), L('QR code at checkout, follow-up email/SMS \u2014 target 5 reviews/week to close the gap','QR код при напускане, последващ имейл/SMS \u2014 цел 5 ревюта/седмица за затваряне на разликата'), L('Critical','Критично'), 'red')}
+      ${qw(3, L('Submit to Business Directories','Регистрирайте се в Бизнес Директории'), L('Opoznai.bg, Firmite.bg, YellowPages.bg, Yelp \u2014 consistent NAP across all listings','Opoznai.bg, Firmite.bg, YellowPages.bg, Yelp \u2014 последователен NAP във всички обяви'), L('High Impact','Висок Ефект'), 'orange')}
+    </div></div>
+  `);
+
+  // ============ CONTENT GAP ANALYSIS ============
+  h += sec('gaps', '&#128200;', L('Content Gap Analysis','Анализ на Липсващо Съдържание'), '', false, `
+    <div class="subsection"><h3>${L('Missing Keyword Topics','Липсващи Теми по Ключови Думи')}</h3>
+    <div class="resp-table"><table>
+      <thead><tr><th>${L('Keyword Topic','Тема')}</th><th>${L('Search Intent','Намерение')}</th><th>${L('Content Type','Тип Съдържание')}</th><th>${L('Priority','Приоритет')}</th></tr></thead>
+      <tbody>
+        <tr><td>${L('хотел за кучета София цени','хотел за кучета София цени')}</td><td>${L('Transactional','Транзакционно')}</td><td>${L('Landing page','Лендинг страница')}</td><td><span class="badge badge-red">${L('Critical','Критичен')}</span></td></tr>
+        <tr><td>${L('хотел за котки София','хотел за котки София')}</td><td>${L('Transactional','Транзакционно')}</td><td>${L('Dedicated landing page','Самостоятелна лендинг страница')}</td><td><span class="badge badge-red">${L('Critical','Критичен')}</span></td></tr>
+        <tr><td>${L('пансион за кучета близо до мен','пансион за кучета близо до мен')}</td><td>${L('Local','Локално')}</td><td>${L('GBP + local landing','GBP + локален лендинг')}</td><td><span class="badge badge-red">${L('Critical','Критичен')}</span></td></tr>
+        <tr><td>${L('дневни грижи за кучета София','дневни грижи за кучета София')}</td><td>${L('Informational','Информационно')}</td><td>${L('Service page','Страница за услуги')}</td><td><span class="badge badge-orange">${L('High','Висок')}</span></td></tr>
+        <tr><td>${L('груминг за кучета цени София','груминг за кучета цени София')}</td><td>${L('Transactional','Транзакционно')}</td><td>${L('Enhanced pricing section','Разширена секция за цени')}</td><td><span class="badge badge-orange">${L('High','Висок')}</span></td></tr>
+        <tr><td>${L('какво да донеса в хотел за кучета','какво да донеса в хотел за кучета')}</td><td>${L('Informational','Информационно')}</td><td>${L('Blog post / FAQ','Блог пост / FAQ')}</td><td><span class="badge badge-orange">${L('High','Висок')}</span></td></tr>
+        <tr><td>${L('как да изберем хотел за куче','как да изберем хотел за куче')}</td><td>${L('Informational','Информационно')}</td><td>${L('Blog post / Guide','Блог пост / Ръководство')}</td><td><span class="badge badge-blue">${L('Medium','Среден')}</span></td></tr>
+        <tr><td>${L('ваксини за хотел за кучета','ваксини за хотел за кучета')}</td><td>${L('Informational','Информационно')}</td><td>${L('FAQ section','FAQ секция')}</td><td><span class="badge badge-blue">${L('Medium','Среден')}</span></td></tr>
+        <tr><td>${L('стрес при кучетата при настаняване','стрес при кучетата при настаняване')}</td><td>${L('Informational','Информационно')}</td><td>${L('Blog post','Блог пост')}</td><td><span class="badge badge-blue">${L('Medium','Среден')}</span></td></tr>
+        <tr><td>${L('хотел за кучета Горни Богров','хотел за кучета Горни Богров')}</td><td>${L('Local','Локално')}</td><td>${L('Location page','Страница за локация')}</td><td><span class="badge badge-blue">${L('Medium','Среден')}</span></td></tr>
+        <tr><td>${L('кучешки фризьор София','кучешки фризьор София')}</td><td>${L('Transactional','Транзакционно')}</td><td>${L('Blog post','Блог пост')}</td><td><span class="badge badge-yellow">${L('Low','Нисък')}</span></td></tr>
+        <tr><td>${L('домашен любимец на почивка какво да правя','домашен любимец на почивка какво да правя')}</td><td>${L('Informational','Информационно')}</td><td>${L('Seasonal blog post','Сезонен блог пост')}</td><td><span class="badge badge-yellow">${L('Low','Нисък')}</span></td></tr>
+      </tbody>
+    </table></div></div>
+
+    <div class="subsection"><h3>${L('Missing Pages','Липсващи Страници')}</h3>
+    <div class="card-grid">
+      ${qw(1, L('Daycare / Daily Care Page','Страница за Дневни Грижи'), L('No dedicated daycare page exists \u2014 "дневни грижи за кучета" is a high-intent keyword with no landing page','Няма самостоятелна страница за дневни грижи \u2014 "дневни грижи за кучета" е ключова дума с висок интент без лендинг страница'), L('High Impact','Висок Ефект'), 'red')}
+      ${qw(2, L('Team / About Staff Page','Страница за Екипа'), L('No team page with staff bios, credentials, or photos \u2014 weakens E-E-A-T signals significantly','Няма страница за екипа с биографии, квалификации или снимки \u2014 значително отслабва E-E-A-T сигналите'), L('E-E-A-T','E-E-A-T'), 'orange')}
+      ${qw(3, L('FAQ Page','FAQ Страница'), L('No FAQ page answering common questions (vaccines, check-in process, what to bring, cancellation policy)','Няма FAQ страница, отговаряща на често задавани въпроси (ваксини, процес на настаняване, какво да донесете, политика за отмяна)'), L('SEO + Trust','SEO + Доверие'), 'orange')}
+      ${qw(4, L('Testimonials / Reviews Page','Страница за Отзиви'), L('No dedicated reviews/testimonials page \u2014 existing 5 testimonials are buried in homepage','Няма самостоятелна страница за отзиви \u2014 съществуващите 5 препоръки са скрити в началната страница'), L('Trust','Доверие'), 'blue')}
+      ${qw(5, L('Location / Directions Page','Страница за Локация / Упътване'), L('No dedicated page with map, directions from Sofia, parking info, and landmarks','Няма самостоятелна страница с карта, упътване от София, информация за паркиране и ориентири'), L('Local SEO','Локално SEO'), 'blue')}
+      ${qw(6, L('Cat-Specific Landing Page','Лендинг Страница за Котки'), L('"хотел за котки София" is a distinct search query \u2014 needs its own landing page with cat-specific content','"хотел за котки София" е отделна заявка за търсене \u2014 нужна е собствена лендинг страница със съдържание, специфично за котки'), L('Keyword Gap','Липсваща Ключова Дума'), 'orange')}
+    </div></div>
+  `);
+
+  // ============ SCHEMA & STRUCTURED DATA ============
+  h += sec('schema', '&#128295;', L('Schema & Structured Data','Schema и Структурирани Данни'), '25/100', false, `
+    <div class="subsection"><h3>${L('Current Schema Status','Текущо Състояние на Schema')}</h3>
+    <div class="resp-table"><table>
+      <thead><tr><th>${L('Schema Type','Тип Schema')}</th><th>${L('Status','Статус')}</th><th>${L('Notes','Бележки')}</th></tr></thead>
+      <tbody>
+        <tr><td><strong>BreadcrumbList</strong></td><td><span class="badge badge-green">${L('Present','Присъства')}</span></td><td>${L('Functional','Функционален')}</td></tr>
+        <tr><td><strong>Organization</strong></td><td><span class="badge badge-yellow">${L('Incomplete','Непълен')}</span></td><td>${L('Missing several recommended fields','Липсват няколко препоръчани полета')}</td></tr>
+        <tr><td><strong>WebPage</strong></td><td><span class="badge badge-green">${L('Present','Присъства')}</span></td><td>${L('Basic implementation','Базова имплементация')}</td></tr>
+        <tr><td><strong>WebSite</strong></td><td><span class="badge badge-green">${L('Present','Присъства')}</span></td><td>${L('Basic implementation','Базова имплементация')}</td></tr>
+        <tr><td><strong>LocalBusiness</strong></td><td><span class="badge badge-red">${L('MISSING','ЛИПСВА')}</span></td><td>${L('Critical \u2014 required for local search visibility','Критично \u2014 необходимо за видимост в локалното търсене')}</td></tr>
+        <tr><td><strong>FAQPage</strong></td><td><span class="badge badge-red">${L('MISSING','ЛИПСВА')}</span></td><td>${L('No FAQ content or schema exists','Няма FAQ съдържание или schema')}</td></tr>
+        <tr><td><strong>Review / AggregateRating</strong></td><td><span class="badge badge-red">${L('MISSING','ЛИПСВА')}</span></td><td>${L('No Google reviews to mark up yet (6 Facebook reviews exist)','Все още няма Google ревюта за маркиране (6 Facebook ревюта съществуват)')}</td></tr>
+      </tbody>
+    </table></div></div>
+
+    <div class="subsection"><h3>${L('Open Graph Issues','Проблеми с Open Graph')}</h3>
+    <ul class="check-list">
+      <li><span class="icon-fail">\u2716</span> ${L('<strong>og:type is "article"</strong> \u2014 should be "website" for the homepage','<strong>og:type е "article"</strong> \u2014 трябва да е "website" за началната страница')}</li>
+      <li><span class="icon-fail">\u2716</span> ${L('<strong>og:site_name duplicated</strong> \u2014 shows "Хотел Mr. & Mrs. PET - Хотел Mr. & Mrs. PET"','<strong>og:site_name дублиран</strong> \u2014 показва "Хотел Mr. & Mrs. PET - Хотел Mr. & Mrs. PET"')}</li>
+      <li><span class="icon-fail">\u2716</span> ${L('<strong>No Twitter card tags</strong> \u2014 missing twitter:card, twitter:title, twitter:description','<strong>Няма Twitter card тагове</strong> \u2014 липсват twitter:card, twitter:title, twitter:description')}</li>
+    </ul></div>
+
+    <div class="callout"><strong>${L('Recommended LocalBusiness JSON-LD Template:','Препоръчан LocalBusiness JSON-LD Шаблон:')}</strong></div>
+    <div class="code-block">{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "additionalType": "https://schema.org/PetStore",
+  "name": "Mr. & Mrs. PET",
+  "description": "${L('Pet hotel for dogs and cats near Sofia, Gorni Bogrov','Хотел за кучета и котки до София, Горни Богров')}",
+  "url": "https://mrmrspet.bg",
+  "telephone": "+359-XXX-XXX-XXX",
+  "email": "info@mrmrspet.bg",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "...",
+    "addressLocality": "${L('Gorni Bogrov','Горни Богров')}",
+    "addressRegion": "${L('Sofia','София')}",
+    "postalCode": "...",
+    "addressCountry": "BG"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "...",
+    "longitude": "..."
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+      "opens": "08:00",
+      "closes": "20:00"
+    }
+  ],
+  "priceRange": "\u20AC\u20AC",
+  "image": "https://mrmrspet.bg/logo.webp",
+  "sameAs": [
+    "https://facebook.com/...",
+    "https://instagram.com/...",
+    "https://tiktok.com/..."
+  ]
+}</div>
+  `);
+
+  // ============ BLOG & CONTENT STRATEGY ============
+  h += sec('blog', '&#9997;', L('Blog & Content Strategy','Блог и Стратегия за Съдържание'), '25/100', false, `
+    <div class="stat-grid" style="margin-bottom:20px">
+      <div class="stat-card"><div class="sv text-red">5</div><div class="sl">${L('Total Posts','Общо Публикации')}</div></div>
+      <div class="stat-card"><div class="sv text-red">350-500</div><div class="sl">${L('Words per Post','Думи на Пост')}</div></div>
+      <div class="stat-card"><div class="sv text-red">8 ${L('mo','мес')}</div><div class="sl">${L('Months Stale','Месеца Неактивен')}</div></div>
+      <div class="stat-card"><div class="sv text-red">0</div><div class="sl">${L('Internal Links','Вътрешни Линкове')}</div></div>
+    </div>
+
+    <div class="subsection"><h3>${L('Current Blog Problems','Текущи Проблеми с Блога')}</h3>
+    <ul class="check-list">
+      <li><span class="icon-fail">\u2716</span> ${L('<strong>Only 5 posts total</strong> \u2014 last published July 2025 (8 months ago)','<strong>Само 5 публикации общо</strong> \u2014 последната от юли 2025 (преди 8 месеца)')}</li>
+      <li><span class="icon-fail">\u2716</span> ${L('<strong>Thin content</strong> \u2014 350-500 words per post (minimum should be 800-1200)','<strong>Кратко съдържание</strong> \u2014 350-500 думи на пост (минимумът трябва да е 800-1200)')}</li>
+      <li><span class="icon-fail">\u2716</span> ${L('<strong>Zero internal links</strong> in any blog post body text','<strong>Нула вътрешни линкове</strong> в текста на блог постовете')}</li>
+      <li><span class="icon-fail">\u2716</span> ${L('<strong>No CTAs within articles</strong> \u2014 posts don\'t drive readers toward booking','<strong>Без CTA в статиите</strong> \u2014 постовете не насочват читателите към резервация')}</li>
+      <li><span class="icon-fail">\u2716</span> ${L('<strong>No author bios</strong> \u2014 every post lacks author attribution','<strong>Без авторски биографии</strong> \u2014 всеки пост е без атрибуция на автор')}</li>
+    </ul></div>
+
+    <div class="callout"><strong>${L('Recommended Cadence:','Препоръчана Честота:')}</strong> ${L(
+      '2 posts/month for the first 3 months, then 1-2/month ongoing. Each post should be 800-1500 words with 2-3 internal links and a clear CTA.',
+      '2 поста/месец за първите 3 месеца, след това 1-2/месец постоянно. Всеки пост трябва да бъде 800-1500 думи с 2-3 вътрешни линка и ясен CTA.'
+    )}</div>
+
+    <div class="subsection"><h3>${L('10 Recommended Blog Topics','10 Препоръчани Теми за Блога')}</h3>
+    <div class="resp-table"><table>
+      <thead><tr><th>#</th><th>${L('Topic','Тема')}</th><th>${L('Target Keyword','Целева Ключова Дума')}</th><th>${L('Word Count','Думи')}</th><th>${L('Priority','Приоритет')}</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>${L('How to Choose a Pet Hotel in Sofia','Как да изберете хотел за домашни любимци в София')}</td><td>${L('хотел за кучета София','хотел за кучета София')}</td><td>1200+</td><td><span class="badge badge-red">${L('Critical','Критичен')}</span></td></tr>
+        <tr><td>2</td><td>${L('What to Pack for Your Dog\'s Hotel Stay','Какво да приготвите за престоя на кучето в хотел')}</td><td>${L('какво да донеса в хотел за кучета','какво да донеса в хотел за кучета')}</td><td>800+</td><td><span class="badge badge-orange">${L('High','Висок')}</span></td></tr>
+        <tr><td>3</td><td>${L('Cat Boarding: Everything You Need to Know','Настаняване на котки: Всичко, което трябва да знаете')}</td><td>${L('хотел за котки София','хотел за котки София')}</td><td>1000+</td><td><span class="badge badge-red">${L('Critical','Критичен')}</span></td></tr>
+        <tr><td>4</td><td>${L('Reducing Separation Anxiety in Dogs During Boarding','Намаляване на тревожността при кучетата по време на настаняване')}</td><td>${L('стрес при кучетата настаняване','стрес при кучетата настаняване')}</td><td>1000+</td><td><span class="badge badge-orange">${L('High','Висок')}</span></td></tr>
+        <tr><td>5</td><td>${L('Required Vaccinations for Pet Hotel Stays','Необходими ваксини за престой в хотел за любимци')}</td><td>${L('ваксини хотел за кучета','ваксини хотел за кучета')}</td><td>800+</td><td><span class="badge badge-orange">${L('High','Висок')}</span></td></tr>
+        <tr><td>6</td><td>${L('Dog Grooming Guide: Breeds, Frequency, Costs','Ръководство за груминг: Породи, честота, цени')}</td><td>${L('груминг за кучета цени','груминг за кучета цени')}</td><td>1200+</td><td><span class="badge badge-blue">${L('Medium','Среден')}</span></td></tr>
+        <tr><td>7</td><td>${L('Day Care vs Overnight Stay: What\'s Best for Your Pet','Дневни грижи vs нощен престой: Кое е най-добро за вашия любимец')}</td><td>${L('дневни грижи за кучета София','дневни грижи за кучета София')}</td><td>1000+</td><td><span class="badge badge-blue">${L('Medium','Среден')}</span></td></tr>
+        <tr><td>8</td><td>${L('Summer Travel: Where to Leave Your Pet in Sofia','Лятна ваканция: Къде да оставите любимеца си в София')}</td><td>${L('домашен любимец на почивка','домашен любимец на почивка')}</td><td>800+</td><td><span class="badge badge-blue">${L('Medium','Среден')}</span></td></tr>
+        <tr><td>9</td><td>${L('First-Time Pet Hotel Visit: A Complete Checklist','Първо посещение на хотел за любимци: Пълен чеклист')}</td><td>${L('хотел за кучета за първи път','хотел за кучета за първи път')}</td><td>1000+</td><td><span class="badge badge-blue">${L('Medium','Среден')}</span></td></tr>
+        <tr><td>10</td><td>${L('Why Gorni Bogrov is the Perfect Location for a Pet Hotel','Защо Горни Богров е перфектната локация за хотел за любимци')}</td><td>${L('хотел за кучета Горни Богров','хотел за кучета Горни Богров')}</td><td>800+</td><td><span class="badge badge-yellow">${L('Low','Нисък')}</span></td></tr>
+      </tbody>
+    </table></div></div>
+  `);
+
+  // ============ SOCIAL MEDIA ============
+  h += sec('social', '&#128242;', L('Social Media Presence','Присъствие в Социалните Медии'), '45/100', false, `
+    <div class="stat-grid" style="margin-bottom:20px">
+      <div class="stat-card"><div class="sv text-orange">588</div><div class="sl">${L('Facebook Followers','Facebook Последователи')}</div></div>
+      <div class="stat-card"><div class="sv text-orange">2,430</div><div class="sl">${L('TikTok Followers','TikTok Последователи')}</div></div>
+      <div class="stat-card"><div class="sv text-green">25.7K</div><div class="sl">${L('TikTok Likes','TikTok Харесвания')}</div></div>
+      <div class="stat-card"><div class="sv text-green">6</div><div class="sl">${L('FB Reviews (100%)','FB Ревюта (100%)')}</div></div>
+    </div>
+
+    <div class="subsection"><h3>${L('Platform Overview','Преглед по Платформи')}</h3>
+    <div class="resp-table"><table>
+      <thead><tr><th>${L('Platform','Платформа')}</th><th>${L('Account','Акаунт')}</th><th>${L('Followers','Последователи')}</th><th>${L('Engagement','Ангажираност')}</th><th>${L('Status','Статус')}</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Facebook</strong></td><td>Mr. & Mrs. Pet</td><td>588</td><td>${L('6 reviews (100% recommendation)','6 ревюта (100% препоръка)')}</td><td><span class="badge badge-green">${L('Active','Активен')}</span></td></tr>
+        <tr><td><strong>TikTok</strong></td><td>@mr.mrs.pet.hotel</td><td>2,430</td><td>25.7K ${L('likes','харесвания')}</td><td><span class="badge badge-green">${L('Active','Активен')}</span></td></tr>
+        <tr><td><strong>Instagram</strong></td><td>@mrmrspetbg</td><td>${L('N/A (login wall)','N/A (изисква вход)')}</td><td>-</td><td><span class="badge badge-yellow">${L('Linked from site','Свързан от сайта')}</span></td></tr>
+      </tbody>
+    </table></div></div>
+
+    <div class="subsection"><h3>${L('Facebook Details','Facebook Детайли')}</h3>
+    <ul class="check-list">
+      <li><span class="icon-pass">\u2714</span> ${L('<strong>Category:</strong> Hotel','<strong>Категория:</strong> Hotel')}</li>
+      <li><span class="icon-pass">\u2714</span> ${L('<strong>Bio:</strong> "За тези от вас, които искат най-доброто \u2013 и за себе си, и за своите домашни любимци."','<strong>Биография:</strong> "За тези от вас, които искат най-доброто \u2013 и за себе си, и за своите домашни любимци."')}</li>
+      <li><span class="icon-pass">\u2714</span> ${L('<strong>Contact:</strong> Phone 088 203 9606, email info@mrmrspet.bg, website linked','<strong>Контакт:</strong> Телефон 088 203 9606, имейл info@mrmrspet.bg, уебсайт свързан')}</li>
+      <li><span class="icon-pass">\u2714</span> ${L('<strong>Last Post:</strong> 3 days ago \u2014 active posting frequency','<strong>Последна Публикация:</strong> преди 3 дни \u2014 активна честота на публикуване')}</li>
+      <li><span class="icon-pass">\u2714</span> ${L('<strong>Hashtag usage:</strong> Uses #pethotel and similar tags consistently','<strong>Хаштагове:</strong> Използва #pethotel и подобни тагове последователно')}</li>
+      <li><span class="icon-pass">\u2714</span> ${L('<strong>6 Reviews:</strong> 100% recommendation rate','<strong>6 Ревюта:</strong> 100% препоръка')}</li>
+    </ul></div>
+
+    <div class="subsection"><h3>${L('TikTok Details','TikTok Детайли')}</h3>
+    <ul class="check-list">
+      <li><span class="icon-pass">\u2714</span> ${L('<strong>Handle:</strong> @mr.mrs.pet.hotel \u2014 "Mr. & Mrs. Pet Hotel"','<strong>Акаунт:</strong> @mr.mrs.pet.hotel \u2014 "Mr. & Mrs. Pet Hotel"')}</li>
+      <li><span class="icon-pass">\u2714</span> ${L('<strong>Following:</strong> 38 accounts','<strong>Следва:</strong> 38 акаунта')}</li>
+      <li><span class="icon-pass">\u2714</span> ${L('<strong>Bio:</strong> Includes website link and brand message','<strong>Биография:</strong> Включва линк към сайта и бранд съобщение')}</li>
+      <li><span class="icon-pass">\u2714</span> ${L('<strong>Engagement ratio:</strong> 25.7K likes on 2,430 followers \u2014 above average','<strong>Съотношение на ангажираност:</strong> 25.7K харесвания на 2 430 последователи \u2014 над средното')}</li>
+    </ul></div>
+
+    <div class="subsection"><h3>${L('Sub-Scores','Под-Оценки')}</h3>
+    ${scoreBar(L('Platform Presence','Присъствие в Платформи'), 65, null, L('Active on 3 platforms (Facebook, Instagram, TikTok) \u2014 good breadth for a local pet business.','Активен в 3 платформи (Facebook, Instagram, TikTok) \u2014 добро покритие за локален бизнес за домашни любимци.'))}
+    ${scoreBar(L('Posting Frequency','Честота на Публикуване'), 60, null, L('Active posting \u2014 most recent Facebook post 3 days ago. Consistent hashtag usage.','Активно публикуване \u2014 последната Facebook публикация преди 3 дни. Последователно използване на хаштагове.'))}
+    ${scoreBar(L('Reviews & Social Proof','Ревюта и Социални Доказателства'), 25, null, L('6 Facebook reviews with 100% recommendation is a positive start, but far behind competitors\' 130-408 Google reviews.','6 Facebook ревюта със 100% препоръка е добро начало, но далеч зад 130-408 Google ревюта на конкурентите.'))}
+    ${scoreBar(L('Profile Completeness','Пълнота на Профила'), 55, null, L('Facebook has bio, phone, email, website linked, category "Hotel". TikTok has bio and website link.','Facebook има биография, телефон, имейл, свързан уебсайт, категория "Hotel". TikTok има биография и линк към сайта.'))}
+    ${scoreBar(L('SEO Impact','SEO Въздействие'), 30, null, L('Social profiles link to website (good for backlinks) but no Google reviews, which is the key local ranking factor.','Социалните профили водят към сайта (добре за backlinks), но няма Google ревюта, което е ключовият фактор за локално класиране.'))}
+    </div>
+
+    <div class="callout success"><strong>${L('Strength:','Предимство:')}</strong> ${L(
+      'Active social media presence with consistent branding and regular posting. TikTok shows good traction with 25.7K likes on 2,430 followers \u2014 above-average engagement ratio.',
+      'Активно присъствие в социалните медии с последователен бранд и редовно публикуване. TikTok показва добро сцепление с 25.7K харесвания на 2 430 последователи \u2014 над средното съотношение на ангажираност.'
+    )}</div>
+    <div class="callout danger"><strong>${L('Gap:','Разлика:')}</strong> ${L(
+      'Only 6 Facebook reviews vs competitors\' 130-408 Google reviews. No Google reviews at all \u2014 this is the single biggest competitive disadvantage.',
+      'Само 6 Facebook ревюта срещу 130-408 Google ревюта на конкурентите. Нула Google ревюта \u2014 това е единственият най-голям конкурентен недостатък.'
+    )}</div>
+
+    <div class="subsection"><h3>${L('Recommendations','Препоръки')}</h3>
+    <div class="card-grid">
+      ${qw(1, L('Prioritize Google Reviews','Приоритизирайте Google Ревюта'), L('Start actively collecting Google reviews \u2014 this is the biggest gap vs competitors. Use QR codes at checkout, follow-up emails.','Започнете активно събиране на Google ревюта \u2014 това е най-голямата разлика спрямо конкурентите. Използвайте QR кодове при напускане, последващи имейли.'), L('Critical','Критично'), 'red')}
+      ${qw(2, L('Embed Facebook Reviews on Site','Вградете Facebook Ревюта в Сайта'), L('Display the 6 Facebook reviews (100% recommendation) prominently on the homepage as social proof and E-E-A-T signal','Покажете 6-те Facebook ревюта (100% препоръка) видимо на началната страница като социално доказателство и E-E-A-T сигнал'), L('Quick Win','Бърза Победа'), 'green')}
+      ${qw(3, L('Cross-Promote for Reviews','Крос-Промотирайте за Ревюта'), L('Use TikTok engagement to drive Google reviews \u2014 add review CTA in TikTok bio and post captions','Използвайте ангажираността от TikTok за Google ревюта \u2014 добавете CTA за ревюта в TikTok биографията и описанията на постове'), L('Growth','Растеж'), 'blue')}
+      ${qw(4, L('Add Review Schema Markup','Добавете Schema Маркъп за Ревюта'), L('Once Google reviews start accumulating, add AggregateRating schema to display star ratings in search results','Когато Google ревютата започнат да се натрупват, добавете AggregateRating schema за показване на звездни оценки в резултатите от търсенето'), L('SEO','SEO'), 'orange')}
+    </div></div>
+  `);
+
+  // ============ ACTION PLAN ============
+  h += sec('action', '&#128221;', L('Action Plan','План за Действие'), '', false, `
+    <div class="subsection"><h3>${L('Critical \u2014 Week 1-2','Критични \u2014 Седмица 1-2')}</h3>
+    <div class="callout danger"><strong>${L('Do these first:','Направете тези първо:')}</strong> ${L(
+      'These items are the foundation. Without them, no other SEO work will have meaningful impact.',
+      'Тези елементи са основата. Без тях нито една друга SEO работа няма да има смислено въздействие.'
+    )}</div>
+    <div class="resp-table"><table>
+      <thead><tr><th>#</th><th>${L('Action','Действие')}</th><th>${L('Impact','Ефект')}</th><th>${L('Effort','Усилие')}</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><strong>${L('Verify footer email routing (iinfo@ href discrepancy)','Проверете маршрутизацията на footer имейла (несъответствие в iinfo@ href)')}</strong></td><td><span class="badge badge-blue">${L('Low','Нисък')}</span></td><td>${L('5 minutes','5 минути')}</td></tr>
+        <tr><td>2</td><td><strong>${L('Consolidate demo.mrmrspet.bg CTAs to main domain','Консолидирайте CTA от demo.mrmrspet.bg към основния домейн')}</strong></td><td><span class="badge badge-blue">${L('Low / SEO','Нисък / SEO')}</span></td><td>${L('10 minutes','10 минути')}</td></tr>
+        <tr><td>3</td><td><strong>${L('Rewrite all title tags with target keywords','Пренапишете всички title тагове с целеви ключови думи')}</strong></td><td><span class="badge badge-red">${L('Critical SEO','Критично SEO')}</span></td><td>${L('1 hour','1 час')}</td></tr>
+        <tr><td>4</td><td><strong>${L('Write unique meta descriptions for all pages','Напишете уникални мета описания за всички страници')}</strong></td><td><span class="badge badge-red">${L('Critical SEO','Критично SEO')}</span></td><td>${L('1 hour','1 час')}</td></tr>
+        <tr><td>5</td><td><strong>${L('Rewrite H1 to include keywords + location','Пренапишете H1 да включва ключови думи + локация')}</strong></td><td><span class="badge badge-red">${L('Critical SEO','Критично SEO')}</span></td><td>${L('30 minutes','30 минути')}</td></tr>
+        <tr><td>6</td><td><strong>${L('Add LocalBusiness JSON-LD schema','Добавете LocalBusiness JSON-LD schema')}</strong></td><td><span class="badge badge-red">${L('Critical','Критично')}</span></td><td>${L('2 hours','2 часа')}</td></tr>
+        <tr><td>7</td><td><strong>${L('Create & verify Google Business Profile','Създайте и верифицирайте Google Business профил')}</strong></td><td><span class="badge badge-red">${L('Critical','Критично')}</span></td><td>${L('1 hour + verification','1 час + верификация')}</td></tr>
+        <tr><td>8</td><td><strong>${L('Fix og:type (article \u2192 website) and og:site_name duplication','Поправете og:type (article \u2192 website) и дублирането на og:site_name')}</strong></td><td><span class="badge badge-orange">${L('High','Висок')}</span></td><td>${L('20 minutes','20 минути')}</td></tr>
+      </tbody>
+    </table></div></div>
+
+    <div class="subsection"><h3>${L('High Priority \u2014 Weeks 2-4','Висок Приоритет \u2014 Седмици 2-4')}</h3>
+    <div class="resp-table"><table>
+      <thead><tr><th>#</th><th>${L('Action','Действие')}</th><th>${L('Impact','Ефект')}</th><th>${L('Effort','Усилие')}</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><strong>${L('Remove duplicate booking forms (keep 1 of 3)','Премахнете дублираните форми за резервация (запазете 1 от 3)')}</strong></td><td><span class="badge badge-orange">${L('High','Висок')}</span></td><td>${L('1 hour','1 час')}</td></tr>
+        <tr><td>2</td><td><strong>${L('Add alt text to all images missing it (~35%)','Добавете alt текст към всички изображения без такъв (~35%)')}</strong></td><td><span class="badge badge-orange">${L('High','Висок')}</span></td><td>${L('2 hours','2 часа')}</td></tr>
+        <tr><td>3</td><td><strong>${L('Add lazy loading to all below-fold images','Добавете lazy loading към всички изображения под видимата зона')}</strong></td><td><span class="badge badge-orange">${L('High','Висок')}</span></td><td>${L('1 hour','1 час')}</td></tr>
+        <tr><td>4</td><td><strong>${L('Add internal links to all blog post bodies','Добавете вътрешни линкове в текста на всички блог постове')}</strong></td><td><span class="badge badge-orange">${L('High','Висок')}</span></td><td>${L('2 hours','2 часа')}</td></tr>
+        <tr><td>5</td><td><strong>${L('Expand existing blog posts to 800+ words','Разширете съществуващите блог постове до 800+ думи')}</strong></td><td><span class="badge badge-orange">${L('High','Висок')}</span></td><td>${L('4 hours','4 часа')}</td></tr>
+        <tr><td>6</td><td><strong>${L('Add author bios to all blog posts','Добавете авторски биографии към всички блог постове')}</strong></td><td><span class="badge badge-orange">${L('High','Висок')}</span></td><td>${L('1 hour','1 час')}</td></tr>
+        <tr><td>7</td><td><strong>${L('Add Twitter card meta tags','Добавете Twitter card мета тагове')}</strong></td><td><span class="badge badge-blue">${L('Medium','Среден')}</span></td><td>${L('30 minutes','30 минути')}</td></tr>
+        <tr><td>8</td><td><strong>${L('Remove "Number of children" field from booking','Премахнете полето "Брой деца" от резервацията')}</strong></td><td><span class="badge badge-blue">${L('Medium','Среден')}</span></td><td>${L('10 minutes','10 минути')}</td></tr>
+        <tr><td>9</td><td><strong>${L('Fix H6 footer headings \u2192 use lists instead','Поправете H6 заглавията във footer \u2192 използвайте списъци')}</strong></td><td><span class="badge badge-blue">${L('Medium','Среден')}</span></td><td>${L('30 minutes','30 минути')}</td></tr>
+      </tbody>
+    </table></div></div>
+
+    <div class="subsection"><h3>${L('Medium Priority \u2014 Months 1-2','Среден Приоритет \u2014 Месеци 1-2')}</h3>
+    <div class="card-grid">
+      ${qw(1, L('Publish 4-6 New Blog Posts','Публикувайте 4-6 Нови Блог Поста'), L('Target local keywords, 800-1500 words each, with internal links and CTAs','Таргетирайте локални ключови думи, 800-1500 думи всеки, с вътрешни линкове и CTA'), L('SEO Growth','SEO Растеж'), 'orange')}
+      ${qw(2, L('Create FAQ Page','Създайте FAQ Страница'), L('Answer top customer questions with FAQPage schema markup','Отговорете на най-честите клиентски въпроси с FAQPage schema маркъп'), L('SEO + Trust','SEO + Доверие'), 'orange')}
+      ${qw(3, L('Create Cat-Specific Landing Page','Създайте Лендинг Страница за Котки'), L('"хотел за котки София" needs a dedicated landing page with cat-specific content','"хотел за котки София" изисква самостоятелна лендинг страница със специфично съдържание за котки'), L('Keyword Gap','Липсваща Ключова Дума'), 'orange')}
+      ${qw(4, L('Create Team / Staff Page','Създайте Страница за Екипа'), L('Staff bios, credentials, photos \u2014 critical for E-E-A-T','Биографии на екипа, квалификации, снимки \u2014 критично за E-E-A-T'), L('E-E-A-T','E-E-A-T'), 'blue')}
+      ${qw(5, L('Defer Non-Critical JS','Отложете Некритичния JS'), L('Audit and defer/remove unused JS files from the 59 total','Одитирайте и отложете/премахнете неизползвани JS файлове от общо 59'), L('Performance','Производителност'), 'blue')}
+      ${qw(6, L('Submit XML Sitemap','Подайте XML Карта на Сайта'), L('Verify XML sitemap is present and submitted to Google Search Console','Проверете дали XML картата на сайта е налична и подадена в Google Search Console'), L('Technical','Техническо'), 'blue')}
+      ${qw(7, L('Submit to 5+ Business Directories','Регистрирайте се в 5+ Бизнес Директории'), L('Opoznai.bg, Firmite.bg, YellowPages.bg, Yelp \u2014 consistent NAP','Opoznai.bg, Firmite.bg, YellowPages.bg, Yelp \u2014 последователен NAP'), L('Local SEO','Локално SEO'), 'orange')}
+      ${qw(8, L('Embed Facebook Reviews on Website','Вградете Facebook Ревюта в Уебсайта'), L('Display 6 Facebook reviews (100% recommendation) on the homepage as social proof while building Google reviews','Покажете 6-те Facebook ревюта (100% препоръка) на началната страница като социално доказателство, докато събирате Google ревюта'), L('Trust','Доверие'), 'green')}
+      ${qw(9, L('Rebuild Pricing Table as HTML','Преработете Ценовата Таблица в HTML'), L('Replace image-based pricing with crawlable HTML table','Заменете ценовата таблица от изображение с обхождаема HTML таблица'), L('SEO','SEO'), 'blue')}
+      ${qw(10, L('Convert Images to WebP','Конвертирайте Изображенията в WebP'), L('Convert remaining non-WebP images for faster loading','Конвертирайте оставащите не-WebP изображения за по-бързо зареждане'), L('Performance','Производителност'), 'green')}
+    </div></div>
+
+    <div class="subsection"><h3>${L('Low Priority \u2014 Months 2-4','Нисък Приоритет \u2014 Месеци 2-4')}</h3>
+    <div class="card-grid">
+      ${qw(1, L('Implement Review Collection Strategy','Внедрете Стратегия за Събиране на Ревюта'), L('QR codes, follow-up emails, review request cards \u2014 target 5 reviews/week','QR кодове, последващи имейли, карти за ревюта \u2014 цел 5 ревюта/седмица'), L('Authority','Авторитет'), 'orange')}
+      ${qw(2, L('Add Related Posts Widget','Добавете Уиджет за Свързани Публикации'), L('Show related blog posts at the end of each article to increase session time','Показвайте свързани блог постове в края на всяка статия за увеличаване на времето на сесията'), L('Engagement','Ангажираност'), 'blue')}
+      ${qw(3, L('Create Daycare Page','Създайте Страница за Дневни Грижи'), L('Dedicated daycare/daily care service page targeting "дневни грижи за кучета София"','Самостоятелна страница за дневни грижи, таргетираща "дневни грижи за кучета София"'), L('Content Gap','Липсващо Съдържание'), 'blue')}
+      ${qw(4, L('Extract Critical CSS','Извлечете Критичния CSS'), L('Inline critical CSS and defer the rest for faster initial render','Вградете критичния CSS и отложете останалия за по-бързо начално рендериране'), L('Performance','Производителност'), 'blue')}
+      ${qw(5, L('Add Image Dimensions','Добавете Размери на Изображенията'), L('Add explicit width/height attributes to prevent CLS','Добавете явни width/height атрибути за предотвратяване на CLS'), L('Core Web Vitals','Core Web Vitals'), 'green')}
+      ${qw(6, L('Preload LCP Image','Предзаредете LCP Изображението'), L('Add preload hint for Largest Contentful Paint image','Добавете preload подсказка за LCP изображението'), L('Performance','Производителност'), 'green')}
+      ${qw(7, L('Rename OG Image File','Преименувайте OG Изображението'), L('Remove Cyrillic characters from OG image filename','Премахнете кирилските символи от името на OG изображението'), L('Quick Fix','Бърза Поправка'), 'green')}
+      ${qw(8, L('Create Content Calendar','Създайте Календар за Съдържание'), L('Plan 6 months of blog content with keyword targets and publishing dates','Планирайте 6 месеца блог съдържание с целеви ключови думи и дати за публикуване'), L('Strategy','Стратегия'), 'blue')}
+      ${qw(9, L('Pitch to "Best Of" Publishers','Предложете се на Издатели'), L('Contact Petfood.bg, Lifestyle.bg for inclusion in "best pet hotels Sofia" articles','Свържете се с Petfood.bg, Lifestyle.bg за включване в статии "най-добрите хотели за любимци София"'), L('Authority','Авторитет'), 'orange')}
+      ${qw(10, L('Monitor Competitor SEO','Мониторирайте SEO на Конкурентите'), L('Set up ongoing tracking of competitor rankings, reviews, and content changes','Настройте постоянно проследяване на класирането, ревютата и промените в съдържанието на конкурентите'), L('Strategy','Стратегия'), 'blue')}
+    </div></div>
+  `);
+
+  // Footer
+  h += `<div class="footer">${L('Generated by AI Marketing Suite','Генерирано от AI Marketing Suite')} &mdash; SEO Content Audit &mdash; 2026-03-21 &mdash; mrmrspet.bg</div>`;
+
+  mc.innerHTML = h;
+}
+
+// Helper: section
+function sec(id, icon, title, score, collapsed, body) {
+  const scoreBadge = score ? `<span class="sec-score ${scoreColor(parseInt(score) || 0)}">${score}</span>` : '';
+  const cls = collapsed ? ' collapsed' : '';
+  return `
+  <div class="section${cls}" id="${id}">
+    <div class="section-header" onclick="toggle(this)">
+      <h2><span class="sec-icon">${icon}</span> ${title} ${scoreBadge}</h2>
+      <div class="section-toggle">&#9660;</div>
+    </div>
+    <div class="section-body">${body}</div>
+  </div>`;
+}
+
+// Helper: score bar
+function scoreBar(label, score, weight, finding) {
+  const w = weight ? `<span style="font-size:.72rem;color:var(--text-secondary);margin-left:6px">(${weight}%)</span>` : '';
+  return `
+  <div class="score-row">
+    <div class="sr-label">${label}${w}</div>
+    <div class="sr-bar-wrap"><div class="sr-bar ${barCls(score)}" style="width:${score}%"></div></div>
+    <div class="sr-val ${txtCls(score)}">${score}/100</div>
+  </div>
+  ${finding ? `<div style="padding:0 0 6px;font-size:.8rem;color:var(--text-secondary);border-bottom:1px solid var(--content-bg);margin-bottom:2px">${finding}</div>` : ''}`;
+}
+
+// Helper: quick win card
+function qw(num, title, desc, impact, impactCls) {
+  const impactHtml = impact ? `<div class="rc-impact ${impactCls}">${impact}</div>` : '';
+  return `
+  <div class="rec-card">
+    <div class="rc-num">${num}</div>
+    <h4>${title}</h4>
+    <p>${desc}</p>
+    ${impactHtml}
+  </div>`;
+}
+
+function toggle(header) {
+  header.parentElement.classList.toggle('collapsed');
+}
+
+function setLang(l) {
+  lang = l;
+  document.getElementById('btnEN').classList.toggle('active', l === 'en');
+  document.getElementById('btnBG').classList.toggle('active', l === 'bg');
+  document.documentElement.lang = l === 'bg' ? 'bg' : 'en';
+  render();
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+// Active nav on scroll
+window.addEventListener('scroll', () => {
+  const links = document.querySelectorAll('.sidebar-nav a');
+  let current = '';
+  NAV.forEach(n => {
+    const el = document.getElementById(n.id);
+    if (el && el.getBoundingClientRect().top < 150) current = n.id;
+  });
+  links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+});
+
+render();
+</script>
+</body>
+</html>
