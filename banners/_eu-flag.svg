@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" preserveAspectRatio="xMidYMid meet">
+  <rect width="60" height="40" fill="#003399"/>
+  <defs>
+    <symbol id="s" viewBox="-2 -2 4 4" overflow="visible">
+      <polygon points="0,-2 0.588,-0.618 1.902,-0.618 0.951,0.236 1.176,1.618 0,0.764 -1.176,1.618 -0.951,0.236 -1.902,-0.618 -0.588,-0.618" fill="#FFCC00"/>
+    </symbol>
+  </defs>
+  <g>
+    <use href="#s" x="30" y="8"/>
+    <use href="#s" x="36" y="9.61"/>
+    <use href="#s" x="40.39" y="14"/>
+    <use href="#s" x="42" y="20"/>
+    <use href="#s" x="40.39" y="26"/>
+    <use href="#s" x="36" y="30.39"/>
+    <use href="#s" x="30" y="32"/>
+    <use href="#s" x="24" y="30.39"/>
+    <use href="#s" x="19.61" y="26"/>
+    <use href="#s" x="18" y="20"/>
+    <use href="#s" x="19.61" y="14"/>
+    <use href="#s" x="24" y="9.61"/>
+  </g>
+</svg>

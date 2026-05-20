@@ -1,37 +1,29 @@
 /* ===========================================================
    STARTNOW · VRATSA INDUSTRIAL BASE
-   Facebook Ad Banner System — 1080×1080
+   Facebook Ad Banner System — v2
+   Sizes: square 1080×1080  ·  landscape 1200×628
    =========================================================== */
 
-/* --- Reset --- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* --- Fonts --- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@500;700;900&family=Noto+Sans+Arabic:wght@500;700;900&family=Noto+Sans:wght@500;700;900&display=swap');
 
-/* --- Tokens --- */
 :root {
   --navy-900: #060F1F;
   --navy-800: #0A1A2F;
   --navy-700: #122339;
+  --navy-600: #1B3057;
   --yellow: #F5C24A;
   --yellow-bright: #FFD43A;
-  --white: #FFFFFF;
-  --white-70: rgba(255,255,255,0.70);
-  --white-50: rgba(255,255,255,0.50);
-
-  --accent-cn: #E63946;   /* red — China */
-  --accent-tr: #E63946;   /* red — Turkey */
-  --accent-ae: #00897B;   /* teal — Gulf */
-  --accent-eu: #1D4ED8;   /* blue — Western EU */
-  --accent-ee: #FFD43A;   /* yellow — Eastern EU */
-  --accent-rent: #2BBA67; /* green — rental */
+  --gold:   #C9A24B;
+  --white:  #FFFFFF;
+  --white-80: rgba(255,255,255,0.80);
+  --white-60: rgba(255,255,255,0.60);
+  --white-40: rgba(255,255,255,0.40);
 
   --font-en: 'Inter', system-ui, sans-serif;
   --font-cn: 'Noto Sans SC', 'Inter', sans-serif;
   --font-ar: 'Noto Sans Arabic', 'Inter', sans-serif;
-  --font-tr: 'Inter', 'Noto Sans', sans-serif;
-  --font-de: 'Inter', 'Noto Sans', sans-serif;
 }
 
 html, body {
@@ -45,20 +37,18 @@ html, body {
   padding: 24px;
 }
 
-/* --- The Banner --- */
+/* ============ Banner shell ============ */
 .banner {
   position: relative;
-  width: 1080px;
-  height: 1080px;
-  overflow: hidden;
   background: var(--navy-900);
   color: var(--white);
   font-family: var(--font-en);
-  /* outline that won't show in screenshot */
+  overflow: hidden;
   box-shadow: 0 30px 80px rgba(0,0,0,0.6);
 }
+.banner.square    { width: 1080px; height: 1080px; }
+.banner.landscape { width: 1200px; height: 628px; }
 
-/* Make sure devtools "capture node screenshot" gets exactly 1080x1080 */
 .banner img.bg {
   position: absolute;
   inset: 0;
@@ -68,331 +58,263 @@ html, body {
   z-index: 0;
 }
 
-/* Heavy gradient mask — kills residual text from source frames.
-   Strategy: a near-solid left panel where copy lives, with the property
-   photo visible primarily on the right side. */
+/* Lighter mask — let the property come through, but keep copy legible. */
 .banner .mask {
   position: absolute;
   inset: 0;
   z-index: 1;
   background:
-    /* Left panel — near-solid navy where all the copy sits (x=0..720) */
+    /* Left panel: ~80% navy, fading to 0 at right */
     linear-gradient(90deg,
-      rgba(6,15,31,0.96) 0%,
-      rgba(6,15,31,0.94) 55%,
-      rgba(6,15,31,0.55) 75%,
-      rgba(6,15,31,0.20) 100%),
-    /* Top + bottom darken for brand and footer rows */
+      rgba(6,15,31,0.86) 0%,
+      rgba(6,15,31,0.78) 40%,
+      rgba(6,15,31,0.30) 75%,
+      rgba(6,15,31,0.08) 100%),
+    /* Top + bottom darken for brand + footer */
     linear-gradient(180deg,
-      rgba(6,15,31,0.65) 0%,
-      rgba(6,15,31,0.20) 20%,
-      rgba(6,15,31,0.20) 70%,
-      rgba(6,15,31,0.95) 100%);
-}
-
-.banner .vignette {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background:
-    radial-gradient(ellipse at center,
-      transparent 30%,
-      rgba(0,0,0,0.55) 100%);
-  pointer-events: none;
+      rgba(6,15,31,0.55) 0%,
+      rgba(6,15,31,0.10) 15%,
+      rgba(6,15,31,0.10) 78%,
+      rgba(6,15,31,0.85) 100%);
 }
 
 .banner .content {
   position: absolute;
   inset: 0;
   z-index: 5;
-  padding: 56px 56px 56px 60px;
   display: flex;
   flex-direction: column;
 }
+.banner.square    .content { padding: 56px 60px; }
+.banner.landscape .content { padding: 40px 48px; }
 
-/* --- Top brand bar --- */
-.brand {
+/* ============ Brand row ============ */
+.brand-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
+  align-items: flex-start;
+  gap: 24px;
 }
-.brand-mark {
+.startnow-mark {
   display: flex;
-  align-items: center;
-  gap: 14px;
-  font-weight: 800;
-  font-size: 18px;
-  letter-spacing: 2px;
+  flex-direction: column;
+  gap: 4px;
+}
+.startnow-mark .wordmark {
+  font-family: var(--font-en);
+  font-weight: 900;
+  font-size: 28px;
+  letter-spacing: 2.8px;
   text-transform: uppercase;
   color: var(--white);
-}
-.brand-mark .eu-chip {
-  width: 44px; height: 44px;
-  background: var(--white);
+  line-height: 1;
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 10px;
+}
+.startnow-mark .wordmark::before {
+  content: '';
+  display: inline-block;
+  width: 22px; height: 22px;
+  background: var(--yellow);
   border-radius: 4px;
-}
-.brand-mark .eu-chip svg { width: 32px; height: 32px; }
-.brand-mark .lockup {
-  font-size: 16px;
-  letter-spacing: 1.6px;
-  font-weight: 700;
-}
-.brand-mark .lockup .sub {
-  display: block;
-  font-size: 11px;
-  letter-spacing: 2.4px;
-  color: var(--white-70);
-  font-weight: 500;
-}
-
-.flag-eu {
-  width: 70px; height: 48px;
-  background: #003399;
-  display: grid;
-  place-items: center;
-  border-radius: 3px;
   position: relative;
 }
-.flag-eu::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 50% 18%, #FFCC00 5%, transparent 6%),
-    radial-gradient(circle at 70% 25%, #FFCC00 5%, transparent 6%),
-    radial-gradient(circle at 82% 40%, #FFCC00 5%, transparent 6%),
-    radial-gradient(circle at 88% 60%, #FFCC00 5%, transparent 6%),
-    radial-gradient(circle at 82% 80%, #FFCC00 5%, transparent 6%),
-    radial-gradient(circle at 70% 95%, #FFCC00 5%, transparent 6%),
-    radial-gradient(circle at 50% 100%, #FFCC00 5%, transparent 6%),
-    radial-gradient(circle at 30% 95%, #FFCC00 5%, transparent 6%),
-    radial-gradient(circle at 18% 80%, #FFCC00 5%, transparent 6%),
-    radial-gradient(circle at 12% 60%, #FFCC00 5%, transparent 6%),
-    radial-gradient(circle at 18% 40%, #FFCC00 5%, transparent 6%),
-    radial-gradient(circle at 30% 25%, #FFCC00 5%, transparent 6%);
-}
-
-/* --- Localized native-script overlay --- */
-.lang-chip {
-  margin-top: 18px;
-  align-self: flex-end;
-  background: rgba(245,194,74,0.12);
-  border: 1px solid rgba(245,194,74,0.45);
-  backdrop-filter: blur(8px);
-  padding: 14px 22px;
-  border-radius: 6px;
-  font-weight: 800;
-  font-size: 28px;
-  letter-spacing: 0.5px;
-  max-width: 560px;
-  text-align: right;
-  line-height: 1.15;
-  color: var(--yellow);
-}
-
-/* --- Hero zone --- */
-.hero {
-  margin-top: 24px;
-  margin-bottom: auto;
-  padding-bottom: 0;
-}
-
-.eyebrow {
-  display: inline-block;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 3px;
+.startnow-mark .handle {
+  font-size: 12px;
+  letter-spacing: 2.4px;
+  color: var(--white-60);
+  font-weight: 600;
   text-transform: uppercase;
+  margin-left: 32px;
+}
+.startnow-mark .property {
+  font-size: 11px;
+  letter-spacing: 2.4px;
   color: var(--yellow);
-  margin-bottom: 24px;
-  padding: 6px 14px;
-  background: rgba(245,194,74,0.10);
-  border: 1px solid rgba(245,194,74,0.35);
-  border-radius: 4px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.15);
+  max-width: 380px;
 }
 
-.price-block {
+/* Real EU flag — 12 stars in a circle */
+.eu-flag {
+  width: 78px;
+  height: 52px;
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+}
+
+/* ============ Small language signal ============ */
+.lang-signal {
+  margin-top: 12px;
+  font-size: 13px;
+  letter-spacing: 1.6px;
+  color: var(--white-60);
+  font-weight: 600;
+  text-transform: uppercase;
+  text-align: right;
+}
+.lang-signal strong {
+  color: var(--yellow);
+  font-weight: 800;
+}
+
+/* ============ Hero ============ */
+.hero {
+  margin-top: 36px;
+  flex: 1;
   display: flex;
-  align-items: baseline;
-  gap: 6px;
-  margin-bottom: 8px;
-  filter: drop-shadow(0 6px 28px rgba(0,0,0,0.55));
-}
-.price-currency {
-  font-size: 160px;
-  font-weight: 900;
-  line-height: 0.85;
-  color: var(--yellow);
-  letter-spacing: -8px;
-}
-.price-number {
-  font-size: 260px;
-  font-weight: 900;
-  line-height: 0.82;
-  letter-spacing: -12px;
-  color: var(--yellow);
-  font-feature-settings: 'tnum' 1;
-}
-.price-unit {
-  font-size: 48px;
-  font-weight: 700;
-  line-height: 0.85;
-  color: var(--white);
-  letter-spacing: -1px;
-  margin-left: 10px;
-  align-self: flex-end;
-  padding-bottom: 24px;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .headline {
-  font-size: 64px;
   font-weight: 900;
-  line-height: 0.95;
-  letter-spacing: -2px;
   text-transform: uppercase;
-  margin-top: 20px;
-  max-width: 900px;
+  line-height: 0.94;
+  letter-spacing: -2px;
   text-shadow: 0 4px 18px rgba(0,0,0,0.55);
+  color: var(--white);
+}
+.banner.square    .headline { font-size: 96px; max-width: 880px; }
+.banner.landscape .headline { font-size: 64px; max-width: 760px; }
+
+.headline em {
+  font-style: normal;
+  color: var(--yellow);
+  text-transform: none;   /* keep m² lowercase even inside an UPPERCASE headline */
 }
 
 .subhead {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 500;
-  line-height: 1.35;
-  color: var(--white-70);
-  margin-top: 18px;
+  line-height: 1.4;
+  color: var(--white-80);
+  margin-top: 20px;
   max-width: 720px;
 }
+.banner.landscape .subhead { font-size: 18px; margin-top: 14px; max-width: 640px; }
 
-/* --- Comparison anchor (the killer move) --- */
-.comparison {
+/* ============ Price duo (buy + rent side by side) ============ */
+.prices {
+  display: flex;
+  gap: 28px;
+  align-items: stretch;
   margin-top: 28px;
+}
+.banner.landscape .prices { margin-top: 18px; gap: 18px; }
+
+.price-card {
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.04);
+  padding: 18px 22px;
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+  min-width: 240px;
+}
+.price-card.primary {
+  background: rgba(245,194,74,0.12);
+  border-color: rgba(245,194,74,0.55);
+}
+.price-card .label {
+  font-size: 11px;
+  letter-spacing: 2.4px;
+  color: var(--white-60);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.price-card.primary .label { color: var(--yellow); }
+
+.price-card .figure {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  margin-top: 6px;
+  line-height: 1;
+}
+.price-card .figure .cur { font-size: 36px; font-weight: 800; color: var(--white); }
+.price-card.primary .figure .cur { color: var(--yellow); }
+.price-card .figure .num { font-size: 68px; font-weight: 900; color: var(--white); letter-spacing: -2px; font-feature-settings: 'tnum' 1; }
+.price-card.primary .figure .num { color: var(--yellow); }
+.price-card .figure .unit { font-size: 24px; font-weight: 700; color: var(--white-60); margin-left: 4px; letter-spacing: -0.5px; }
+.banner.landscape .price-card { padding: 12px 16px; min-width: 200px; }
+.banner.landscape .price-card .figure .num { font-size: 52px; }
+.banner.landscape .price-card .figure .cur { font-size: 28px; }
+.banner.landscape .price-card .figure .unit { font-size: 18px; }
+
+/* ============ Comparison anchor ============ */
+.comparison {
+  margin-top: 22px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--white-80);
   display: inline-flex;
   align-items: center;
-  gap: 18px;
-  padding: 14px 22px;
-  background: rgba(255,255,255,0.06);
-  border-left: 4px solid var(--accent);
-  border-radius: 2px;
+  gap: 14px;
+  flex-wrap: wrap;
+  letter-spacing: 0.3px;
+}
+.comparison .label-tiny {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--white-40);
+  font-weight: 700;
+  text-transform: uppercase;
 }
 .comparison .strike {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--white-70);
+  color: var(--white-60);
   text-decoration: line-through;
-  text-decoration-color: var(--accent);
-  text-decoration-thickness: 3px;
+  text-decoration-color: rgba(245,194,74,0.7);
+  text-decoration-thickness: 2px;
 }
-.comparison .arrow {
-  font-size: 22px;
-  color: var(--white-50);
-}
-.comparison .ours {
-  font-size: 26px;
-  font-weight: 900;
-  color: var(--yellow);
-  letter-spacing: -0.5px;
-}
-.comparison .label {
-  display: block;
-  font-size: 11px;
-  color: var(--white-50);
-  font-weight: 600;
-  letter-spacing: 1.4px;
-  text-transform: uppercase;
-  margin-bottom: 2px;
-}
+.comparison .arrow { color: var(--yellow); font-weight: 800; }
+.comparison .ours  { color: var(--yellow); font-weight: 800; }
 
-/* --- Footer: stats + CTA --- */
+/* ============ Footer ============ */
 .footer {
-  margin-top: auto;
+  margin-top: 28px;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   gap: 24px;
 }
 
-.stat-row {
-  display: flex;
-  gap: 28px;
-}
-.stat {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.stat .v {
-  font-size: 28px;
-  font-weight: 800;
-  color: var(--white);
-  letter-spacing: -0.5px;
-}
-.stat .k {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--white-50);
-  letter-spacing: 1.6px;
-  text-transform: uppercase;
-}
+.stat-row { display: flex; gap: 26px; flex-wrap: wrap; }
+.stat .v { font-size: 22px; font-weight: 800; color: var(--white); letter-spacing: -0.5px; display: block; }
+.stat .k { font-size: 10px; font-weight: 700; color: var(--white-40); letter-spacing: 1.8px; text-transform: uppercase; margin-top: 2px; }
+
+.banner.landscape .stat-row { gap: 18px; }
+.banner.landscape .stat .v { font-size: 18px; }
+.banner.landscape .stat .k { font-size: 9px; }
 
 .cta {
   background: var(--yellow);
   color: var(--navy-900);
-  padding: 18px 28px;
+  padding: 16px 24px;
   font-weight: 900;
-  font-size: 18px;
+  font-size: 16px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   border-radius: 4px;
   box-shadow: 0 8px 24px rgba(245,194,74,0.35);
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   white-space: nowrap;
 }
+.banner.landscape .cta { padding: 12px 20px; font-size: 14px; }
 
-/* --- Accent stripe per variant --- */
-.banner::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 6px;
-  background: var(--accent);
-  z-index: 10;
-}
-
-/* --- Variant accent overrides --- */
-.banner.v-china   { --accent: var(--accent-cn); }
-.banner.v-turkey  { --accent: var(--accent-tr); }
-.banner.v-dubai   { --accent: var(--accent-ae); }
-.banner.v-westeu  { --accent: var(--accent-eu); }
-.banner.v-easteu  { --accent: var(--accent-ee); }
-.banner.v-rent-en { --accent: var(--accent-rent); }
-.banner.v-rent-de { --accent: var(--accent-rent); }
-
-/* --- Language-specific overlays --- */
-.banner.lang-cn .lang-chip { font-family: var(--font-cn); }
-.banner.lang-ar .lang-chip { font-family: var(--font-ar); direction: rtl; }
-.banner.lang-tr .lang-chip { font-family: var(--font-tr); }
-.banner.lang-de .lang-chip { font-family: var(--font-de); }
-
-/* --- Page utilities (for gallery view) --- */
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(2, 1080px);
-  gap: 32px;
-  padding: 48px;
-}
-.gallery .banner {
-  transform: scale(0.5);
-  transform-origin: top left;
-  margin: 0 -540px -540px 0;
-}
-
-.preview-half {
-  zoom: 0.5;
+/* ============ Trust strip ============ */
+.trust-strip {
+  margin-top: 16px;
+  font-size: 14px;
+  letter-spacing: 1.4px;
+  color: var(--white-60);
+  font-weight: 600;
+  text-transform: uppercase;
 }
